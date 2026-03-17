@@ -39,6 +39,14 @@
 
 ---
 
+## Figma 链接
+
+
+
+https://www.figma.com/make/gGyRINQwNbDa6o9D0Xvkvk/Prototype-with-Voice-Recognition?t=BEqKjdr9VD98IIo7-20&fullscreen=1
+
+---
+
 ## 团队分工
 
 | 姓名  | 学号         | 分工  |
