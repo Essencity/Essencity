@@ -5,8 +5,6 @@ import com.xiaohongshu.entity.User;
 import com.xiaohongshu.repository.FollowRepository;
 import com.xiaohongshu.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,23 +22,19 @@ public class UserService {
     @Autowired
     private FollowRepository followRepository;
 
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
     public User register(User user) {
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             throw new RuntimeException("User already exists");
         }
-        if (user.getNickname() == null || user.getNickname().isEmpty()) {
-            user.setNickname(user.getUsername());
+        if (user.getNickname() == null) {
+            user.setNickname("");
         }
-        // BCrypt 加密密码
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
     public User login(String username, String password) {
         Optional<User> user = userRepository.findByUsername(username);
-        if (user.isPresent() && passwordEncoder.matches(password, user.get().getPassword())) {
+        if (user.isPresent() && user.get().getPassword().equals(password)) {
             return user.get();
         }
         throw new RuntimeException("Invalid username or password");
