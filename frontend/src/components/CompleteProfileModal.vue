@@ -49,20 +49,19 @@ const handleSubmit = async () => {
     if (avatarFile.value) {
       const formData = new FormData()
       formData.append('file', avatarFile.value)
-      
-      const uploadRes = await fetch('http://localhost:8080/api/uploads', {
+
+      const uploadRes = await fetch('/api/uploads', {
         method: 'POST',
         body: formData
       })
-      
+
       if (!uploadRes.ok) throw new Error('头像上传失败')
       const uploadData = await uploadRes.json()
-      // Fix URL port 3000 issue if backend returns it
-      avatarUrl = uploadData.url.replace('http://localhost:3000', '/api')
+      avatarUrl = uploadData.url
     }
 
     // 2. Update Profile
-    const updateRes = await fetch('http://localhost:8080/api/auth/profile', {
+    const updateRes = await fetch('/api/auth/profile', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -75,11 +74,6 @@ const handleSubmit = async () => {
 
     if (!updateRes.ok) throw new Error('资料更新失败')
     const updatedUser = await updateRes.json()
-    
-    // Fix avatar URL in updated user if needed
-    if (updatedUser.avatar && updatedUser.avatar.startsWith('http://localhost:3000')) {
-        updatedUser.avatar = updatedUser.avatar.replace('http://localhost:3000', '/api')
-    }
 
     emit('complete', updatedUser)
 
