@@ -1,0 +1,1000 @@
+openapi: 3.0.3
+info:
+  title: Essencity API
+  description: |
+    Essencity 是一个图片/视频分享社交平台的RESTful API。
+
+    ## 认证方式
+    系统使用 JWT Token 认证。登录成功后在前端存储用户信息，后续请求通过用户ID参数传递。
+
+    ## 统一响应结构
+    所有API返回统一结构：
+    ```json
+    {
+      "code": 200,
+      "message": "success",
+      "data": {}
+    }
+    ```
+
+    ## 错误码
+    | Code | 含义 |
+    |------|------|
+    | 200 | 成功 |
+    | 400 | 参数错误 |
+    | 401 | 未登录 |
+    | 403 | 权限不足 |
+    | 404 | 资源不存在 |
+    | 500 | 服务器错误 |
+  version: 1.0.0
+  contact:
+    name: Essencity Team
+
+servers:
+  - url: http://localhost:8080/api
+    description: 本地开发服务器
+  - url: /api
+    description: 生产环境（前端代理）
+
+tags:
+  - name: auth
+    description: 认证模块
+  - name: posts
+    description: 帖子模块
+  - name: comments
+    description: 评论模块
+  - name: notifications
+    description: 通知模块
+  - name: uploads
+    description: 文件上传模块
+
+paths:
+  # ==================== 认证模块 ====================
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: 用户登录
+      description: 用户登录接口，登录成功后返回用户信息和token
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  description: 用户名
+                  example: test
+                password:
+                  type: string
+                  description: 密码（至少6位）
+                  example: "123456"
+      responses:
+        '200':
+          description: 登录成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              example:
+                id: 1
+                username: test
+                nickname: 测试用户
+                avatar: /uploads/avatar.png
+                bio: ""
+                gender: ""
+                token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        '401':
+          description: 用户名或密码错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: 401
+                message: 用户名或密码错误
+
+  /auth/register:
+    post:
+      tags:
+        - auth
+      summary: 用户注册
+      description: 用户注册接口，注册成功后自动登录
+      operationId: register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  description: 用户名（至少3位）
+                  example: test
+                password:
+                  type: string
+                  description: 密码（至少6位）
+                  example: "123456"
+      responses:
+        '200':
+          description: 注册成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /auth/profile:
+    put:
+      tags:
+        - auth
+      summary: 更新用户资料
+      description: 更新当前用户的个人资料
+      operationId: updateProfile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nickname:
+                  type: string
+                  description: 昵称
+                  example: 新昵称
+                bio:
+                  type: string
+                  description: 个人简介
+                  example: 这是我的简介
+                gender:
+                  type: string
+                  description: 性别（男、女、保密）
+                  example: 男
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /auth/following-status:
+    get:
+      tags:
+        - auth
+      summary: 获取关注状态
+      description: 查询当前用户是否关注了目标用户
+      operationId: getFollowingStatus
+      parameters:
+        - name: followerId
+          in: query
+          required: true
+          description: 粉丝ID
+          schema:
+            type: integer
+            example: 1
+        - name: followingId
+          in: query
+          required: true
+          description: 被关注者ID
+          schema:
+            type: integer
+            example: 2
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  isFollowing:
+                    type: boolean
+              example:
+                success: true
+                isFollowing: true
+
+  /auth/follow:
+    post:
+      tags:
+        - auth
+      summary: 关注用户
+      operationId: followUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - followerId
+                - followingId
+              properties:
+                followerId:
+                  type: integer
+                  description: 粉丝ID
+                  example: 1
+                followingId:
+                  type: integer
+                  description: 被关注者ID
+                  example: 2
+      responses:
+        '200':
+          description: 关注成功
+          content:
+            application/json:
+              example:
+                success: true
+
+  /auth/unfollow:
+    post:
+      tags:
+        - auth
+      summary: 取消关注
+      operationId: unfollowUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - followerId
+                - followingId
+              properties:
+                followerId:
+                  type: integer
+                  description: 粉丝ID
+                followingId:
+                  type: integer
+                  description: 被关注者ID
+      responses:
+        '200':
+          description: 取消关注成功
+
+  /auth/following-count/{userId}:
+    get:
+      tags:
+        - auth
+      summary: 获取关注数
+      description: 获取指定用户的关注数量
+      operationId: getFollowingCount
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+              example:
+                count: 100
+
+  /auth/followers-count/{userId}:
+    get:
+      tags:
+        - auth
+      summary: 获取粉丝数
+      description: 获取指定用户的粉丝数量
+      operationId: getFollowersCount
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: 查询成功
+
+  /auth/followers/{userId}:
+    get:
+      tags:
+        - auth
+      summary: 获取粉丝列表
+      operationId: getFollowers
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+  /auth/following/{userId}:
+    get:
+      tags:
+        - auth
+      summary: 获取关注列表
+      operationId: getFollowing
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 查询成功
+
+  # ==================== 帖子模块 ====================
+  /posts:
+    get:
+      tags:
+        - posts
+      summary: 获取帖子列表
+      description: 获取首页推荐帖子列表，支持按标签筛选和搜索
+      operationId: getPosts
+      parameters:
+        - name: title
+          in: query
+          description: 搜索关键词（标题）
+          schema:
+            type: string
+        - name: tag
+          in: query
+          description: 标签筛选
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: 页码
+          schema:
+            type: integer
+            default: 1
+        - name: size
+          in: query
+          description: 每页数量
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+    post:
+      tags:
+        - posts
+      summary: 创建帖子
+      description: 发布新的视频或图片帖子
+      operationId: createPost
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - type
+                - url
+                - author_id
+              properties:
+                title:
+                  type: string
+                  description: 标题
+                  example: 我的第一个帖子
+                description:
+                  type: string
+                  description: 正文内容/描述
+                type:
+                  type: string
+                  enum: [video, image, article]
+                  description: 帖子类型
+                  example: image
+                url:
+                  type: string
+                  description: 媒体文件URL
+                cover_url:
+                  type: string
+                  description: 封面图URL
+                author_id:
+                  type: integer
+                  description: 作者ID
+                tag:
+                  type: string
+                  description: 标签
+      responses:
+        '200':
+          description: 创建成功
+
+  /posts/upload:
+    post:
+      tags:
+        - posts
+        - uploads
+      summary: 上传媒体文件
+      description: 上传视频或图片文件，返回文件访问URL
+      operationId: uploadMedia
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: 上传的文件（视频最大20GB，图片最大20MB）
+      responses:
+        '200':
+          description: 上传成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    description: 文件访问URL
+              example:
+                url: /uploads/2026/03/video_abc123.mp4
+
+  /posts/{id}:
+    get:
+      tags:
+        - posts
+      summary: 获取帖子详情
+      operationId: getPostById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+
+  /posts/user/{userId}/stats:
+    get:
+      tags:
+        - posts
+      summary: 获取用户帖子统计
+      operationId: getUserPostStats
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              example:
+                postCount: 10
+                likeCount: 100
+                collectCount: 50
+
+  /posts/user/{userId}/collections:
+    get:
+      tags:
+        - posts
+      summary: 获取用户收藏列表
+      operationId: getUserCollections
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 查询成功
+
+  /posts/user/{userId}/likes:
+    get:
+      tags:
+        - posts
+      summary: 获取用户点赞列表
+      operationId: getUserLikes
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 查询成功
+
+  # ==================== 点赞模块 ====================
+  /posts/{id}/like:
+    post:
+      tags:
+        - posts
+      summary: 点赞帖子
+      operationId: likePost
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+              properties:
+                userId:
+                  type: integer
+      responses:
+        '200':
+          description: 点赞成功
+
+  /posts/{id}/unlike:
+    post:
+      tags:
+        - posts
+      summary: 取消点赞
+      operationId: unlikePost
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+              properties:
+                userId:
+                  type: integer
+      responses:
+        '200':
+          description: 取消成功
+
+  /posts/{id}/like/status:
+    get:
+      tags:
+        - posts
+      summary: 获取点赞状态
+      operationId: getLikeStatus
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              example:
+                liked: true
+                likeCount: 100
+
+  # ==================== 收藏模块 ====================
+  /posts/{id}/collect:
+    post:
+      tags:
+        - posts
+      summary: 收藏帖子
+      operationId: collectPost
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+              properties:
+                userId:
+                  type: integer
+      responses:
+        '200':
+          description: 收藏成功
+
+  /posts/{id}/uncollect:
+    post:
+      tags:
+        - posts
+      summary: 取消收藏
+      operationId: uncollectPost
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+              properties:
+                userId:
+                  type: integer
+      responses:
+        '200':
+          description: 取消成功
+
+  /posts/{id}/collect/status:
+    get:
+      tags:
+        - posts
+      summary: 获取收藏状态
+      operationId: getCollectStatus
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 查询成功
+
+  # ==================== 评论模块 ====================
+  /posts/{id}/comments:
+    get:
+      tags:
+        - comments
+      summary: 获取帖子评论
+      operationId: getComments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 帖子ID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+    post:
+      tags:
+        - comments
+      summary: 添加评论
+      operationId: addComment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 帖子ID
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+                - content
+              properties:
+                userId:
+                  type: integer
+                  description: 评论者ID
+                content:
+                  type: string
+                  description: 评论内容
+                parent_id:
+                  type: integer
+                  description: 父评论ID（用于回复）
+      responses:
+        '200':
+          description: 评论成功
+
+  /posts/comments/{commentId}:
+    delete:
+      tags:
+        - comments
+      summary: 删除评论
+      operationId: deleteComment
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+              properties:
+                userId:
+                  type: integer
+      responses:
+        '200':
+          description: 删除成功
+
+  # ==================== 通知模块 ====================
+  /notifications:
+    get:
+      tags:
+        - notifications
+      summary: 获取通知列表
+      description: 获取当前用户的通知消息
+      operationId: getNotifications
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: type
+          in: query
+          required: true
+          description: 通知类型（comments/likes/follows）
+          schema:
+            type: string
+            enum: [comments, likes, follows]
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notification'
+
+  # ==================== 文件上传 ====================
+  /uploads:
+    post:
+      tags:
+        - uploads
+      summary: 上传文件
+      description: 通用文件上传接口
+      operationId: uploadFile
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: 上传成功
+
+components:
+  schemas:
+    # 用户对象
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 用户ID
+        username:
+          type: string
+          description: 用户名
+        nickname:
+          type: string
+          description: 昵称
+        avatar:
+          type: string
+          description: 头像URL
+        bio:
+          type: string
+          description: 个人简介
+        gender:
+          type: string
+          description: 性别
+        token:
+          type: string
+          description: JWT令牌
+
+    # 帖子对象
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 帖子ID
+        title:
+          type: string
+          description: 标题
+        description:
+          type: string
+          description: 正文/描述
+        type:
+          type: string
+          enum: [video, image, article]
+          description: 帖子类型
+        url:
+          type: string
+          description: 媒体URL
+        coverUrl:
+          type: string
+          description: 封面图URL
+        imageUrl:
+          type: string
+          description: 图片URL
+        videoUrl:
+          type: string
+          description: 视频URL
+        imageUrls:
+          type: array
+          items:
+            type: string
+          description: 多图URL列表
+        author:
+          $ref: '#/components/schemas/User'
+        authorId:
+          type: integer
+          description: 作者ID
+        authorNickname:
+          type: string
+          description: 作者昵称
+        authorAvatar:
+          type: string
+          description: 作者头像
+        tag:
+          type: string
+          description: 标签
+        likeCount:
+          type: integer
+          description: 点赞数
+        collectionCount:
+          type: integer
+          description: 收藏数
+        commentCount:
+          type: integer
+          description: 评论数
+        likeStatus:
+          type: boolean
+          description: 当前用户是否点赞
+        collectionStatus:
+          type: boolean
+          description: 当前用户是否收藏
+        createdAt:
+          type: string
+          format: date-time
+          description: 创建时间
+
+    # 评论对象
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 评论ID
+        postId:
+          type: integer
+          description: 帖子ID
+        userId:
+          type: integer
+          description: 评论者ID
+        user:
+          $ref: '#/components/schemas/User'
+        content:
+          type: string
+          description: 评论内容
+        parentId:
+          type: integer
+          description: 父评论ID
+        subComments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+        createdAt:
+          type: string
+          format: date-time
+          description: 创建时间
+
+    # 通知对象
+    Notification:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 通知ID
+        type:
+          type: string
+          enum: [LIKE, COLLECTION, COMMENT, REPLY, FOLLOW]
+          description: 通知类型
+        actor:
+          $ref: '#/components/schemas/User'
+        content:
+          type: string
+          description: 通知内容（如评论文本）
+        createdAt:
+          type: string
+          format: date-time
+          description: 创建时间
+
+    # 错误响应
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: 错误码
+        message:
+          type: string
+          description: 错误信息
+        data:
+          type: object
+          description: 错误数据
