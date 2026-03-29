@@ -27,11 +27,33 @@ const manualCoverUrl = ref('')
 
 const tags = ['穿搭', '美食', '彩妆', '影视', '职场', '情感', '家居', '游戏', '旅行', '健身']
 const selectedTag = ref('')
+const customTagInput = ref('')
+const showCustomTagInput = ref(false)
+
+const toggleCustomTagInput = () => {
+  showCustomTagInput.value = !showCustomTagInput.value
+  if (showCustomTagInput.value) {
+    customTagInput.value = ''
+  }
+}
+
+const selectCustomTag = () => {
+  const tag = customTagInput.value.trim().replace(/^#/, '')
+  if (tag && !selectedTag.value) {
+    selectedTag.value = '#' + tag
+  }
+  showCustomTagInput.value = false
+  customTagInput.value = ''
+}
+
+const isCustomTag = computed(() => {
+  return selectedTag.value && !tags.includes(selectedTag.value)
+})
 
 // Image handling
-const imageFile = ref(null)
-const imageUrl = ref('')
-const imageInfo = ref(null)
+const imageFiles = ref([])
+const imageUrls = ref([])
+const imageInfos = ref([])
 const imageInputRef = ref(null)
 
 const formatFileSize = (bytes) => {
@@ -128,46 +150,83 @@ const triggerImageInput = () => {
 }
 
 const handleImageSelect = (event) => {
-  const file = event.target.files[0]
-  if (!file) return
-  processImageFile(file)
+  const files = Array.from(event.target.files)
+  if (files.length === 0) return
+
+  const remainingSlots = 9 - imageFiles.value.length
+  const filesToAdd = files.slice(0, remainingSlots)
+
+  filesToAdd.forEach(file => {
+    processImageFile(file)
+  })
 }
 
 const handleImageDrop = (event) => {
   event.preventDefault()
-  const file = event.dataTransfer.files[0]
-  if (file && file.type.startsWith('image/')) {
+  const files = Array.from(event.dataTransfer.files).filter(f => f.type.startsWith('image/'))
+  if (files.length === 0) return
+
+  const remainingSlots = 9 - imageFiles.value.length
+  const filesToAdd = files.slice(0, remainingSlots)
+
+  filesToAdd.forEach(file => {
     processImageFile(file)
-  }
+  })
 }
 
 const processImageFile = (file) => {
-  imageFile.value = file
-  
+  imageFiles.value.push(file)
+
   const reader = new FileReader()
   reader.onload = (e) => {
-    imageUrl.value = e.target.result
-    
-    // Load image to get dimensions
+    imageUrls.value.push(e.target.result)
+
     const img = new Image()
     img.onload = () => {
-      imageInfo.value = {
+      imageInfos.value.push({
         name: file.name,
         size: formatFileSize(file.size),
         width: img.width,
         height: img.height
-      }
+      })
     }
     img.src = e.target.result
   }
   reader.readAsDataURL(file)
 }
 
-const replaceImage = () => {
-  imageFile.value = null
-  imageUrl.value = ''
-  imageInfo.value = null
-  triggerImageInput()
+const removeImage = (index) => {
+  imageFiles.value.splice(index, 1)
+  imageUrls.value.splice(index, 1)
+  imageInfos.value.splice(index, 1)
+}
+
+const replaceImage = (index) => {
+  const input = document.createElement('input')
+  input.type = 'file'
+  input.accept = 'image/*'
+  input.onchange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      imageFiles.value[index] = file
+      const reader = new FileReader()
+      reader.onload = (ev) => {
+        imageUrls.value[index] = ev.target.result
+        const img = new Image()
+        img.onload = () => {
+          imageInfos.value[index] = {
+            name: file.name,
+            size: formatFileSize(file.size),
+            width: img.width,
+            height: img.height
+          }
+        }
+        img.src = ev.target.result
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+  input.click()
 }
 
 const triggerCoverInput = () => {
@@ -210,38 +269,37 @@ const handlePublish = async () => {
     alert('请上传视频并填写标题')
     return
   }
-  if (activeTab.value === 'image' && (!imageFile.value || !title.value.trim())) {
+  if (activeTab.value === 'image' && (imageFiles.value.length === 0 || !title.value.trim())) {
     alert('请上传图片并填写标题')
     return
   }
-  
+
   try {
     let finalUrl = ''
     let finalCoverUrl = ''
+    let imageUrls = []
     let postType = activeTab.value
 
     if (activeTab.value === 'video') {
-       // 1. Upload video file
       const videoFormData = new FormData()
       videoFormData.append('file', videoFile.value)
-      
+
       const uploadRes = await fetch('/api/posts/upload', {
         method: 'POST',
         body: videoFormData
       })
       const uploadData = await uploadRes.json()
       finalUrl = uploadData.url
-      
-      // 2. Upload cover image (convert dataURL to blob)
-      const coverToUpload = coverSource.value === 'manual' && manualCoverUrl.value 
-        ? manualCoverUrl.value 
+
+      const coverToUpload = coverSource.value === 'manual' && manualCoverUrl.value
+        ? manualCoverUrl.value
         : coverUrl.value
-      
+
       if (coverToUpload) {
         const coverBlob = await fetch(coverToUpload).then(r => r.blob())
         const coverFormData = new FormData()
         coverFormData.append('file', coverBlob, 'cover.jpg')
-        
+
         const coverRes = await fetch('/api/posts/upload', {
           method: 'POST',
           body: coverFormData
@@ -250,20 +308,21 @@ const handlePublish = async () => {
         finalCoverUrl = coverData.url
       }
     } else {
-      // Upload image file
-      const imageFormData = new FormData()
-      imageFormData.append('file', imageFile.value)
-      
-      const uploadRes = await fetch('/api/posts/upload', {
-        method: 'POST',
-        body: imageFormData
-      })
-      const uploadData = await uploadRes.json()
-      finalUrl = uploadData.url
-      finalCoverUrl = uploadData.url // Use same image as cover for now
+      for (let i = 0; i < imageFiles.value.length; i++) {
+        const imageFormData = new FormData()
+        imageFormData.append('file', imageFiles.value[i])
+
+        const uploadRes = await fetch('/api/posts/upload', {
+          method: 'POST',
+          body: imageFormData
+        })
+        const uploadData = await uploadRes.json()
+        imageUrls.push(uploadData.url)
+      }
+      finalUrl = imageUrls[0]
+      finalCoverUrl = imageUrls[0]
     }
-   
-    // 3. Create post
+
     const postRes = await fetch('/api/posts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -273,23 +332,23 @@ const handlePublish = async () => {
         type: postType,
         url: finalUrl,
         cover_url: finalCoverUrl,
+        imageUrls: imageUrls,
         author_id: props.currentUser?.id || 0,
         tag: selectedTag.value
       })
     })
-    
+
     if (postRes.ok) {
       alert('发布成功！')
-      // Reset form
       videoFile.value = null
       videoUrl.value = ''
       coverUrl.value = ''
       videoInfo.value = null
-      
-      imageFile.value = null
-      imageUrl.value = ''
-      imageInfo.value = null
-      
+
+      imageFiles.value = []
+      imageUrls.value = []
+      imageInfos.value = []
+
       title.value = ''
       content.value = ''
     }
@@ -302,7 +361,7 @@ const handlePublish = async () => {
 
 const canPublish = computed(() => {
   if (activeTab.value === 'video') return videoFile.value && title.value.trim().length > 0
-  if (activeTab.value === 'image') return imageFile.value && title.value.trim().length > 0
+  if (activeTab.value === 'image') return imageFiles.value.length > 0 && title.value.trim().length > 0
   return false
 })
 </script>
@@ -450,8 +509,8 @@ const canPublish = computed(() => {
               <div class="section">
                 <h3 class="section-title">添加标签</h3>
                 <div class="tag-list">
-                  <span 
-                    v-for="tag in tags" 
+                  <span
+                    v-for="tag in tags"
                     :key="tag"
                     class="tag-item"
                     :class="{ active: selectedTag === tag }"
@@ -459,6 +518,32 @@ const canPublish = computed(() => {
                   >
                     {{ tag }}
                   </span>
+                  <span
+                    v-if="!showCustomTagInput && !isCustomTag"
+                    class="tag-item custom-trigger"
+                    @click="toggleCustomTagInput"
+                  >
+                    + 自定义
+                  </span>
+                  <span
+                    v-if="isCustomTag"
+                    class="tag-item active custom-tag"
+                    @click="toggleCustomTagInput"
+                  >
+                    {{ selectedTag }}
+                  </span>
+                </div>
+                <div v-if="showCustomTagInput" class="custom-tag-input-wrapper">
+                  <span class="tag-prefix">#</span>
+                  <input
+                    v-model="customTagInput"
+                    type="text"
+                    class="custom-tag-input"
+                    placeholder="输入话题"
+                    maxlength="20"
+                    @keyup.enter="selectCustomTag"
+                    @blur="selectCustomTag"
+                  />
                 </div>
               </div>
 
@@ -525,25 +610,39 @@ const canPublish = computed(() => {
 
           <template v-else>
             <div class="edit-form">
-              <!-- Image Info -->
-              <div class="video-info-section">
-                <div class="video-info-header">
-                  <span class="file-name">{{ imageInfo?.name }}</span>
-                  <button class="replace-btn" @click="replaceImage">替换图片</button>
-                </div>
-                <div class="video-meta">
-                  <span class="success-badge">✓ 上传成功</span>
-                  <span>图片大小：{{ imageInfo?.size }}</span>
-                  <span>{{ imageInfo?.width }}x{{ imageInfo?.height }}</span>
-                </div>
-              </div>
-
-              <!-- Image Preview -->
+              <!-- Image Grid -->
               <div class="section">
-                <h3 class="section-title">图片预览</h3>
-                <div class="cover-options">
-                  <div class="cover-option">
-                    <img :src="imageUrl" alt="预览" class="cover-image" />
+                <h3 class="section-title">图片 ({{ imageFiles.length }}/9)</h3>
+                <div class="image-grid">
+                  <div
+                    v-for="(img, index) in imageUrls"
+                    :key="index"
+                    class="image-grid-item"
+                  >
+                    <img :src="img" alt="预览" class="grid-image" />
+                    <div class="image-overlay">
+                      <button class="overlay-btn" @click="replaceImage(index)">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                        </svg>
+                      </button>
+                      <button class="overlay-btn remove" @click="removeImage(index)">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                      </button>
+                    </div>
+                    <span v-if="index === 0" class="cover-badge">封面</span>
+                  </div>
+                  <div
+                    v-if="imageFiles.length < 9"
+                    class="image-grid-item add-more"
+                    @click="triggerImageInput"
+                  >
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                    </svg>
+                    <span>添加图片</span>
                   </div>
                 </div>
               </div>
@@ -840,6 +939,108 @@ const canPublish = computed(() => {
   align-items: center;
   justify-content: center;
   font-size: 12px;
+}
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.image-grid-item {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.grid-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.image-grid-item:hover .image-overlay {
+  opacity: 1;
+}
+
+.overlay-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #333;
+}
+
+.overlay-btn:hover {
+  background: #f0f0f0;
+}
+
+.overlay-btn.remove:hover {
+  background: #ff4d4f;
+  color: white;
+}
+
+.overlay-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.cover-badge {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  background: var(--primary-color);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.image-grid-item.add-more {
+  border: 2px dashed #d0d0d0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #999;
+  transition: all 0.2s;
+}
+
+.image-grid-item.add-more:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.image-grid-item.add-more svg {
+  width: 32px;
+  height: 32px;
+}
+
+.image-grid-item.add-more span {
+  font-size: 13px;
 }
 
 .title-input {
@@ -1204,6 +1405,39 @@ const canPublish = computed(() => {
   border-color: var(--primary-color);
   color: var(--primary-color);
   font-weight: 500;
+}
+
+.tag-item.custom-trigger {
+  border-style: dashed;
+}
+
+.tag-item.custom-trigger:hover {
+  background: var(--bg-color);
+}
+
+.custom-tag-input-wrapper {
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+  padding: 8px 12px;
+  background: var(--white);
+  border: 1px solid var(--primary-color);
+  border-radius: 20px;
+  width: fit-content;
+}
+
+.tag-prefix {
+  color: var(--primary-color);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.custom-tag-input {
+  border: none;
+  outline: none;
+  font-size: 14px;
+  width: 150px;
+  background: transparent;
 }
 </style>
 
