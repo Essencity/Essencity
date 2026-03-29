@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
+import AiSummary from './AiSummary.vue'
 
 const props = defineProps({
   post: {
@@ -27,6 +28,8 @@ const isLoadingComments = ref(false)
 const replyToCommentId = ref(null)
 const replyToNickname = ref(null)
 const showDeleteMenu = ref(null)
+const showAiSummary = ref(false)
+const commentLikes = ref({})
 
 // 默认头像base64
 const defaultAvatar = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2NjYyI+PHBhdGggZD0iTTEyIDJDNC40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTAgM2MxLjY2IDAgMyAxLjM0IDMgM3MtMS4zNCAzLTMgMy0zLTEuMzQtMy0zIDEuMzQtMyAzLTN6bTAgMTQuMmMtMi41IDAtNC43MS0xLjI4LTYtMy4yMi4wMy0xLjk5IDQtMy4wOCA2LTMuMDggMS45OSAwIDUuOTcgMS4wOSA2IDMuMDgtMS4yOSAxLjk0LTMuNSAzLjIyLTYgMy4yMnoiLz48L3N2Zz4='
@@ -358,21 +361,68 @@ const setReplyTarget = (comment) => {
 
 const formatDate = (dateStr) => {
   if (!dateStr) return ''
-  
+
   const date = new Date(dateStr)
-  
+
   // 检查日期是否有效
   if (isNaN(date.getTime())) return ''
-  
+
   const now = new Date()
   const diff = now - date
-  
+
   if (diff < 60000) return '刚刚'
   if (diff < 3600000) return Math.floor(diff / 60000) + '分钟前'
   if (diff < 86400000) return Math.floor(diff / 3600000) + '小时前'
   if (diff < 604800000) return Math.floor(diff / 86400000) + '天前'
-  
+
   return date.toLocaleDateString('zh-CN')
+}
+
+const handleCommentLike = async (commentId) => {
+  if (!props.currentUser) return
+
+  const currentStatus = commentLikes.value[commentId] || false
+
+  try {
+    const endpoint = currentStatus ? 'unlike' : 'like'
+    const response = await fetch(`/api/comments/${commentId}/${endpoint}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: props.currentUser.id })
+    })
+
+    const data = await response.json()
+    if (data.success !== false) {
+      commentLikes.value[commentId] = !currentStatus
+      updateCommentLikeCount(commentId, !currentStatus)
+    }
+  } catch (error) {
+    console.error('Failed to like comment:', error)
+  }
+}
+
+const updateCommentLikeCount = (commentId, isLiked) => {
+  const updateInList = (list) => {
+    for (const comment of list) {
+      if (comment.id === commentId) {
+        comment.likeCount = (comment.likeCount || 0) + (isLiked ? 1 : -1)
+        return true
+      }
+      if (comment.subComments && updateInList(comment.subComments)) {
+        return true
+      }
+    }
+    return false
+  }
+  updateInList(comments.value)
+}
+
+const getCommentLikeCount = (comment) => {
+  return comment.likeCount || 0
+}
+
+const isCommentLiked = (commentId) => {
+  return commentLikes.value[commentId] || false
 }
 
 // Check follow status
@@ -560,12 +610,22 @@ watch(() => props.post.id, () => {
                 <p class="comment-text">{{ comment.content }}</p>
                 <div class="comment-footer">
                   <span class="comment-time">{{ formatDate(comment.createdAt) }}</span>
-                  <button 
-                    v-if="currentUser" 
-                    @click="setReplyTarget(comment)" 
+                  <button
+                    v-if="currentUser"
+                    @click="setReplyTarget(comment)"
                     class="reply-comment-btn"
                   >
                     回复
+                  </button>
+                  <button
+                    class="comment-like-btn"
+                    :class="{ liked: isCommentLiked(comment.id) }"
+                    @click="handleCommentLike(comment.id)"
+                  >
+                    <svg viewBox="0 0 24 24" :fill="isCommentLiked(comment.id) ? 'var(--primary-color)' : 'none'" :stroke="isCommentLiked(comment.id) ? 'var(--primary-color)' : 'currentColor'" stroke-width="2">
+                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                    <span v-if="getCommentLikeCount(comment) > 0">{{ getCommentLikeCount(comment) }}</span>
                   </button>
                   <div class="comment-actions">
                     <button 
@@ -603,12 +663,22 @@ watch(() => props.post.id, () => {
                       </div>
                       <div class="sub-comment-footer">
                         <span class="sub-comment-time">{{ formatDate(subComment.createdAt) }}</span>
-                        <button 
-                          v-if="currentUser" 
-                          @click="setReplyTarget(subComment)" 
+                        <button
+                          v-if="currentUser"
+                          @click="setReplyTarget(subComment)"
                           class="reply-comment-btn"
                         >
                           回复
+                        </button>
+                        <button
+                          class="comment-like-btn"
+                          :class="{ liked: isCommentLiked(subComment.id) }"
+                          @click="handleCommentLike(subComment.id)"
+                        >
+                          <svg viewBox="0 0 24 24" :fill="isCommentLiked(subComment.id) ? 'var(--primary-color)' : 'none'" :stroke="isCommentLiked(subComment.id) ? 'var(--primary-color)' : 'currentColor'" stroke-width="2">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                          </svg>
+                          <span v-if="getCommentLikeCount(subComment) > 0">{{ getCommentLikeCount(subComment) }}</span>
                         </button>
                         <div class="comment-actions">
                           <button 
@@ -676,10 +746,24 @@ watch(() => props.post.id, () => {
               </svg>
               <span>{{ formattedCommentCount }}</span>
             </div>
+            <div class="action-item" @click="showAiSummary = true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+              </svg>
+              <span>AI</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
+
+    <AiSummary
+      v-if="showAiSummary"
+      :post-id="post.id"
+      :title="post.title"
+      :content="post.description"
+      @close="showAiSummary = false"
+    />
   </div>
 </template>
 
@@ -1008,6 +1092,32 @@ watch(() => props.post.id, () => {
 }
 
 .reply-comment-btn:hover {
+  color: var(--primary-color);
+}
+
+.comment-like-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 8px;
+}
+
+.comment-like-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.comment-like-btn:hover {
+  color: var(--primary-color);
+}
+
+.comment-like-btn.liked {
   color: var(--primary-color);
 }
 
