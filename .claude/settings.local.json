@@ -1,7 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(docker-compose up:*)",
+      "Bash(mysql:*)",
+      "Bash(docker pull:*)",
+      "Bash(docker tag:*)",
+      "Bash(docker rmi:*)",
+      "Bash(docker-compose ps:*)"
     ]
   }
 }
