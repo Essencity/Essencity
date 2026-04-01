@@ -574,7 +574,7 @@ const canPublish = computed(() => {
 
         <!-- Image Section -->
         <template v-else-if="activeTab === 'image'">
-          <template v-if="!imageFile">
+          <template v-if="imageFiles.length === 0">
             <div 
               class="upload-area"
               @drop="handleImageDrop"
