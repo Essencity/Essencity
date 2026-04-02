@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS posts (
     cover_url VARCHAR(255),
     author_id BIGINT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ai_summary TEXT,
     FOREIGN KEY (author_id) REFERENCES users(id)
 );
 
