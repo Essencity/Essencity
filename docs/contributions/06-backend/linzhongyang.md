@@ -10,7 +10,77 @@
 
 ## 贡献内容
 
-### 1. 文件上传配置优化
+### 1. 后端AI总结模块开发
+
+#### 功能描述
+
+为小红书笔记提供AI智能总结功能，调用 MiniMax API 生成简洁的笔记摘要。
+
+#### API 接口
+
+| 方法 | 路径 | 说明 |
+| ---- | ---- | ---- |
+| POST | /ai/summary | 生成并保存AI总结 |
+| GET | /ai/summary/{postId} | 获取指定帖子的AI总结 |
+
+#### 请求/响应格式
+
+**POST /ai/summary** 请求体：
+```json
+{
+  "postId": 1,
+  "title": "笔记标题",
+  "content": "笔记正文内容"
+}
+```
+
+响应：
+```json
+{
+  "ai_summary": "这是一篇关于...的笔记，核心要点包括..."
+}
+```
+
+#### 技术实现
+
+**AIService.java** ([backend/src/main/java/com/xiaohongshu/service/AIService.java](../../backend/src/main/java/com/xiaohongshu/service/AIService.java)):
+- 使用 RestTemplate 调用 MiniMax Chat API
+- 构建提示词：请为以下小红书笔记生成一个简洁的AI总结，突出重点内容和亮点
+- 参数配置：temperature=0.7，max_tokens=500
+- 解析 MiniMax 响应格式：`choices[0].messages[0].content`
+
+**AIController.java** ([backend/src/main/java/com/xiaohongshu/controller/AIController.java](../../backend/src/main/java/com/xiaohongshu/controller/AIController.java)):
+- `POST /ai/summary`：接收 postId、title、content，调用 AI 服务生成总结并保存到 Post 记录
+- `GET /ai/summary/{postId}`：根据帖子 ID 返回已生成的 AI 总结
+
+#### 配置参数
+
+MiniMax API 配置（[application.properties](../../backend/src/main/resources/application.properties#L27-L29)）：
+```properties
+minimax.api-key=your_api_key
+minimax.base-url=https://api.minimax.chat
+minimax.model=MiniMax-Text-01
+```
+
+#### 相关文件
+
+| 文件路径 | 说明 |
+| ------- | ---- |
+| [AIService.java](../../backend/src/main/java/com/xiaohongshu/service/AIService.java) | AI 服务层，调用 MiniMax API |
+| [AIController.java](../../backend/src/main/java/com/xiaohongshu/controller/AIController.java) | REST API 控制器 |
+| [Post.java:40-41,122-126](../../backend/src/main/java/com/xiaohongshu/entity/Post.java) | 实体类添加 aiSummary 字段 |
+| [application.properties:27-29](../../backend/src/main/resources/application.properties) | MiniMax API 配置 |
+
+#### 技术要点
+
+- **API 调用**：使用 Spring RestTemplate 发送 HTTP POST 请求
+- **提示词构建**：引导 AI 生成简洁的小红书风格总结（100字以内）
+- **响应解析**：MiniMax 返回格式为 `choices[0].messages[0].content`
+- **错误处理**：捕获异常并返回友好的错误信息
+
+---
+
+### 2. 文件上传配置优化
 
 #### 问题描述
 
@@ -39,7 +109,7 @@ file.upload-dir=D:/1/Essencity/uploads
 
 ---
 
-### 2. OpenAPI 规范文档
+### 3. OpenAPI 规范文档
 
 创建了完整的 OpenAPI 3.0.3 规范文档，包含：
 - 认证模块 (登录、注册、资料更新、关注操作)
@@ -51,7 +121,7 @@ file.upload-dir=D:/1/Essencity/uploads
 
 ---
 
-### 3. 后端接口测试
+### 4. 后端接口测试
 
 创建了基于 Spring Boot Test 的接口测试：
 - **AuthControllerTest.java**: 11个测试用例
