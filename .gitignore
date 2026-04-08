@@ -26,6 +26,7 @@ build/
 # Backend
 backend/target/
 backend/*.log
+backend/src/main/resources/application-secrets.properties
 uploads/
 
 # Environment
