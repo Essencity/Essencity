@@ -29,6 +29,23 @@ const replyToCommentId = ref(null)
 const replyToNickname = ref(null)
 const showDeleteMenu = ref(null)
 const showAiSummary = ref(false)
+const showPostDeleteMenu = ref(false)
+
+const handleDeletePost = async () => {
+  if (!props.currentUser) return
+
+  try {
+    await fetch(`/api/posts/${props.post.id}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' }
+    })
+    showPostDeleteMenu.value = false
+    emit('interaction')
+    emit('close')
+  } catch (error) {
+    console.error('Failed to delete post:', error)
+  }
+}
 const commentLikes = ref({})
 
 // 默认头像base64
@@ -569,10 +586,11 @@ watch(() => props.post.id, () => {
         <div class="author-header">
           <img :src="getAvatar(post.authorAvatar)" :alt="post.authorNickname" class="author-avatar" />
           <span class="author-name">{{ post.authorNickname }}</span>
-          <button 
-            class="follow-btn" 
-            :class="{ 'following': isFollowing }" 
-            @click="handleFollow" 
+          <button
+            v-if="currentUser && currentUser.id !== post.author_id"
+            class="follow-btn"
+            :class="{ 'following': isFollowing }"
+            @click="handleFollow"
             :disabled="isFollowLoading"
           >
             <span v-if="isFollowLoading" class="follow-btn-loading">
@@ -584,6 +602,22 @@ watch(() => props.post.id, () => {
             <span v-else-if="isFollowing">已关注</span>
             <span v-else>关注</span>
           </button>
+          <div v-if="currentUser && currentUser.id === post.author_id" class="post-actions">
+            <button
+              @click="showPostDeleteMenu = !showPostDeleteMenu"
+              class="post-actions-btn"
+            >
+              ⋮
+            </button>
+            <div v-if="showPostDeleteMenu" class="post-delete-menu">
+              <button
+                @click="handleDeletePost"
+                class="post-delete-menu-btn"
+              >
+                删除
+              </button>
+            </div>
+          </div>
         </div>
         
         <!-- Content -->
@@ -915,6 +949,57 @@ watch(() => props.post.id, () => {
 .follow-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.post-actions {
+  position: relative;
+}
+
+.post-actions-btn {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: rgba(0, 0, 0, 0.03);
+  font-size: 18px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.post-actions-btn:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--text-primary);
+}
+
+.post-delete-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  margin-top: 4px;
+  background: var(--white);
+  border-radius: 4px;
+  box-shadow: var(--shadow-md);
+  padding: 4px 0;
+  z-index: 10;
+  min-width: 80px;
+}
+
+.post-delete-menu-btn {
+  width: 100%;
+  padding: 6px 16px;
+  border: none;
+  background: none;
+  color: var(--primary-color);
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.post-delete-menu-btn:hover {
+  background: rgba(0, 0, 0, 0.03);
 }
 
 .follow-btn-loading {
