@@ -1,10 +1,14 @@
 package com.xiaohongshu.controller;
 
 import com.xiaohongshu.entity.Post;
+import com.xiaohongshu.repository.PostRepository;
 import com.xiaohongshu.service.AIService;
 import com.xiaohongshu.service.PostService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -19,6 +23,12 @@ public class AIController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private PostRepository postRepository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     /**
      * 获取帖子的AI总结
@@ -36,6 +46,7 @@ public class AIController {
      * 生成AI总结
      */
     @PostMapping("/summary")
+    @Transactional
     public ResponseEntity<?> generateAiSummary(@RequestBody Map<String, Object> request) {
         try {
             Long postId = ((Number) request.get("postId")).longValue();
@@ -50,9 +61,9 @@ public class AIController {
             // 调用AI生成总结
             String summary = aiService.generateSummary(title, content);
 
-            // 保存到数据库
+            // 使用EntityManager直接更新
             post.setAiSummary(summary);
-            postService.createPost(post);
+            entityManager.merge(post);
 
             return ResponseEntity.ok(Map.of("ai_summary", summary));
         } catch (Exception e) {

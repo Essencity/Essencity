@@ -70,22 +70,23 @@ public class AIService {
     }
 
     private String buildPrompt(String title, String content) {
-        return "请为以下小红书笔记生成一个简洁的AI总结，突出重点内容和亮点。\n\n" +
+        String actualContent = (content == null || content.trim().isEmpty()) ? "（无正文内容）" : content;
+        return "请根据以下小红书笔记的标题和内容，用一段简洁的文字（100字以内）总结其核心内容。\n\n" +
                 "标题：" + title + "\n\n" +
-                "内容：" + content + "\n\n" +
-                "请用一段简洁的文字总结这篇笔记的核心内容，字数控制在100字以内。";
+                "内容：" + actualContent;
     }
 
     private String parseResponse(Map responseBody) {
         try {
             // MiniMax API 响应格式
-            // {"id":"xxx","choices":[{"messages":[{"role":"assistant","content":"xxx"}]}]}
+            // {"id":"xxx","choices":[{"message":{"role":"assistant","content":"xxx"}}]}
+            System.out.println("AI 响应: " + responseBody);
+
             List<?> choices = (List<?>) responseBody.get("choices");
             if (choices != null && !choices.isEmpty()) {
                 Map<?, ?> choice = (Map<?, ?>) choices.get(0);
-                List<?> messages = (List<?>) choice.get("messages");
-                if (messages != null && !messages.isEmpty()) {
-                    Map<?, ?> message = (Map<?, ?>) messages.get(0);
+                Map<?, ?> message = (Map<?, ?>) choice.get("message");
+                if (message != null) {
                     return (String) message.get("content");
                 }
             }

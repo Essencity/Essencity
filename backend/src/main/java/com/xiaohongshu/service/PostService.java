@@ -60,7 +60,8 @@ public class PostService {
     @Transactional
     public void deletePost(Long id) {
         Post post = getPostById(id);
-        // 删除关联的点赞和收藏
+        // 删除关联的评论、点赞和收藏
+        commentRepository.deleteAll(commentRepository.findByPostOrderByCreatedAtDesc(post));
         likeRepository.deleteAll(likeRepository.findByPost(post));
         collectionRepository.deleteAll(collectionRepository.findByPost(post));
         postRepository.delete(post);

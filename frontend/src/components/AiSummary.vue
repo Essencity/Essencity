@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { getAiSummary } from '@/api/ai.js'
+import { getAiSummary, generateAiSummary } from '@/api/ai.js'
 
 const props = defineProps({
   postId: {
@@ -27,14 +27,22 @@ const hasSummary = ref(false)
 const fetchSummary = async () => {
   loading.value = true
   error.value = null
-  
+
   try {
+    // 先尝试获取已有总结
     const data = await getAiSummary(props.postId)
     if (data.ai_summary) {
       summary.value = data.ai_summary
       hasSummary.value = true
     } else {
-      error.value = '暂无AI总结'
+      // 没有总结，则生成新总结
+      const generateData = await generateAiSummary(props.postId, props.title, props.content)
+      if (generateData.ai_summary) {
+        summary.value = generateData.ai_summary
+        hasSummary.value = true
+      } else {
+        error.value = '暂无AI总结'
+      }
     }
   } catch (err) {
     error.value = '获取总结失败，请稍后再试'
