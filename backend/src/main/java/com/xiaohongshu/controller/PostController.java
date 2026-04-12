@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -22,7 +23,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/posts")
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+@CrossOrigin(origins = "http://localhost:5173", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS}, allowCredentials = "true")
 public class PostController {
     @Autowired
     private PostService postService;
@@ -140,6 +141,25 @@ public class PostController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(Map.of("message", "Failed to create post"));
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updatePost(@PathVariable Long id, @RequestBody Map<String, Object> postData) {
+        try {
+            Post post = new Post();
+            post.setTitle((String) postData.get("title"));
+            post.setDescription((String) postData.get("description"));
+            post.setType((String) postData.get("type"));
+            post.setUrl((String) postData.get("url"));
+            post.setCoverUrl((String) postData.get("cover_url"));
+            post.setTag((String) postData.get("tag"));
+
+            Post updated = postService.updatePost(id, post);
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(Map.of("message", "Failed to update post"));
         }
     }
 

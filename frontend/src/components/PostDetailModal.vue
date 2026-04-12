@@ -13,7 +13,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['close', 'interaction'])
+const emit = defineEmits(['close', 'interaction', 'edit'])
 
 const videoRef = ref(null)
 const commentInputRef = ref(null)
@@ -45,6 +45,11 @@ const handleDeletePost = async () => {
   } catch (error) {
     console.error('Failed to delete post:', error)
   }
+}
+
+const handleEditPost = () => {
+  showPostDeleteMenu.value = false
+  emit('edit', props.post)
 }
 const commentLikes = ref({})
 
@@ -611,6 +616,12 @@ watch(() => props.post.id, () => {
             </button>
             <div v-if="showPostDeleteMenu" class="post-delete-menu">
               <button
+                @click="handleEditPost"
+                class="post-edit-menu-btn"
+              >
+                编辑
+              </button>
+              <button
                 @click="handleDeletePost"
                 class="post-delete-menu-btn"
               >
@@ -985,6 +996,21 @@ watch(() => props.post.id, () => {
   padding: 4px 0;
   z-index: 10;
   min-width: 80px;
+}
+
+.post-edit-menu-btn {
+  width: 100%;
+  padding: 6px 16px;
+  border: none;
+  background: none;
+  color: var(--primary-color);
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.post-edit-menu-btn:hover {
+  background: rgba(0, 0, 0, 0.03);
 }
 
 .post-delete-menu-btn {

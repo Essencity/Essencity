@@ -1,12 +1,18 @@
 <script setup>
-import { ref, computed, defineProps } from 'vue'
+import { ref, computed, watch, defineProps } from 'vue'
 
 const props = defineProps({
   currentUser: {
     type: Object,
     default: null
+  },
+  editingPost: {
+    type: Object,
+    default: null
   }
 })
+
+const emit = defineEmits(['success'])
 
 const activeTab = ref('video') // 'video', 'image'
 const videoFile = ref(null)
@@ -50,11 +56,35 @@ const isCustomTag = computed(() => {
   return selectedTag.value && !tags.includes(selectedTag.value)
 })
 
-// Image handling
+// Image handling - MUST be declared before watch with immediate: true
 const imageFiles = ref([])
 const imageUrls = ref([])
 const imageInfos = ref([])
 const imageInputRef = ref(null)
+
+// Editing mode
+const isEditMode = computed(() => !!props.editingPost)
+
+watch(() => props.editingPost, (post) => {
+  if (post) {
+    title.value = post.title || ''
+    content.value = post.description || ''
+    selectedTag.value = post.tag || ''
+
+    if (post.type === 'video') {
+      activeTab.value = 'video'
+      videoUrl.value = post.url || ''
+      coverUrl.value = post.coverUrl || ''
+    } else {
+      activeTab.value = 'image'
+      // Use post.image (from selectedPost) or post.url
+      const imgUrl = post.image || post.url || post.imageUrl
+      if (imgUrl) {
+        imageUrls.value = [imgUrl]
+      }
+    }
+  }
+}, { immediate: true })
 
 const formatFileSize = (bytes) => {
   if (bytes < 1024 * 1024) {
@@ -265,11 +295,11 @@ const activeCoverUrl = computed(() => {
 })
 
 const handlePublish = async () => {
-  if (activeTab.value === 'video' && (!videoFile.value || !title.value.trim())) {
+  if (activeTab.value === 'video' && (!videoFile.value && !isEditMode.value || !title.value.trim())) {
     alert('请上传视频并填写标题')
     return
   }
-  if (activeTab.value === 'image' && (imageFiles.value.length === 0 || !title.value.trim())) {
+  if (activeTab.value === 'image' && (imageFiles.value.length === 0 && !isEditMode.value || !title.value.trim())) {
     alert('请上传图片并填写标题')
     return
   }
@@ -281,87 +311,117 @@ const handlePublish = async () => {
     let postType = activeTab.value
 
     if (activeTab.value === 'video') {
-      const videoFormData = new FormData()
-      videoFormData.append('file', videoFile.value)
-
-      const uploadRes = await fetch('/api/posts/upload', {
-        method: 'POST',
-        body: videoFormData
-      })
-      const uploadData = await uploadRes.json()
-      finalUrl = uploadData.url
-
-      const coverToUpload = coverSource.value === 'manual' && manualCoverUrl.value
-        ? manualCoverUrl.value
-        : coverUrl.value
-
-      if (coverToUpload) {
-        const coverBlob = await fetch(coverToUpload).then(r => r.blob())
-        const coverFormData = new FormData()
-        coverFormData.append('file', coverBlob, 'cover.jpg')
-
-        const coverRes = await fetch('/api/posts/upload', {
-          method: 'POST',
-          body: coverFormData
-        })
-        const coverData = await coverRes.json()
-        finalCoverUrl = coverData.url
-      }
-    } else {
-      for (let i = 0; i < imageFiles.value.length; i++) {
-        const imageFormData = new FormData()
-        imageFormData.append('file', imageFiles.value[i])
+      if (videoFile.value) {
+        const videoFormData = new FormData()
+        videoFormData.append('file', videoFile.value)
 
         const uploadRes = await fetch('/api/posts/upload', {
           method: 'POST',
-          body: imageFormData
+          body: videoFormData
         })
         const uploadData = await uploadRes.json()
-        imageUrls.push(uploadData.url)
+        finalUrl = uploadData.url
+      } else {
+        finalUrl = props.editingPost?.url || ''
       }
-      finalUrl = imageUrls[0]
-      finalCoverUrl = imageUrls[0]
+
+      if ((coverSource.value === 'manual' && manualCoverUrl.value) || coverUrl.value) {
+        const coverToUpload = coverSource.value === 'manual' && manualCoverUrl.value
+          ? manualCoverUrl.value
+          : coverUrl.value
+
+        if (coverToUpload && !coverToUpload.startsWith('/api') && !coverToUpload.startsWith('http')) {
+          const coverBlob = await fetch(coverToUpload).then(r => r.blob())
+          const coverFormData = new FormData()
+          coverFormData.append('file', coverBlob, 'cover.jpg')
+
+          const coverRes = await fetch('/api/posts/upload', {
+            method: 'POST',
+            body: coverFormData
+          })
+          const coverData = await coverRes.json()
+          finalCoverUrl = coverData.url
+        } else {
+          finalCoverUrl = coverToUpload
+        }
+      }
+    } else {
+      if (imageFiles.value.length > 0) {
+        for (let i = 0; i < imageFiles.value.length; i++) {
+          const imageFormData = new FormData()
+          imageFormData.append('file', imageFiles.value[i])
+
+          const uploadRes = await fetch('/api/posts/upload', {
+            method: 'POST',
+            body: imageFormData
+          })
+          const uploadData = await uploadRes.json()
+          imageUrls.push(uploadData.url)
+        }
+        finalUrl = imageUrls[0]
+        finalCoverUrl = imageUrls[0]
+      } else {
+        finalUrl = props.editingPost?.url || imageUrls.value[0] || ''
+        finalCoverUrl = props.editingPost?.coverUrl || imageUrls.value[0] || ''
+      }
     }
 
-    const postRes = await fetch('/api/posts', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        title: title.value,
-        description: content.value,
-        type: postType,
-        url: finalUrl,
-        cover_url: finalCoverUrl,
-        imageUrls: imageUrls,
-        author_id: props.currentUser?.id || 0,
-        tag: selectedTag.value
+    const postData = {
+      title: title.value,
+      description: content.value,
+      type: postType,
+      url: finalUrl,
+      cover_url: finalCoverUrl,
+      imageUrls: imageUrls.length > 0 ? imageUrls : imageUrls.value,
+      author_id: props.currentUser?.id || 0,
+      tag: selectedTag.value
+    }
+
+    let postRes
+    if (isEditMode.value) {
+      postRes = await fetch(`/api/posts/${props.editingPost.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(postData)
       })
-    })
+    } else {
+      postRes = await fetch('/api/posts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(postData)
+      })
+    }
 
     if (postRes.ok) {
-      alert('发布成功！')
-      videoFile.value = null
-      videoUrl.value = ''
-      coverUrl.value = ''
-      videoInfo.value = null
-
-      imageFiles.value = []
-      imageUrls.value = []
-      imageInfos.value = []
-
-      title.value = ''
-      content.value = ''
+      alert(isEditMode.value ? '更新成功！' : '发布成功！')
+      resetForm()
+      emit('success')
     }
   } catch (error) {
     console.error('Publish error:', error)
-    alert('发布失败，请重试')
+    alert(isEditMode.value ? '更新失败，请重试' : '发布失败，请重试')
   }
+}
+
+const resetForm = () => {
+  videoFile.value = null
+  videoUrl.value = ''
+  coverUrl.value = ''
+  videoInfo.value = null
+  imageFiles.value = []
+  imageUrls.value = []
+  imageInfos.value = []
+  title.value = ''
+  content.value = ''
+  selectedTag.value = ''
 }
 
 
 const canPublish = computed(() => {
-  if (activeTab.value === 'video') return videoFile.value && title.value.trim().length > 0
-  if (activeTab.value === 'image') return imageFiles.value.length > 0 && title.value.trim().length > 0
+  if (!title.value.trim().length > 0) return false
+  if (isEditMode.value) return true
+  if (activeTab.value === 'video') return videoFile.value
+  if (activeTab.value === 'image') return imageFiles.value.length > 0
   return false
 })
 </script>
@@ -394,15 +454,20 @@ const canPublish = computed(() => {
     
     <div class="main-body">
       <main class="content-area">
+        <!-- Edit mode header -->
+        <div v-if="isEditMode" class="edit-header">
+          <span class="edit-title">编辑笔记</span>
+        </div>
+
         <!-- Tabs -->
-        <div class="tabs">
-          <span 
-            class="tab" 
+        <div v-else class="tabs">
+          <span
+            class="tab"
             :class="{ active: activeTab === 'video' }"
             @click="activeTab = 'video'"
           >上传视频</span>
-          <span 
-            class="tab" 
+          <span
+            class="tab"
             :class="{ active: activeTab === 'image' }"
             @click="activeTab = 'image'"
           >上传图文</span>
@@ -559,14 +624,14 @@ const canPublish = computed(() => {
               </div>
 
               <div class="publish-actions">
-                <button 
-                  class="publish-btn" 
+                <button
+                  class="publish-btn"
                   :disabled="!canPublish"
                   @click="handlePublish"
                 >
-                  发布
+                  {{ isEditMode ? '更新' : '发布' }}
                 </button>
-                <button class="save-draft-btn">暂存离开</button>
+                <button v-if="!isEditMode" class="save-draft-btn">暂存离开</button>
               </div>
             </div>
           </template>
@@ -574,8 +639,8 @@ const canPublish = computed(() => {
 
         <!-- Image Section -->
         <template v-else-if="activeTab === 'image'">
-          <template v-if="imageFiles.length === 0">
-            <div 
+          <template v-if="imageFiles.length === 0 && imageUrls.length === 0">
+            <div
               class="upload-area"
               @drop="handleImageDrop"
               @dragover="handleDragOver"
@@ -612,7 +677,7 @@ const canPublish = computed(() => {
             <div class="edit-form">
               <!-- Image Grid -->
               <div class="section">
-                <h3 class="section-title">图片 ({{ imageFiles.length }}/9)</h3>
+                <h3 class="section-title">图片 ({{ imageUrls.length }}/9)</h3>
                 <div class="image-grid">
                   <div
                     v-for="(img, index) in imageUrls"
@@ -635,7 +700,7 @@ const canPublish = computed(() => {
                     <span v-if="index === 0" class="cover-badge">封面</span>
                   </div>
                   <div
-                    v-if="imageFiles.length < 9"
+                    v-if="imageUrls.length < 9"
                     class="image-grid-item add-more"
                     @click="triggerImageInput"
                   >
@@ -687,14 +752,14 @@ const canPublish = computed(() => {
               </div>
 
               <div class="publish-actions">
-                <button 
-                  class="publish-btn" 
+                <button
+                  class="publish-btn"
                   :disabled="!canPublish"
                   @click="handlePublish"
                 >
-                  发布
+                  {{ isEditMode ? '更新' : '发布' }}
                 </button>
-                <button class="save-draft-btn">暂存离开</button>
+                <button v-if="!isEditMode" class="save-draft-btn">暂存离开</button>
               </div>
             </div>
           </template>
@@ -723,6 +788,22 @@ const canPublish = computed(() => {
   padding: 24px;
   overflow-y: auto;
   background-color: var(--bg-color);
+}
+
+.edit-header {
+  display: flex;
+  align-items: center;
+  background: var(--white);
+  padding: 16px 24px;
+  border-radius: 4px 4px 0 0;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 20px;
+}
+
+.edit-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 .tabs {
