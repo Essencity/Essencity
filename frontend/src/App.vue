@@ -18,6 +18,7 @@ const currentUser = ref(null)
 const pendingNavigation = ref(null) // Store intended navigation when login is required
 const selectedPost = ref(null)
 const showPostDetail = ref(false)
+const editingPost = ref(null)
 
 // Helper function to get media URL
 const getMediaUrl = (url) => {
@@ -95,6 +96,24 @@ const handleOpenDetail = async (post) => {
 const handleCloseDetail = () => {
   showPostDetail.value = false
   selectedPost.value = null
+}
+
+const handleEditPost = (post) => {
+  // 先关闭弹窗
+  showPostDetail.value = false
+  selectedPost.value = null
+
+  // 延迟设置编辑数据，确保弹窗已关闭
+  setTimeout(() => {
+    editingPost.value = post
+    currentView.value = 'publish'
+  }, 100)
+}
+
+const handleCreationSuccess = () => {
+  editingPost.value = null
+  currentView.value = 'discovery'
+  fetchPosts()
 }
 
 const checkProfileCompletion = (user) => {
@@ -281,7 +300,11 @@ onMounted(() => {
       </template>
 
       <template v-else-if="currentView === 'publish'">
-        <CreationPage :current-user="currentUser" />
+        <CreationPage
+          :current-user="currentUser"
+          :editing-post="editingPost"
+          @success="handleCreationSuccess"
+        />
       </template>
 
       <template v-else-if="currentView === 'notification'">
@@ -312,6 +335,7 @@ onMounted(() => {
       :current-user="currentUser"
       @close="handleCloseDetail"
       @interaction="fetchPosts"
+      @edit="handleEditPost"
     />
 
     <CompleteProfileModal
