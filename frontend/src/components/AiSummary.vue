@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { getAiSummary } from '@/api/ai.js'
+import { getAiSummary, generateAiSummary } from '@/api/ai.js'
 
 const props = defineProps({
   postId: {
@@ -27,18 +27,42 @@ const hasSummary = ref(false)
 const fetchSummary = async () => {
   loading.value = true
   error.value = null
-  
+
   try {
     const data = await getAiSummary(props.postId)
     if (data.ai_summary) {
       summary.value = data.ai_summary
       hasSummary.value = true
     } else {
-      error.value = '暂无AI总结'
+      await generateSummary()
     }
   } catch (err) {
-    error.value = '获取总结失败，请稍后再试'
-    console.error('AI Summary error:', err)
+    if (err.message.includes('获取AI总结失败') || err.message.includes('404')) {
+      await generateSummary()
+    } else {
+      error.value = '获取总结失败，请稍后再试'
+      console.error('AI Summary error:', err)
+    }
+  } finally {
+    loading.value = false
+  }
+}
+
+const generateSummary = async () => {
+  loading.value = true
+  error.value = null
+
+  try {
+    const data = await generateAiSummary(props.postId, props.title, props.content)
+    if (data.ai_summary) {
+      summary.value = data.ai_summary
+      hasSummary.value = true
+    } else {
+      error.value = '生成总结失败'
+    }
+  } catch (err) {
+    error.value = '生成总结失败，请稍后再试'
+    console.error('AI Generate error:', err)
   } finally {
     loading.value = false
   }
