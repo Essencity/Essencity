@@ -37,6 +37,30 @@ public class PostService {
         return postRepository.save(post);
     }
 
+    @Transactional
+    public Post updatePost(Long id, Post updatedPost) {
+        Post post = getPostById(id);
+        if (updatedPost.getTitle() != null) {
+            post.setTitle(updatedPost.getTitle());
+        }
+        if (updatedPost.getDescription() != null) {
+            post.setDescription(updatedPost.getDescription());
+        }
+        if (updatedPost.getType() != null) {
+            post.setType(updatedPost.getType());
+        }
+        if (updatedPost.getUrl() != null) {
+            post.setUrl(updatedPost.getUrl());
+        }
+        if (updatedPost.getCoverUrl() != null) {
+            post.setCoverUrl(updatedPost.getCoverUrl());
+        }
+        if (updatedPost.getTag() != null) {
+            post.setTag(updatedPost.getTag());
+        }
+        return postRepository.save(post);
+    }
+
     public List<Post> getAllPosts() {
         return postRepository.findAllByOrderByCreatedAtDesc();
     }
@@ -60,7 +84,8 @@ public class PostService {
     @Transactional
     public void deletePost(Long id) {
         Post post = getPostById(id);
-        // 删除关联的点赞和收藏
+        // 删除关联的评论、点赞和收藏
+        commentRepository.deleteAll(commentRepository.findByPostOrderByCreatedAtDesc(post));
         likeRepository.deleteAll(likeRepository.findByPost(post));
         collectionRepository.deleteAll(collectionRepository.findByPost(post));
         postRepository.delete(post);

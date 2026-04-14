@@ -549,9 +549,9 @@ const handlePostClick = (post) => {
               </svg>
             </button>
           </template>
-          <template v-else>
-            <button 
-              class="follow-btn" 
+          <template v-else-if="currentUser && userId && currentUser.id !== userId">
+            <button
+              class="follow-btn"
               :class="{ 'following': isFollowing }"
               @click="handleFollow"
               :disabled="isFollowLoading"
