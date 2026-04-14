@@ -12,18 +12,21 @@ const props = defineProps({
 const emit = defineEmits(['close', 'search'])
 
 const searchQuery = ref('')
-const { isListening, isSupported, transcript, error, startListening, stopListening, resetTranscript } = useSpeech()
+const { isListening, isSupported, transcript, error, checkSupport, startListening, stopListening, resetTranscript } = useSpeech()
+
+watch(() => props.visible, (newVal) => {
+  if (newVal) {
+    checkSupport()
+  }
+  if (!newVal) {
+    resetTranscript()
+    searchQuery.value = ''
+  }
+}, { immediate: true })
 
 watch(transcript, (newTranscript) => {
   if (newTranscript) {
     searchQuery.value = newTranscript
-  }
-})
-
-watch(() => props.visible, (newVal) => {
-  if (!newVal) {
-    resetTranscript()
-    searchQuery.value = ''
   }
 })
 

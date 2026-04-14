@@ -8,6 +8,17 @@ export function useSpeech() {
 
   let recognition = null
 
+  const checkSupport = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+    if (!SpeechRecognition) {
+      isSupported.value = false
+      error.value = '当前浏览器不支持语音识别'
+      return false
+    }
+    isSupported.value = true
+    return true
+  }
+
   const initRecognition = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
 
@@ -114,6 +125,7 @@ export function useSpeech() {
     isSupported,
     transcript,
     error,
+    checkSupport,
     startListening,
     stopListening,
     resetTranscript
