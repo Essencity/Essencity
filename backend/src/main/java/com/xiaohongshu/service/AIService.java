@@ -19,10 +19,18 @@ public class AIService {
     @Value("${minimax.model}")
     private String model;
 
-    private final RestTemplate restTemplate;
+    private RestTemplate restTemplate;
 
     public AIService() {
         this.restTemplate = new RestTemplate();
+    }
+
+    // 构造函数用于测试
+    public AIService(RestTemplate restTemplate, String apiKey, String baseUrl, String model) {
+        this.restTemplate = restTemplate;
+        this.apiKey = apiKey;
+        this.baseUrl = baseUrl;
+        this.model = model;
     }
 
     public String generateSummary(String title, String content) {
