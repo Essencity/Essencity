@@ -1,5 +1,7 @@
 # 🌸 Essencity
 
+[![Backend Coverage](https://codecov.io/gh/Essencity/Essencity/branch/main/graph/badge.svg?flag=backend)](https://codecov.io/gh/Essencity/Essencity)
+
 <p align="center">
   <img src="https://img.shields.io/badge/Vue-3.x-4FC08D?style=flat-square&logo=vue.js" alt="Vue">
   <img src="https://img.shields.io/badge/Spring%20Boot-3.x-6DB33F?style=flat-square&logo=spring-boot" alt="Spring Boot">

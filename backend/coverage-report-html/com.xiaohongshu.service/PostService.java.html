@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PostService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">xiaohongshu</a> &gt; <a href="index.source.html" class="el_package">com.xiaohongshu.service</a> &gt; <span class="el_source">PostService.java</span></div><h1>PostService.java</h1><pre class="source lang-java linenums">package com.xiaohongshu.service;
+
+import com.xiaohongshu.entity.Collection;
+import com.xiaohongshu.entity.Comment;
+import com.xiaohongshu.entity.Like;
+import com.xiaohongshu.entity.Post;
+import com.xiaohongshu.entity.User;
+import com.xiaohongshu.repository.CollectionRepository;
+import com.xiaohongshu.repository.CommentRepository;
+import com.xiaohongshu.repository.LikeRepository;
+import com.xiaohongshu.repository.PostRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+@Service
+<span class="fc" id="L23">public class PostService {</span>
+    @Autowired
+    private PostRepository postRepository;
+
+    @Autowired
+    private LikeRepository likeRepository;
+
+    @Autowired
+    private CollectionRepository collectionRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
+
+    public Post createPost(Post post) {
+<span class="fc" id="L37">        return postRepository.save(post);</span>
+    }
+
+    @Transactional
+    public Post updatePost(Long id, Post updatedPost) {
+<span class="fc" id="L42">        Post post = getPostById(id);</span>
+<span class="pc bpc" id="L43" title="1 of 2 branches missed.">        if (updatedPost.getTitle() != null) {</span>
+<span class="fc" id="L44">            post.setTitle(updatedPost.getTitle());</span>
+        }
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        if (updatedPost.getDescription() != null) {</span>
+<span class="fc" id="L47">            post.setDescription(updatedPost.getDescription());</span>
+        }
+<span class="pc bpc" id="L49" title="1 of 2 branches missed.">        if (updatedPost.getType() != null) {</span>
+<span class="nc" id="L50">            post.setType(updatedPost.getType());</span>
+        }
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">        if (updatedPost.getUrl() != null) {</span>
+<span class="nc" id="L53">            post.setUrl(updatedPost.getUrl());</span>
+        }
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">        if (updatedPost.getCoverUrl() != null) {</span>
+<span class="nc" id="L56">            post.setCoverUrl(updatedPost.getCoverUrl());</span>
+        }
+<span class="pc bpc" id="L58" title="1 of 2 branches missed.">        if (updatedPost.getTag() != null) {</span>
+<span class="nc" id="L59">            post.setTag(updatedPost.getTag());</span>
+        }
+<span class="fc" id="L61">        return postRepository.save(post);</span>
+    }
+
+    public List&lt;Post&gt; getAllPosts() {
+<span class="fc" id="L65">        return postRepository.findAllByOrderByCreatedAtDesc();</span>
+    }
+
+    public List&lt;Post&gt; searchPosts(String keyword) {
+<span class="fc" id="L69">        return postRepository.findByTitleContainingOrderByCreatedAtDesc(keyword);</span>
+    }
+
+    public List&lt;Post&gt; getPostsByTag(String tag) {
+<span class="fc" id="L73">        return postRepository.findByTagOrderByCreatedAtDesc(tag);</span>
+    }
+
+    public List&lt;Post&gt; searchPostsByTag(String tag, String keyword) {
+<span class="nc" id="L77">        return postRepository.findByTagAndTitleContainingOrderByCreatedAtDesc(tag, keyword);</span>
+    }
+
+    public Post getPostById(Long id) {
+<span class="fc" id="L81">        return postRepository.findById(id).orElseThrow(() -&gt; new RuntimeException(&quot;Post not found&quot;));</span>
+    }
+
+    @Transactional
+    public void deletePost(Long id) {
+<span class="nc" id="L86">        Post post = getPostById(id);</span>
+        // 删除关联的评论、点赞和收藏
+<span class="nc" id="L88">        commentRepository.deleteAll(commentRepository.findByPostOrderByCreatedAtDesc(post));</span>
+<span class="nc" id="L89">        likeRepository.deleteAll(likeRepository.findByPost(post));</span>
+<span class="nc" id="L90">        collectionRepository.deleteAll(collectionRepository.findByPost(post));</span>
+<span class="nc" id="L91">        postRepository.delete(post);</span>
+<span class="nc" id="L92">    }</span>
+
+    public List&lt;Post&gt; getPostsByAuthor(User author) {
+<span class="nc" id="L95">        return postRepository.findByAuthorOrderByCreatedAtDesc(author);</span>
+    }
+
+    // Like methods
+    @Transactional
+    public void toggleLike(User user, Long postId) {
+<span class="fc" id="L101">        Post post = getPostById(postId);</span>
+<span class="fc" id="L102">        Optional&lt;Like&gt; existingLike = likeRepository.findByUserAndPost(user, post);</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">        if (existingLike.isPresent()) {</span>
+<span class="fc" id="L104">            likeRepository.delete(existingLike.get());</span>
+        } else {
+<span class="fc" id="L106">            Like like = new Like();</span>
+<span class="fc" id="L107">            like.setUser(user);</span>
+<span class="fc" id="L108">            like.setPost(post);</span>
+<span class="fc" id="L109">            likeRepository.save(like);</span>
+        }
+<span class="fc" id="L111">    }</span>
+
+    @Transactional
+    public void likePost(User user, Long postId) {
+<span class="fc" id="L115">        Post post = getPostById(postId);</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">        if (!likeRepository.existsByUserAndPost(user, post)) {</span>
+<span class="fc" id="L117">            Like like = new Like();</span>
+<span class="fc" id="L118">            like.setUser(user);</span>
+<span class="fc" id="L119">            like.setPost(post);</span>
+<span class="fc" id="L120">            likeRepository.save(like);</span>
+        }
+<span class="fc" id="L122">    }</span>
+
+    @Transactional
+    public void unlikePost(User user, Long postId) {
+<span class="fc" id="L126">        Post post = getPostById(postId);</span>
+<span class="fc" id="L127">        likeRepository.findByUserAndPost(user, post).ifPresent(likeRepository::delete);</span>
+<span class="fc" id="L128">    }</span>
+
+    // Collection methods
+    @Transactional
+    public void toggleCollection(User user, Long postId) {
+<span class="fc" id="L133">        Post post = getPostById(postId);</span>
+<span class="fc" id="L134">        Optional&lt;Collection&gt; existingCollection = collectionRepository.findByUserAndPost(user, post);</span>
+<span class="fc bfc" id="L135" title="All 2 branches covered.">        if (existingCollection.isPresent()) {</span>
+<span class="fc" id="L136">            collectionRepository.delete(existingCollection.get());</span>
+        } else {
+<span class="fc" id="L138">            Collection collection = new Collection();</span>
+<span class="fc" id="L139">            collection.setUser(user);</span>
+<span class="fc" id="L140">            collection.setPost(post);</span>
+<span class="fc" id="L141">            collectionRepository.save(collection);</span>
+        }
+<span class="fc" id="L143">    }</span>
+
+    @Transactional
+    public void collectPost(User user, Long postId) {
+<span class="nc" id="L147">        Post post = getPostById(postId);</span>
+<span class="nc bnc" id="L148" title="All 2 branches missed.">        if (!collectionRepository.existsByUserAndPost(user, post)) {</span>
+<span class="nc" id="L149">            Collection collection = new Collection();</span>
+<span class="nc" id="L150">            collection.setUser(user);</span>
+<span class="nc" id="L151">            collection.setPost(post);</span>
+<span class="nc" id="L152">            collectionRepository.save(collection);</span>
+        }
+<span class="nc" id="L154">    }</span>
+
+    @Transactional
+    public void uncollectPost(User user, Long postId) {
+<span class="nc" id="L158">        Post post = getPostById(postId);</span>
+<span class="nc" id="L159">        collectionRepository.findByUserAndPost(user, post).ifPresent(collectionRepository::delete);</span>
+<span class="nc" id="L160">    }</span>
+
+    public long getLikeCount(Long postId) {
+<span class="fc" id="L163">        Post post = getPostById(postId);</span>
+<span class="fc" id="L164">        return likeRepository.countByPost(post);</span>
+    }
+
+    public boolean isLikedBy(User user, Long postId) {
+<span class="fc" id="L168">        Post post = getPostById(postId);</span>
+<span class="fc" id="L169">        return likeRepository.existsByUserAndPost(user, post);</span>
+    }
+
+    public long getCollectionCount(Long postId) {
+<span class="fc" id="L173">        Post post = getPostById(postId);</span>
+<span class="fc" id="L174">        return collectionRepository.countByPost(post);</span>
+    }
+
+    public boolean isCollectedBy(User user, Long postId) {
+<span class="nc" id="L178">        Post post = getPostById(postId);</span>
+<span class="nc" id="L179">        return collectionRepository.existsByUserAndPost(user, post);</span>
+    }
+
+    // Comment methods
+    public List&lt;Map&lt;String, Object&gt;&gt; getCommentsByPostId(Long postId) {
+<span class="nc" id="L184">        Post post = getPostById(postId);</span>
+<span class="nc" id="L185">        List&lt;Comment&gt; topLevelComments = commentRepository.findByPostAndParentIdIsNullOrderByCreatedAtDesc(post);</span>
+
+<span class="nc" id="L187">        List&lt;Map&lt;String, Object&gt;&gt; result = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L188" title="All 2 branches missed.">        for (Comment comment : topLevelComments) {</span>
+<span class="nc" id="L189">            Map&lt;String, Object&gt; commentMap = commentToMap(comment);</span>
+<span class="nc" id="L190">            List&lt;Comment&gt; subComments = commentRepository.findByParentIdOrderByCreatedAtAsc(comment.getId());</span>
+<span class="nc" id="L191">            List&lt;Map&lt;String, Object&gt;&gt; subCommentList = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L192" title="All 2 branches missed.">            for (Comment sub : subComments) {</span>
+<span class="nc" id="L193">                subCommentList.add(commentToMap(sub));</span>
+<span class="nc" id="L194">            }</span>
+<span class="nc" id="L195">            commentMap.put(&quot;subComments&quot;, subCommentList);</span>
+<span class="nc" id="L196">            result.add(commentMap);</span>
+<span class="nc" id="L197">        }</span>
+<span class="nc" id="L198">        return result;</span>
+    }
+
+    private Map&lt;String, Object&gt; commentToMap(Comment comment) {
+<span class="nc" id="L202">        Map&lt;String, Object&gt; map = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L203">        map.put(&quot;id&quot;, comment.getId());</span>
+<span class="nc" id="L204">        map.put(&quot;post_id&quot;, comment.getPost().getId());</span>
+<span class="nc" id="L205">        map.put(&quot;user_id&quot;, comment.getUser().getId());</span>
+<span class="nc" id="L206">        map.put(&quot;content&quot;, comment.getContent());</span>
+<span class="nc" id="L207">        map.put(&quot;parent_id&quot;, comment.getParentId());</span>
+<span class="nc" id="L208">        map.put(&quot;created_at&quot;, comment.getCreatedAt());</span>
+
+<span class="nc" id="L210">        Map&lt;String, Object&gt; userMap = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L211">        userMap.put(&quot;id&quot;, comment.getUser().getId());</span>
+<span class="nc" id="L212">        userMap.put(&quot;nickname&quot;, comment.getUser().getNickname());</span>
+<span class="nc" id="L213">        userMap.put(&quot;avatar&quot;, comment.getUser().getAvatar());</span>
+<span class="nc" id="L214">        map.put(&quot;user&quot;, userMap);</span>
+
+<span class="nc bnc" id="L216" title="All 2 branches missed.">        if (comment.getReplyToUser() != null) {</span>
+<span class="nc" id="L217">            Map&lt;String, Object&gt; replyToUserMap = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L218">            replyToUserMap.put(&quot;id&quot;, comment.getReplyToUser().getId());</span>
+<span class="nc" id="L219">            replyToUserMap.put(&quot;nickname&quot;, comment.getReplyToUser().getNickname());</span>
+<span class="nc" id="L220">            map.put(&quot;replyToUser&quot;, replyToUserMap);</span>
+        }
+
+<span class="nc" id="L223">        return map;</span>
+    }
+
+    @Transactional
+    public Comment createComment(Long postId, User user, String content, Long parentId) {
+<span class="nc" id="L228">        Post post = getPostById(postId);</span>
+<span class="nc" id="L229">        Comment comment = new Comment();</span>
+<span class="nc" id="L230">        comment.setPost(post);</span>
+<span class="nc" id="L231">        comment.setUser(user);</span>
+<span class="nc" id="L232">        comment.setContent(content);</span>
+
+<span class="nc bnc" id="L234" title="All 2 branches missed.">        if (parentId != null) {</span>
+<span class="nc" id="L235">            Comment parent = commentRepository.findById(parentId)</span>
+<span class="nc" id="L236">                    .orElseThrow(() -&gt; new RuntimeException(&quot;Parent comment not found&quot;));</span>
+
+            // Set replyToUser and replyToCommentId
+<span class="nc" id="L239">            comment.setReplyToUser(parent.getUser());</span>
+<span class="nc" id="L240">            comment.setReplyToCommentId(parent.getId());</span>
+
+            // Flattening: If parent has a parentId, it means it's a sub-comment.
+            // We want to attach the new comment to the ROOT parent.
+<span class="nc bnc" id="L244" title="All 2 branches missed.">            if (parent.getParentId() != null) {</span>
+<span class="nc" id="L245">                comment.setParentId(parent.getParentId());</span>
+            } else {
+<span class="nc" id="L247">                comment.setParentId(parentId);</span>
+            }
+<span class="nc" id="L249">        } else {</span>
+<span class="nc" id="L250">            comment.setParentId(null);</span>
+        }
+<span class="nc" id="L252">        return commentRepository.save(comment);</span>
+    }
+
+    @Transactional
+    public boolean deleteComment(Long commentId, Long userId) {
+<span class="fc" id="L257">        Optional&lt;Comment&gt; commentOpt = commentRepository.findById(commentId);</span>
+<span class="fc bfc" id="L258" title="All 4 branches covered.">        if (commentOpt.isPresent() &amp;&amp; commentOpt.get().getUser().getId().equals(userId)) {</span>
+<span class="fc" id="L259">            commentRepository.delete(commentOpt.get());</span>
+<span class="fc" id="L260">            return true;</span>
+        }
+<span class="fc" id="L262">        return false;</span>
+    }
+
+    public long getCommentCount(Long postId) {
+<span class="nc" id="L266">        Post post = getPostById(postId);</span>
+<span class="nc" id="L267">        return commentRepository.countByPost(post);</span>
+    }
+
+    // User stats methods
+    public Map&lt;String, Long&gt; getUserStats(Long userId, User user) {
+<span class="nc" id="L272">        List&lt;Post&gt; userPosts = postRepository.findByAuthorOrderByCreatedAtDesc(user);</span>
+<span class="nc" id="L273">        long totalLikes = 0;</span>
+<span class="nc" id="L274">        long totalCollections = 0;</span>
+<span class="nc bnc" id="L275" title="All 2 branches missed.">        for (Post post : userPosts) {</span>
+<span class="nc" id="L276">            totalLikes += likeRepository.countByPost(post);</span>
+<span class="nc" id="L277">            totalCollections += collectionRepository.countByPost(post);</span>
+<span class="nc" id="L278">        }</span>
+<span class="nc" id="L279">        Map&lt;String, Long&gt; stats = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L280">        stats.put(&quot;totalLikes&quot;, totalLikes);</span>
+<span class="nc" id="L281">        stats.put(&quot;totalCollections&quot;, totalCollections);</span>
+<span class="nc" id="L282">        return stats;</span>
+    }
+
+    public List&lt;Map&lt;String, Object&gt;&gt; getUserCollections(Long userId, User user) {
+<span class="nc" id="L286">        List&lt;Collection&gt; collections = collectionRepository.findByUser(user);</span>
+<span class="nc" id="L287">        List&lt;Map&lt;String, Object&gt;&gt; result = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L288" title="All 2 branches missed.">        for (Collection c : collections) {</span>
+<span class="nc" id="L289">            Map&lt;String, Object&gt; item = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L290">            item.put(&quot;id&quot;, c.getId());</span>
+<span class="nc" id="L291">            item.put(&quot;post_id&quot;, c.getPost().getId());</span>
+
+<span class="nc" id="L293">            Map&lt;String, Object&gt; postMap = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L294">            Post post = c.getPost();</span>
+<span class="nc" id="L295">            postMap.put(&quot;id&quot;, post.getId());</span>
+<span class="nc" id="L296">            postMap.put(&quot;title&quot;, post.getTitle());</span>
+<span class="nc" id="L297">            postMap.put(&quot;type&quot;, post.getType());</span>
+<span class="nc" id="L298">            postMap.put(&quot;url&quot;, post.getUrl());</span>
+<span class="nc" id="L299">        postMap.put(&quot;imageUrl&quot;, post.getUrl());</span>
+<span class="nc" id="L300">        postMap.put(&quot;coverUrl&quot;, post.getCoverUrl());</span>
+<span class="nc" id="L301">            postMap.put(&quot;author&quot;, post.getAuthor().getNickname());</span>
+<span class="nc" id="L302">            postMap.put(&quot;author_avatar&quot;, post.getAuthor().getAvatar());</span>
+<span class="nc" id="L303">            item.put(&quot;post&quot;, postMap);</span>
+
+<span class="nc" id="L305">            result.add(item);</span>
+<span class="nc" id="L306">        }</span>
+<span class="nc" id="L307">        return result;</span>
+    }
+
+    public List&lt;Map&lt;String, Object&gt;&gt; getUserLikedPosts(Long userId, User user) {
+<span class="nc" id="L311">        List&lt;Like&gt; likes = likeRepository.findByUser(user);</span>
+<span class="nc" id="L312">        List&lt;Map&lt;String, Object&gt;&gt; result = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L313" title="All 2 branches missed.">        for (Like l : likes) {</span>
+<span class="nc" id="L314">            Map&lt;String, Object&gt; item = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L315">            item.put(&quot;id&quot;, l.getId());</span>
+<span class="nc" id="L316">            item.put(&quot;post_id&quot;, l.getPost().getId());</span>
+
+<span class="nc" id="L318">            Map&lt;String, Object&gt; postMap = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L319">            Post post = l.getPost();</span>
+<span class="nc" id="L320">            postMap.put(&quot;id&quot;, post.getId());</span>
+<span class="nc" id="L321">            postMap.put(&quot;title&quot;, post.getTitle());</span>
+<span class="nc" id="L322">            postMap.put(&quot;type&quot;, post.getType());</span>
+<span class="nc" id="L323">            postMap.put(&quot;url&quot;, post.getUrl());</span>
+<span class="nc" id="L324">        postMap.put(&quot;imageUrl&quot;, post.getUrl());</span>
+<span class="nc" id="L325">        postMap.put(&quot;coverUrl&quot;, post.getCoverUrl());</span>
+<span class="nc" id="L326">            postMap.put(&quot;author&quot;, post.getAuthor().getNickname());</span>
+<span class="nc" id="L327">            postMap.put(&quot;author_avatar&quot;, post.getAuthor().getAvatar());</span>
+<span class="nc" id="L328">            item.put(&quot;post&quot;, postMap);</span>
+
+<span class="nc" id="L330">            result.add(item);</span>
+<span class="nc" id="L331">        }</span>
+<span class="nc" id="L332">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
