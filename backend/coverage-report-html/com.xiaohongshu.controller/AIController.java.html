@@ -35,11 +35,11 @@ import java.util.Map;
      */
     @GetMapping(&quot;/summary/{postId}&quot;)
     public ResponseEntity&lt;?&gt; getAiSummary(@PathVariable Long postId) {
-<span class="nc" id="L38">        Post post = postService.getPostById(postId);</span>
-<span class="nc bnc" id="L39" title="All 2 branches missed.">        if (post == null) {</span>
-<span class="nc" id="L40">            return ResponseEntity.notFound().build();</span>
+<span class="fc" id="L38">        Post post = postService.getPostById(postId);</span>
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        if (post == null) {</span>
+<span class="fc" id="L40">            return ResponseEntity.notFound().build();</span>
         }
-<span class="nc bnc" id="L42" title="All 2 branches missed.">        return ResponseEntity.ok(Map.of(&quot;ai_summary&quot;, post.getAiSummary() != null ? post.getAiSummary() : &quot;&quot;));</span>
+<span class="fc bfc" id="L42" title="All 2 branches covered.">        return ResponseEntity.ok(Map.of(&quot;ai_summary&quot;, post.getAiSummary() != null ? post.getAiSummary() : &quot;&quot;));</span>
     }
 
     /**
@@ -49,26 +49,26 @@ import java.util.Map;
     @Transactional
     public ResponseEntity&lt;?&gt; generateAiSummary(@RequestBody Map&lt;String, Object&gt; request) {
         try {
-<span class="nc" id="L52">            Long postId = ((Number) request.get(&quot;postId&quot;)).longValue();</span>
-<span class="nc" id="L53">            String title = (String) request.get(&quot;title&quot;);</span>
-<span class="nc" id="L54">            String content = (String) request.get(&quot;content&quot;);</span>
+<span class="fc" id="L52">            Long postId = ((Number) request.get(&quot;postId&quot;)).longValue();</span>
+<span class="fc" id="L53">            String title = (String) request.get(&quot;title&quot;);</span>
+<span class="fc" id="L54">            String content = (String) request.get(&quot;content&quot;);</span>
 
-<span class="nc" id="L56">            Post post = postService.getPostById(postId);</span>
-<span class="nc bnc" id="L57" title="All 2 branches missed.">            if (post == null) {</span>
-<span class="nc" id="L58">                return ResponseEntity.notFound().build();</span>
+<span class="fc" id="L56">            Post post = postService.getPostById(postId);</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">            if (post == null) {</span>
+<span class="fc" id="L58">                return ResponseEntity.notFound().build();</span>
             }
 
             // 调用AI生成总结
-<span class="nc" id="L62">            String summary = aiService.generateSummary(title, content);</span>
+<span class="fc" id="L62">            String summary = aiService.generateSummary(title, content);</span>
 
             // 使用EntityManager直接更新
-<span class="nc" id="L65">            post.setAiSummary(summary);</span>
-<span class="nc" id="L66">            entityManager.merge(post);</span>
+<span class="fc" id="L65">            post.setAiSummary(summary);</span>
+<span class="fc" id="L66">            entityManager.merge(post);</span>
 
-<span class="nc" id="L68">            return ResponseEntity.ok(Map.of(&quot;ai_summary&quot;, summary));</span>
-<span class="nc" id="L69">        } catch (Exception e) {</span>
-<span class="nc" id="L70">            e.printStackTrace();</span>
-<span class="nc" id="L71">            return ResponseEntity.badRequest().body(Map.of(&quot;message&quot;, &quot;AI总结生成失败: &quot; + e.getMessage()));</span>
+<span class="fc" id="L68">            return ResponseEntity.ok(Map.of(&quot;ai_summary&quot;, summary));</span>
+<span class="fc" id="L69">        } catch (Exception e) {</span>
+<span class="fc" id="L70">            e.printStackTrace();</span>
+<span class="fc" id="L71">            return ResponseEntity.badRequest().body(Map.of(&quot;message&quot;, &quot;AI总结生成失败: &quot; + e.getMessage()));</span>
         }
     }
 }

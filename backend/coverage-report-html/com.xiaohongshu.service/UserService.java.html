@@ -51,10 +51,10 @@ import java.util.Optional;
     }
 
     public User updateUser(User user) {
-<span class="nc bnc" id="L54" title="All 2 branches missed.">        if (!userRepository.existsById(user.getId())) {</span>
-<span class="nc" id="L55">            throw new RuntimeException(&quot;User not found&quot;);</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        if (!userRepository.existsById(user.getId())) {</span>
+<span class="fc" id="L55">            throw new RuntimeException(&quot;User not found&quot;);</span>
         }
-<span class="nc" id="L57">        return userRepository.save(user);</span>
+<span class="fc" id="L57">        return userRepository.save(user);</span>
     }
 
     // Follow methods
@@ -97,44 +97,44 @@ import java.util.Optional;
     }
 
     public List&lt;Map&lt;String, Object&gt;&gt; getFollowers(Long userId) {
-<span class="nc" id="L100">        User user = getUserById(userId);</span>
-<span class="nc" id="L101">        List&lt;Follow&gt; follows = followRepository.findByFollowingOrderByCreatedAtDesc(user);</span>
-<span class="nc" id="L102">        List&lt;Map&lt;String, Object&gt;&gt; result = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L103" title="All 2 branches missed.">        for (Follow f : follows) {</span>
-<span class="nc" id="L104">            result.add(userToMap(f.getFollower()));</span>
-<span class="nc" id="L105">        }</span>
-<span class="nc" id="L106">        return result;</span>
+<span class="fc" id="L100">        User user = getUserById(userId);</span>
+<span class="fc" id="L101">        List&lt;Follow&gt; follows = followRepository.findByFollowingOrderByCreatedAtDesc(user);</span>
+<span class="fc" id="L102">        List&lt;Map&lt;String, Object&gt;&gt; result = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">        for (Follow f : follows) {</span>
+<span class="fc" id="L104">            result.add(userToMap(f.getFollower()));</span>
+<span class="fc" id="L105">        }</span>
+<span class="fc" id="L106">        return result;</span>
     }
 
     public List&lt;Map&lt;String, Object&gt;&gt; getFollowing(Long userId) {
-<span class="nc" id="L110">        User user = getUserById(userId);</span>
-<span class="nc" id="L111">        List&lt;Follow&gt; follows = followRepository.findByFollower(user);</span>
-<span class="nc" id="L112">        List&lt;Map&lt;String, Object&gt;&gt; result = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L113" title="All 2 branches missed.">        for (Follow f : follows) {</span>
-<span class="nc" id="L114">            result.add(userToMap(f.getFollowing()));</span>
-<span class="nc" id="L115">        }</span>
-<span class="nc" id="L116">        return result;</span>
+<span class="fc" id="L110">        User user = getUserById(userId);</span>
+<span class="fc" id="L111">        List&lt;Follow&gt; follows = followRepository.findByFollower(user);</span>
+<span class="fc" id="L112">        List&lt;Map&lt;String, Object&gt;&gt; result = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L113" title="All 2 branches covered.">        for (Follow f : follows) {</span>
+<span class="fc" id="L114">            result.add(userToMap(f.getFollowing()));</span>
+<span class="fc" id="L115">        }</span>
+<span class="fc" id="L116">        return result;</span>
     }
 
     public long getFollowersCount(Long userId) {
-<span class="nc" id="L120">        User user = getUserById(userId);</span>
-<span class="nc" id="L121">        return followRepository.countByFollowing(user);</span>
+<span class="fc" id="L120">        User user = getUserById(userId);</span>
+<span class="fc" id="L121">        return followRepository.countByFollowing(user);</span>
     }
 
     public long getFollowingCount(Long userId) {
-<span class="nc" id="L125">        User user = getUserById(userId);</span>
-<span class="nc" id="L126">        return followRepository.countByFollower(user);</span>
+<span class="fc" id="L125">        User user = getUserById(userId);</span>
+<span class="fc" id="L126">        return followRepository.countByFollower(user);</span>
     }
 
     private Map&lt;String, Object&gt; userToMap(User user) {
-<span class="nc" id="L130">        Map&lt;String, Object&gt; map = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L131">        map.put(&quot;id&quot;, user.getId());</span>
-<span class="nc" id="L132">        map.put(&quot;username&quot;, user.getUsername());</span>
-<span class="nc" id="L133">        map.put(&quot;nickname&quot;, user.getNickname());</span>
-<span class="nc" id="L134">        map.put(&quot;avatar&quot;, user.getAvatar());</span>
-<span class="nc" id="L135">        map.put(&quot;bio&quot;, user.getBio());</span>
-<span class="nc" id="L136">        map.put(&quot;gender&quot;, user.getGender());</span>
-<span class="nc" id="L137">        return map;</span>
+<span class="fc" id="L130">        Map&lt;String, Object&gt; map = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L131">        map.put(&quot;id&quot;, user.getId());</span>
+<span class="fc" id="L132">        map.put(&quot;username&quot;, user.getUsername());</span>
+<span class="fc" id="L133">        map.put(&quot;nickname&quot;, user.getNickname());</span>
+<span class="fc" id="L134">        map.put(&quot;avatar&quot;, user.getAvatar());</span>
+<span class="fc" id="L135">        map.put(&quot;bio&quot;, user.getBio());</span>
+<span class="fc" id="L136">        map.put(&quot;gender&quot;, user.getGender());</span>
+<span class="fc" id="L137">        return map;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
