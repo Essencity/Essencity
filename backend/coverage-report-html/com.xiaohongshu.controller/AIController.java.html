@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AIController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">xiaohongshu</a> &gt; <a href="index.source.html" class="el_package">com.xiaohongshu.controller</a> &gt; <span class="el_source">AIController.java</span></div><h1>AIController.java</h1><pre class="source lang-java linenums">package com.xiaohongshu.controller;
+
+import com.xiaohongshu.entity.Post;
+import com.xiaohongshu.repository.PostRepository;
+import com.xiaohongshu.service.AIService;
+import com.xiaohongshu.service.PostService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
+@RestController
+@RequestMapping(&quot;/ai&quot;)
+@CrossOrigin(origins = &quot;http://localhost:5173&quot;, allowCredentials = &quot;true&quot;)
+<span class="fc" id="L19">public class AIController {</span>
+
+    @Autowired
+    private AIService aiService;
+
+    @Autowired
+    private PostService postService;
+
+    @Autowired
+    private PostRepository postRepository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    /**
+     * 获取帖子的AI总结
+     */
+    @GetMapping(&quot;/summary/{postId}&quot;)
+    public ResponseEntity&lt;?&gt; getAiSummary(@PathVariable Long postId) {
+<span class="fc" id="L38">        Post post = postService.getPostById(postId);</span>
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        if (post == null) {</span>
+<span class="fc" id="L40">            return ResponseEntity.notFound().build();</span>
+        }
+<span class="fc bfc" id="L42" title="All 2 branches covered.">        return ResponseEntity.ok(Map.of(&quot;ai_summary&quot;, post.getAiSummary() != null ? post.getAiSummary() : &quot;&quot;));</span>
+    }
+
+    /**
+     * 生成AI总结
+     */
+    @PostMapping(&quot;/summary&quot;)
+    @Transactional
+    public ResponseEntity&lt;?&gt; generateAiSummary(@RequestBody Map&lt;String, Object&gt; request) {
+        try {
+<span class="fc" id="L52">            Long postId = ((Number) request.get(&quot;postId&quot;)).longValue();</span>
+<span class="fc" id="L53">            String title = (String) request.get(&quot;title&quot;);</span>
+<span class="fc" id="L54">            String content = (String) request.get(&quot;content&quot;);</span>
+
+<span class="fc" id="L56">            Post post = postService.getPostById(postId);</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">            if (post == null) {</span>
+<span class="fc" id="L58">                return ResponseEntity.notFound().build();</span>
+            }
+
+            // 调用AI生成总结
+<span class="fc" id="L62">            String summary = aiService.generateSummary(title, content);</span>
+
+            // 使用EntityManager直接更新
+<span class="fc" id="L65">            post.setAiSummary(summary);</span>
+<span class="fc" id="L66">            entityManager.merge(post);</span>
+
+<span class="fc" id="L68">            return ResponseEntity.ok(Map.of(&quot;ai_summary&quot;, summary));</span>
+<span class="fc" id="L69">        } catch (Exception e) {</span>
+<span class="fc" id="L70">            e.printStackTrace();</span>
+<span class="fc" id="L71">            return ResponseEntity.badRequest().body(Map.of(&quot;message&quot;, &quot;AI总结生成失败: &quot; + e.getMessage()));</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

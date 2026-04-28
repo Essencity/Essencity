@@ -1,6 +1,6 @@
-# OpenCode
+# Claude Code / OpenCode
+.claude/settings.local.json
 .opencode/
-.config/opencode/
 
 # IDE
 .idea/
@@ -27,10 +27,12 @@ build/
 backend/target/
 backend/*.log
 backend/src/main/resources/application-secrets.properties
+
+# Uploads (runtime generated)
 uploads/
+test-uploads/
 
 # Environment
 .env
 .env.local
 .env.*.local
-.claude/settings.local.json
