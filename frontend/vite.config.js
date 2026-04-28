@@ -2,7 +2,6 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
   resolve: {
@@ -23,16 +22,29 @@ export default defineConfig({
     }
   },
   build: {
-    // 生产构建优化配置
-    minify: 'esbuild', // 使用默认的esbuild压缩，无需额外安装依赖
+    minify: 'esbuild',
     rollupOptions: {
       output: {
-        // 静态资源分类打包
         chunkFileNames: 'assets/js/[name]-[hash].js',
         entryFileNames: 'assets/js/[name]-[hash].js',
         assetFileNames: 'assets/[ext]/[name]-[hash].[ext]'
       }
     }
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/setupTests.js',
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      reportsDirectory: './coverage',
+      exclude: [
+        'node_modules/**',
+        'src/setupTests.js',
+        '**/*.spec.js',
+        '**/*.md'
+      ]
+    }
   }
 })
-
