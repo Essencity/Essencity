@@ -68,6 +68,9 @@
 						<goals>
 							<goal>prepare-agent</goal>
 						</goals>
+						<configuration>
+							<destFile>${java.io.tmpdir}/jacoco-essencity.exec</destFile>
+						</configuration>
 					</execution>
 					<execution>
 						<id>report</id>
@@ -75,6 +78,9 @@
 						<goals>
 							<goal>report</goal>
 						</goals>
+						<configuration>
+							<dataFile>${java.io.tmpdir}/jacoco-essencity.exec</dataFile>
+						</configuration>
 					</execution>
 					<execution>
 						<id>check</id>
@@ -83,6 +89,7 @@
 							<goal>check</goal>
 						</goals>
 						<configuration>
+							<dataFile>${java.io.tmpdir}/jacoco-essencity.exec</dataFile>
 							<rules>
 								<rule>
 									<element>BUNDLE</element>
@@ -94,6 +101,19 @@
 											<counter>LINE</counter>
 											<value>COVEREDRATIO</value>
 											<minimum>0.70</minimum>
+										</limit>
+									</limits>
+								</rule>
+								<rule>
+									<element>BUNDLE</element>
+									<includes>
+										<include>com.xiaohongshu.controller.*</include>
+									</includes>
+									<limits>
+										<limit>
+											<counter>LINE</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>0.60</minimum>
 										</limit>
 									</limits>
 								</rule>

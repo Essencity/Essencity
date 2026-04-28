@@ -40,23 +40,23 @@ import java.util.Optional;
     @Transactional
     public Post updatePost(Long id, Post updatedPost) {
 <span class="fc" id="L42">        Post post = getPostById(id);</span>
-<span class="pc bpc" id="L43" title="1 of 2 branches missed.">        if (updatedPost.getTitle() != null) {</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">        if (updatedPost.getTitle() != null) {</span>
 <span class="fc" id="L44">            post.setTitle(updatedPost.getTitle());</span>
         }
 <span class="fc bfc" id="L46" title="All 2 branches covered.">        if (updatedPost.getDescription() != null) {</span>
 <span class="fc" id="L47">            post.setDescription(updatedPost.getDescription());</span>
         }
-<span class="pc bpc" id="L49" title="1 of 2 branches missed.">        if (updatedPost.getType() != null) {</span>
-<span class="nc" id="L50">            post.setType(updatedPost.getType());</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        if (updatedPost.getType() != null) {</span>
+<span class="fc" id="L50">            post.setType(updatedPost.getType());</span>
         }
-<span class="pc bpc" id="L52" title="1 of 2 branches missed.">        if (updatedPost.getUrl() != null) {</span>
-<span class="nc" id="L53">            post.setUrl(updatedPost.getUrl());</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        if (updatedPost.getUrl() != null) {</span>
+<span class="fc" id="L53">            post.setUrl(updatedPost.getUrl());</span>
         }
-<span class="pc bpc" id="L55" title="1 of 2 branches missed.">        if (updatedPost.getCoverUrl() != null) {</span>
-<span class="nc" id="L56">            post.setCoverUrl(updatedPost.getCoverUrl());</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">        if (updatedPost.getCoverUrl() != null) {</span>
+<span class="fc" id="L56">            post.setCoverUrl(updatedPost.getCoverUrl());</span>
         }
-<span class="pc bpc" id="L58" title="1 of 2 branches missed.">        if (updatedPost.getTag() != null) {</span>
-<span class="nc" id="L59">            post.setTag(updatedPost.getTag());</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if (updatedPost.getTag() != null) {</span>
+<span class="fc" id="L59">            post.setTag(updatedPost.getTag());</span>
         }
 <span class="fc" id="L61">        return postRepository.save(post);</span>
     }
@@ -74,7 +74,7 @@ import java.util.Optional;
     }
 
     public List&lt;Post&gt; searchPostsByTag(String tag, String keyword) {
-<span class="nc" id="L77">        return postRepository.findByTagAndTitleContainingOrderByCreatedAtDesc(tag, keyword);</span>
+<span class="fc" id="L77">        return postRepository.findByTagAndTitleContainingOrderByCreatedAtDesc(tag, keyword);</span>
     }
 
     public Post getPostById(Long id) {
@@ -83,16 +83,16 @@ import java.util.Optional;
 
     @Transactional
     public void deletePost(Long id) {
-<span class="nc" id="L86">        Post post = getPostById(id);</span>
+<span class="fc" id="L86">        Post post = getPostById(id);</span>
         // 删除关联的评论、点赞和收藏
-<span class="nc" id="L88">        commentRepository.deleteAll(commentRepository.findByPostOrderByCreatedAtDesc(post));</span>
-<span class="nc" id="L89">        likeRepository.deleteAll(likeRepository.findByPost(post));</span>
-<span class="nc" id="L90">        collectionRepository.deleteAll(collectionRepository.findByPost(post));</span>
-<span class="nc" id="L91">        postRepository.delete(post);</span>
-<span class="nc" id="L92">    }</span>
+<span class="fc" id="L88">        commentRepository.deleteAll(commentRepository.findByPostOrderByCreatedAtDesc(post));</span>
+<span class="fc" id="L89">        likeRepository.deleteAll(likeRepository.findByPost(post));</span>
+<span class="fc" id="L90">        collectionRepository.deleteAll(collectionRepository.findByPost(post));</span>
+<span class="fc" id="L91">        postRepository.delete(post);</span>
+<span class="fc" id="L92">    }</span>
 
     public List&lt;Post&gt; getPostsByAuthor(User author) {
-<span class="nc" id="L95">        return postRepository.findByAuthorOrderByCreatedAtDesc(author);</span>
+<span class="fc" id="L95">        return postRepository.findByAuthorOrderByCreatedAtDesc(author);</span>
     }
 
     // Like methods
@@ -144,20 +144,20 @@ import java.util.Optional;
 
     @Transactional
     public void collectPost(User user, Long postId) {
-<span class="nc" id="L147">        Post post = getPostById(postId);</span>
-<span class="nc bnc" id="L148" title="All 2 branches missed.">        if (!collectionRepository.existsByUserAndPost(user, post)) {</span>
-<span class="nc" id="L149">            Collection collection = new Collection();</span>
-<span class="nc" id="L150">            collection.setUser(user);</span>
-<span class="nc" id="L151">            collection.setPost(post);</span>
-<span class="nc" id="L152">            collectionRepository.save(collection);</span>
+<span class="fc" id="L147">        Post post = getPostById(postId);</span>
+<span class="fc bfc" id="L148" title="All 2 branches covered.">        if (!collectionRepository.existsByUserAndPost(user, post)) {</span>
+<span class="fc" id="L149">            Collection collection = new Collection();</span>
+<span class="fc" id="L150">            collection.setUser(user);</span>
+<span class="fc" id="L151">            collection.setPost(post);</span>
+<span class="fc" id="L152">            collectionRepository.save(collection);</span>
         }
-<span class="nc" id="L154">    }</span>
+<span class="fc" id="L154">    }</span>
 
     @Transactional
     public void uncollectPost(User user, Long postId) {
-<span class="nc" id="L158">        Post post = getPostById(postId);</span>
-<span class="nc" id="L159">        collectionRepository.findByUserAndPost(user, post).ifPresent(collectionRepository::delete);</span>
-<span class="nc" id="L160">    }</span>
+<span class="fc" id="L158">        Post post = getPostById(postId);</span>
+<span class="fc" id="L159">        collectionRepository.findByUserAndPost(user, post).ifPresent(collectionRepository::delete);</span>
+<span class="fc" id="L160">    }</span>
 
     public long getLikeCount(Long postId) {
 <span class="fc" id="L163">        Post post = getPostById(postId);</span>
@@ -175,8 +175,8 @@ import java.util.Optional;
     }
 
     public boolean isCollectedBy(User user, Long postId) {
-<span class="nc" id="L178">        Post post = getPostById(postId);</span>
-<span class="nc" id="L179">        return collectionRepository.existsByUserAndPost(user, post);</span>
+<span class="fc" id="L178">        Post post = getPostById(postId);</span>
+<span class="fc" id="L179">        return collectionRepository.existsByUserAndPost(user, post);</span>
     }
 
     // Comment methods
@@ -263,23 +263,23 @@ import java.util.Optional;
     }
 
     public long getCommentCount(Long postId) {
-<span class="nc" id="L266">        Post post = getPostById(postId);</span>
-<span class="nc" id="L267">        return commentRepository.countByPost(post);</span>
+<span class="fc" id="L266">        Post post = getPostById(postId);</span>
+<span class="fc" id="L267">        return commentRepository.countByPost(post);</span>
     }
 
     // User stats methods
     public Map&lt;String, Long&gt; getUserStats(Long userId, User user) {
-<span class="nc" id="L272">        List&lt;Post&gt; userPosts = postRepository.findByAuthorOrderByCreatedAtDesc(user);</span>
-<span class="nc" id="L273">        long totalLikes = 0;</span>
-<span class="nc" id="L274">        long totalCollections = 0;</span>
-<span class="nc bnc" id="L275" title="All 2 branches missed.">        for (Post post : userPosts) {</span>
-<span class="nc" id="L276">            totalLikes += likeRepository.countByPost(post);</span>
-<span class="nc" id="L277">            totalCollections += collectionRepository.countByPost(post);</span>
-<span class="nc" id="L278">        }</span>
-<span class="nc" id="L279">        Map&lt;String, Long&gt; stats = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L280">        stats.put(&quot;totalLikes&quot;, totalLikes);</span>
-<span class="nc" id="L281">        stats.put(&quot;totalCollections&quot;, totalCollections);</span>
-<span class="nc" id="L282">        return stats;</span>
+<span class="fc" id="L272">        List&lt;Post&gt; userPosts = postRepository.findByAuthorOrderByCreatedAtDesc(user);</span>
+<span class="fc" id="L273">        long totalLikes = 0;</span>
+<span class="fc" id="L274">        long totalCollections = 0;</span>
+<span class="fc bfc" id="L275" title="All 2 branches covered.">        for (Post post : userPosts) {</span>
+<span class="fc" id="L276">            totalLikes += likeRepository.countByPost(post);</span>
+<span class="fc" id="L277">            totalCollections += collectionRepository.countByPost(post);</span>
+<span class="fc" id="L278">        }</span>
+<span class="fc" id="L279">        Map&lt;String, Long&gt; stats = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L280">        stats.put(&quot;totalLikes&quot;, totalLikes);</span>
+<span class="fc" id="L281">        stats.put(&quot;totalCollections&quot;, totalCollections);</span>
+<span class="fc" id="L282">        return stats;</span>
     }
 
     public List&lt;Map&lt;String, Object&gt;&gt; getUserCollections(Long userId, User user) {

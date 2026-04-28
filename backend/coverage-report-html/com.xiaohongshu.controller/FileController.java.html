@@ -24,44 +24,44 @@ public class FileController {
 
     private final Path fileStorageLocation;
 
-<span class="nc" id="L27">    public FileController(@Value(&quot;${file.upload-dir}&quot;) String uploadDir) {</span>
-<span class="nc" id="L28">        this.fileStorageLocation = Paths.get(uploadDir)</span>
-<span class="nc" id="L29">                .toAbsolutePath()</span>
-<span class="nc" id="L30">                .normalize();</span>
+<span class="fc" id="L27">    public FileController(@Value(&quot;${file.upload-dir}&quot;) String uploadDir) {</span>
+<span class="fc" id="L28">        this.fileStorageLocation = Paths.get(uploadDir)</span>
+<span class="fc" id="L29">                .toAbsolutePath()</span>
+<span class="fc" id="L30">                .normalize();</span>
 
         try {
-<span class="nc" id="L33">            Files.createDirectories(this.fileStorageLocation);</span>
+<span class="fc" id="L33">            Files.createDirectories(this.fileStorageLocation);</span>
 <span class="nc" id="L34">        } catch (IOException e) {</span>
 <span class="nc" id="L35">            throw new RuntimeException(&quot;Could not create upload directory!&quot;, e);</span>
-<span class="nc" id="L36">        }</span>
-<span class="nc" id="L37">    }</span>
+<span class="fc" id="L36">        }</span>
+<span class="fc" id="L37">    }</span>
 
     @GetMapping(&quot;/test&quot;)
     public ResponseEntity&lt;String&gt; test() {
-<span class="nc" id="L41">        return ResponseEntity.ok(&quot;FileController is working!&quot;);</span>
+<span class="fc" id="L41">        return ResponseEntity.ok(&quot;FileController is working!&quot;);</span>
     }
 
     @GetMapping(&quot;/debug/{fileName:.+}&quot;)
     public ResponseEntity&lt;String&gt; debugPath(@PathVariable String fileName) {
-<span class="nc" id="L46">        Path filePath = this.fileStorageLocation.resolve(fileName).normalize();</span>
-<span class="nc" id="L47">        return ResponseEntity.ok(&quot;Resolved path: &quot; + filePath.toAbsolutePath().toString() + &quot;, Exists: &quot;</span>
-<span class="nc" id="L48">                + java.nio.file.Files.exists(filePath));</span>
+<span class="fc" id="L46">        Path filePath = this.fileStorageLocation.resolve(fileName).normalize();</span>
+<span class="fc" id="L47">        return ResponseEntity.ok(&quot;Resolved path: &quot; + filePath.toAbsolutePath().toString() + &quot;, Exists: &quot;</span>
+<span class="fc" id="L48">                + java.nio.file.Files.exists(filePath));</span>
     }
 
     @GetMapping(&quot;/{fileName:.+}&quot;)
     public ResponseEntity&lt;Resource&gt; downloadFile(@PathVariable String fileName) {
         try {
-<span class="nc" id="L54">            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();</span>
-<span class="nc" id="L55">            Resource resource = new UrlResource(filePath.toUri());</span>
+<span class="fc" id="L54">            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();</span>
+<span class="fc" id="L55">            Resource resource = new UrlResource(filePath.toUri());</span>
 
-<span class="nc bnc" id="L57" title="All 2 branches missed.">            if (resource.exists()) {</span>
-<span class="nc" id="L58">                String contentType = &quot;application/octet-stream&quot;;</span>
-<span class="nc" id="L59">                String lowerFileName = fileName.toLowerCase();</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">            if (resource.exists()) {</span>
+<span class="fc" id="L58">                String contentType = &quot;application/octet-stream&quot;;</span>
+<span class="fc" id="L59">                String lowerFileName = fileName.toLowerCase();</span>
 
-<span class="nc bnc" id="L61" title="All 4 branches missed.">                if (lowerFileName.endsWith(&quot;.jpg&quot;) || lowerFileName.endsWith(&quot;.jpeg&quot;)) {</span>
-<span class="nc" id="L62">                    contentType = &quot;image/jpeg&quot;;</span>
-<span class="nc bnc" id="L63" title="All 2 branches missed.">                } else if (lowerFileName.endsWith(&quot;.png&quot;)) {</span>
-<span class="nc" id="L64">                    contentType = &quot;image/png&quot;;</span>
+<span class="pc bpc" id="L61" title="1 of 4 branches missed.">                if (lowerFileName.endsWith(&quot;.jpg&quot;) || lowerFileName.endsWith(&quot;.jpeg&quot;)) {</span>
+<span class="fc" id="L62">                    contentType = &quot;image/jpeg&quot;;</span>
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">                } else if (lowerFileName.endsWith(&quot;.png&quot;)) {</span>
+<span class="fc" id="L64">                    contentType = &quot;image/png&quot;;</span>
 <span class="nc bnc" id="L65" title="All 2 branches missed.">                } else if (lowerFileName.endsWith(&quot;.gif&quot;)) {</span>
 <span class="nc" id="L66">                    contentType = &quot;image/gif&quot;;</span>
 <span class="nc bnc" id="L67" title="All 2 branches missed.">                } else if (lowerFileName.endsWith(&quot;.mp4&quot;)) {</span>
@@ -70,11 +70,11 @@ public class FileController {
 <span class="nc" id="L70">                    contentType = &quot;image/svg+xml&quot;;</span>
                 }
 
-<span class="nc" id="L73">                return ResponseEntity.ok()</span>
-<span class="nc" id="L74">                        .contentType(MediaType.parseMediaType(contentType))</span>
-<span class="nc" id="L75">                        .body(resource);</span>
+<span class="fc" id="L73">                return ResponseEntity.ok()</span>
+<span class="fc" id="L74">                        .contentType(MediaType.parseMediaType(contentType))</span>
+<span class="fc" id="L75">                        .body(resource);</span>
             } else {
-<span class="nc" id="L77">                return ResponseEntity.status(404).body(null);</span>
+<span class="fc" id="L77">                return ResponseEntity.status(404).body(null);</span>
                 // For debugging:
                 // return ResponseEntity.status(404).body(new UrlResource(Paths.get(&quot;File not
                 // found: &quot; + filePath.toString()).toUri()));
@@ -92,16 +92,16 @@ public class FileController {
     public ResponseEntity&lt;?&gt; uploadFile(
             @org.springframework.web.bind.annotation.RequestParam(&quot;file&quot;) org.springframework.web.multipart.MultipartFile file) {
         try {
-<span class="nc bnc" id="L95" title="All 2 branches missed.">            if (file.isEmpty()) {</span>
-<span class="nc" id="L96">                return ResponseEntity.badRequest().body(&quot;File is empty&quot;);</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">            if (file.isEmpty()) {</span>
+<span class="fc" id="L96">                return ResponseEntity.badRequest().body(&quot;File is empty&quot;);</span>
             }
-<span class="nc" id="L98">            String fileName = System.currentTimeMillis() + &quot;_&quot; + file.getOriginalFilename();</span>
-<span class="nc" id="L99">            Path targetLocation = this.fileStorageLocation.resolve(fileName);</span>
-<span class="nc" id="L100">            java.nio.file.Files.copy(file.getInputStream(), targetLocation,</span>
+<span class="fc" id="L98">            String fileName = System.currentTimeMillis() + &quot;_&quot; + file.getOriginalFilename();</span>
+<span class="fc" id="L99">            Path targetLocation = this.fileStorageLocation.resolve(fileName);</span>
+<span class="fc" id="L100">            java.nio.file.Files.copy(file.getInputStream(), targetLocation,</span>
                     java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 
-<span class="nc" id="L103">            String fileUrl = &quot;/uploads/&quot; + fileName;</span>
-<span class="nc" id="L104">            return ResponseEntity.ok(java.util.Map.of(&quot;url&quot;, fileUrl));</span>
+<span class="fc" id="L103">            String fileUrl = &quot;/uploads/&quot; + fileName;</span>
+<span class="fc" id="L104">            return ResponseEntity.ok(java.util.Map.of(&quot;url&quot;, fileUrl));</span>
 <span class="nc" id="L105">        } catch (java.io.IOException e) {</span>
 <span class="nc" id="L106">            return ResponseEntity.badRequest().body(&quot;Failed to upload file: &quot; + e.getMessage());</span>
         }
