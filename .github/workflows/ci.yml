@@ -9,6 +9,9 @@ on:
 jobs:
   backend:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
       - uses: actions/checkout@v4
@@ -25,14 +28,19 @@ jobs:
         working-directory: backend
 
       - name: Upload backend coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
+          use_oidc: true
           files: backend/target/site/jacoco/jacoco.xml
           flags: backend
-          fail_ci_if_error: false
+          fail_ci_if_error: true
+          verbose: true
 
   frontend:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
       - uses: actions/checkout@v4
@@ -58,8 +66,10 @@ jobs:
           VITE_API_URL: http://localhost:3000
 
       - name: Upload frontend coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
+          use_oidc: true
           files: frontend/coverage/lcov.info
           flags: frontend
-          fail_ci_if_error: false
+          fail_ci_if_error: true
+          verbose: true
