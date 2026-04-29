@@ -1,0 +1,23 @@
+comment: false
+
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 2%
+    patch:
+      default:
+        target: auto
+        threshold: 3%
+
+flag_management:
+  default_rules:
+    carryforward: true
+  individual_flags:
+    - name: backend
+      paths:
+        - backend/
+    - name: frontend
+      paths:
+        - frontend/
