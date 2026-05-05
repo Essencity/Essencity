@@ -9,11 +9,6 @@ on:
 jobs:
   backend:
     runs-on: ubuntu-latest
-    # OIDC 免 Token 上传必须要有下面这个权限配置
-    permissions:
-      id-token: write
-      contents: read
-
     steps:
       - uses: actions/checkout@v4
 
@@ -28,20 +23,20 @@ jobs:
         run: mvn test -B
         working-directory: backend
 
-      # 使用 OIDC 上传测试结果 (Test Analytics)
+      # 使用 Token 上传测试结果 (Test Analytics)
       - name: Upload backend test results to Codecov
         if: ${{ !cancelled() }}
         uses: codecov/codecov-action@v5
         with:
-          use_oidc: true
+          token: ${{ secrets.CODECOV_TOKEN }}
           flags: backend
           report_type: test_results
 
-      # 使用 OIDC 上传代码覆盖率
+      # 使用 Token 上传代码覆盖率
       - name: Upload backend coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
-          use_oidc: true
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: backend/target/site/jacoco/jacoco.xml
           flags: backend
           fail_ci_if_error: true
@@ -49,11 +44,6 @@ jobs:
 
   frontend:
     runs-on: ubuntu-latest
-    # OIDC 免 Token 上传必须要有下面这个权限配置
-    permissions:
-      id-token: write
-      contents: read
-
     steps:
       - uses: actions/checkout@v4
 
@@ -77,20 +67,20 @@ jobs:
         env:
           VITE_API_URL: http://localhost:3000
 
-      # 使用 OIDC 上传测试结果 (Test Analytics)
+      # 使用 Token 上传测试结果 (Test Analytics)
       - name: Upload frontend test results to Codecov
         if: ${{ !cancelled() }}
         uses: codecov/codecov-action@v5
         with:
-          use_oidc: true
+          token: ${{ secrets.CODECOV_TOKEN }}
           flags: frontend
           report_type: test_results
 
-      # 使用 OIDC 上传代码覆盖率
+      # 使用 Token 上传代码覆盖率
       - name: Upload frontend coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
-          use_oidc: true
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: frontend/coverage/lcov.info
           flags: frontend
           fail_ci_if_error: true

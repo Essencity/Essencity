@@ -1,8 +1,8 @@
 # 🌸 Essencity
 
 [![CI](https://github.com/Essencity/Essencity/actions/workflows/ci.yml/badge.svg)](https://github.com/Essencity/Essencity/actions)
-[![Backend Coverage](https://codecov.io/gh/Essencity/Essencity/branch/main/graph/badge.svg?flag=backend)](https://codecov.io/gh/Essencity/Essencity)
-[![Frontend Coverage](https://codecov.io/gh/Essencity/Essencity/branch/main/graph/badge.svg?flag=frontend)](https://codecov.io/gh/Essencity/Essencity)
+[![Backend Coverage](https://codecov.io/gh/Essencity/Essencity/branch/main/graph/badge.svg?token=7CZVSCDQ4K&flag=backend)](https://codecov.io/gh/Essencity/Essencity)
+[![Frontend Coverage](https://codecov.io/gh/Essencity/Essencity/branch/main/graph/badge.svg?token=7CZVSCDQ4K&flag=frontend)](https://codecov.io/gh/Essencity/Essencity)
 
 <p align="center">
   <img src="https://img.shields.io/badge/Vue-3.x-4FC08D?style=flat-square&logo=vue.js" alt="Vue">
