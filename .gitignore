@@ -28,6 +28,9 @@ backend/target/
 backend/*.log
 backend/src/main/resources/application-secrets.properties
 
+# Test coverage
+frontend/coverage/
+
 # Uploads (runtime generated)
 uploads/
 test-uploads/
