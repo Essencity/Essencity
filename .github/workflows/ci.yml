@@ -64,11 +64,14 @@ jobs:
       - name: Run Frontend Tests & Coverage
         run: |
           echo "开始运行测试..."
-          npx vitest run --reporter=default --reporter=junit --outputFile=junit.xml --coverage
-          echo "测试完成，退出码: $?"
+          npx vitest run --reporter=verbose --reporter=junit --outputFile=junit.xml --coverage 2>&1 || EXIT_CODE=$?
+          echo "测试退出码: ${EXIT_CODE:-0}"
+          exit ${EXIT_CODE:-0}
         working-directory: frontend
         env:
           VITE_API_URL: http://localhost:3000
+          CI: true
+        continue-on-error: true
 
       - name: Check test results
         run: |
