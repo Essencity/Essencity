@@ -1,0 +1,19 @@
+codecov:
+  max_report_age: off
+
+comment: false
+
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 2%
+    patch:
+      default:
+        target: auto
+        threshold: 3%
+
+flag_management:
+  default_rules:
+    carryforward: true

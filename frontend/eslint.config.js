@@ -2,8 +2,11 @@ import js from '@eslint/js'
 import pluginVue from 'eslint-plugin-vue'
 
 export default [
+  {
+    ignores: ['node_modules/**', 'dist/**', 'coverage/**']
+  },
   js.configs.recommended,
-  ...pluginVue.configs['flat/recommended'],
+  ...pluginVue.configs['flat/essential'],
   {
     files: ['**/*.js', '**/*.vue'],
     languageOptions: {
@@ -57,8 +60,5 @@ export default [
     rules: {
       'no-unused-vars': 'off'
     }
-  },
-  {
-    ignores: ['node_modules/', 'dist/', 'coverage/', '*.config.js']
   }
 ]
