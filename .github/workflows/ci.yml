@@ -9,6 +9,11 @@ on:
 jobs:
   backend:
     runs-on: ubuntu-latest
+    # OIDC 免 Token 上传必须要有下面这个权限配置
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
       - uses: actions/checkout@v4
 
@@ -23,19 +28,20 @@ jobs:
         run: mvn test -B
         working-directory: backend
 
-      # 上传测试结果 (Test Analytics)
+      # 使用 OIDC 上传测试结果 (Test Analytics)
       - name: Upload backend test results to Codecov
         if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
+        uses: codecov/codecov-action@v5
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          use_oidc: true
           flags: backend
+          report_type: test_results
 
-      # 上传代码覆盖率
+      # 使用 OIDC 上传代码覆盖率
       - name: Upload backend coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          use_oidc: true
           files: backend/target/site/jacoco/jacoco.xml
           flags: backend
           fail_ci_if_error: true
@@ -43,6 +49,11 @@ jobs:
 
   frontend:
     runs-on: ubuntu-latest
+    # OIDC 免 Token 上传必须要有下面这个权限配置
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
       - uses: actions/checkout@v4
 
@@ -61,25 +72,25 @@ jobs:
         working-directory: frontend
 
       - name: Run Frontend Tests & Coverage
-        # 注意这里的改动：添加了生成 junit.xml 的参数
         run: npx vitest run --reporter=default --reporter=junit --outputFile=junit.xml --coverage
         working-directory: frontend
         env:
           VITE_API_URL: http://localhost:3000
 
-      # 上传测试结果 (Test Analytics)
+      # 使用 OIDC 上传测试结果 (Test Analytics)
       - name: Upload frontend test results to Codecov
         if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
+        uses: codecov/codecov-action@v5
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          use_oidc: true
           flags: frontend
+          report_type: test_results
 
-      # 上传代码覆盖率
+      # 使用 OIDC 上传代码覆盖率
       - name: Upload frontend coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          use_oidc: true
           files: frontend/coverage/lcov.info
           flags: frontend
           fail_ci_if_error: true
