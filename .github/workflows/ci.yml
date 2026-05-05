@@ -27,6 +27,13 @@ jobs:
         run: mvn test -B
         working-directory: backend
 
+      - name: Upload backend test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: backend
+
       - name: Upload backend coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
@@ -60,10 +67,17 @@ jobs:
         working-directory: frontend
 
       - name: Run Frontend Tests & Coverage
-        run: npm test
+        run: npm run test:ci
         working-directory: frontend
         env:
           VITE_API_URL: http://localhost:3000
+
+      - name: Upload frontend test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: frontend
 
       - name: Upload frontend coverage to Codecov
         uses: codecov/codecov-action@v5
