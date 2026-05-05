@@ -98,7 +98,7 @@ export function useSpeech() {
 
     try {
       recognition.start()
-    } catch (err) {
+    } catch (_err) {
       error.value = '启动语音识别失败'
     }
   }

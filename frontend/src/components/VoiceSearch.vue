@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch } from 'vue'
 import { useSpeech } from '@/composables/useSpeech.js'
 
 const props = defineProps({
@@ -48,12 +48,6 @@ const handleSearch = () => {
 const handleClose = () => {
   stopListening()
   emit('close')
-}
-
-const handleKeyup = (e) => {
-  if (e.key === 'Enter') {
-    handleSearch()
-  }
 }
 
 const clearSearch = () => {
