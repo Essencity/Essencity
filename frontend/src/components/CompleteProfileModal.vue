@@ -46,12 +46,16 @@ const handleSubmit = async () => {
   try {
     // 1. Upload Avatar if changed
     let avatarUrl = props.user.avatar
+    const token = localStorage.getItem('token')
+    const authHeaders = token ? { 'Authorization': `Bearer ${token}` } : {}
+
     if (avatarFile.value) {
       const formData = new FormData()
       formData.append('file', avatarFile.value)
 
       const uploadRes = await fetch('/api/uploads', {
         method: 'POST',
+        headers: authHeaders,
         body: formData
       })
 
@@ -63,9 +67,8 @@ const handleSubmit = async () => {
     // 2. Update Profile
     const updateRes = await fetch('/api/auth/profile', {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', ...authHeaders },
       body: JSON.stringify({
-        userId: props.user.id,
         nickname: nickname.value,
         gender: gender.value,
         avatar: avatarUrl

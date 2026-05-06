@@ -1,34 +1,36 @@
 package com.xiaohongshu.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/uploads")
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class FileController {
 
+    private static final Logger log = LoggerFactory.getLogger(FileController.class);
+    private static final Set<String> ALLOWED_TYPES = Set.of(
+            "image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml",
+            "video/mp4", "video/webm", "video/ogg");
+    private static final long MAX_FILE_SIZE = 50 * 1024 * 1024;
+
     private final Path fileStorageLocation;
 
     public FileController(@Value("${file.upload-dir}") String uploadDir) {
-        this.fileStorageLocation = Paths.get(uploadDir)
-                .toAbsolutePath()
-                .normalize();
-
+        this.fileStorageLocation = Paths.get(uploadDir).toAbsolutePath().normalize();
         try {
             Files.createDirectories(this.fileStorageLocation);
         } catch (IOException e) {
@@ -41,69 +43,95 @@ public class FileController {
         return ResponseEntity.ok("FileController is working!");
     }
 
-    @GetMapping("/debug/{fileName:.+}")
-    public ResponseEntity<String> debugPath(@PathVariable String fileName) {
-        Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
-        return ResponseEntity.ok("Resolved path: " + filePath.toAbsolutePath().toString() + ", Exists: "
-                + java.nio.file.Files.exists(filePath));
-    }
-
     @GetMapping("/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {
         try {
-            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
-            Resource resource = new UrlResource(filePath.toUri());
+            Path filePath = fileStorageLocation.resolve(fileName).normalize();
 
-            if (resource.exists()) {
-                String contentType = "application/octet-stream";
-                String lowerFileName = fileName.toLowerCase();
-
-                if (lowerFileName.endsWith(".jpg") || lowerFileName.endsWith(".jpeg")) {
-                    contentType = "image/jpeg";
-                } else if (lowerFileName.endsWith(".png")) {
-                    contentType = "image/png";
-                } else if (lowerFileName.endsWith(".gif")) {
-                    contentType = "image/gif";
-                } else if (lowerFileName.endsWith(".mp4")) {
-                    contentType = "video/mp4";
-                } else if (lowerFileName.endsWith(".svg")) {
-                    contentType = "image/svg+xml";
-                }
-
-                return ResponseEntity.ok()
-                        .contentType(MediaType.parseMediaType(contentType))
-                        .body(resource);
-            } else {
-                return ResponseEntity.status(404).body(null);
-                // For debugging:
-                // return ResponseEntity.status(404).body(new UrlResource(Paths.get("File not
-                // found: " + filePath.toString()).toUri()));
-                // typically we can't return Resource for string message easily without changing
-                // return type.
-                // Let's create a temporary specific endpoint for debug or just trust my
-                // analysis.
+            // 路径遍历防护
+            if (!filePath.startsWith(fileStorageLocation)) {
+                return ResponseEntity.notFound().build();
             }
+
+            Resource resource = new UrlResource(filePath.toUri());
+            if (!resource.exists()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            String contentType = detectContentType(fileName);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .body(resource);
         } catch (MalformedURLException e) {
             return ResponseEntity.badRequest().build();
         }
     }
 
-    @org.springframework.web.bind.annotation.PostMapping("")
+    @PostMapping("")
     public ResponseEntity<?> uploadFile(
-            @org.springframework.web.bind.annotation.RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
+            @RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
         try {
             if (file.isEmpty()) {
-                return ResponseEntity.badRequest().body("File is empty");
+                return ResponseEntity.badRequest().body(java.util.Map.of("message", "文件为空"));
             }
-            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-            Path targetLocation = this.fileStorageLocation.resolve(fileName);
-            java.nio.file.Files.copy(file.getInputStream(), targetLocation,
+            if (file.getSize() > MAX_FILE_SIZE) {
+                return ResponseEntity.badRequest().body(java.util.Map.of("message", "文件大小不能超过50MB"));
+            }
+
+            String contentType = file.getContentType();
+            String originalName = file.getOriginalFilename();
+            if (!isAllowed(contentType, originalName)) {
+                return ResponseEntity.badRequest().body(java.util.Map.of("message", "不支持的文件类型"));
+            }
+
+            // 仅使用 UUID + 安全扩展名
+            String ext = "";
+            if (originalName != null && originalName.contains(".")) {
+                ext = originalName.substring(originalName.lastIndexOf("."));
+                if (!ext.toLowerCase().matches("\\.(jpg|jpeg|png|gif|webp|svg|mp4|webm|ogg)")) {
+                    return ResponseEntity.badRequest().body(java.util.Map.of("message", "不支持的文件格式"));
+                }
+            }
+            String fileName = java.util.UUID.randomUUID().toString() + ext;
+            Path targetLocation = fileStorageLocation.resolve(fileName);
+
+            if (!targetLocation.normalize().startsWith(fileStorageLocation)) {
+                return ResponseEntity.badRequest().body(java.util.Map.of("message", "Invalid file path"));
+            }
+
+            Files.copy(file.getInputStream(), targetLocation,
                     java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 
             String fileUrl = "/uploads/" + fileName;
             return ResponseEntity.ok(java.util.Map.of("url", fileUrl));
-        } catch (java.io.IOException e) {
-            return ResponseEntity.badRequest().body("Failed to upload file: " + e.getMessage());
+        } catch (IOException e) {
+            log.error("Failed to upload file: {}", e.getMessage());
+            return ResponseEntity.internalServerError()
+                    .body(java.util.Map.of("message", "文件上传失败"));
         }
+    }
+
+    private String detectContentType(String fileName) {
+        String lower = fileName.toLowerCase();
+        if (lower.endsWith(".jpg") || lower.endsWith(".jpeg")) return "image/jpeg";
+        if (lower.endsWith(".png")) return "image/png";
+        if (lower.endsWith(".gif")) return "image/gif";
+        if (lower.endsWith(".svg")) return "image/svg+xml";
+        if (lower.endsWith(".webp")) return "image/webp";
+        if (lower.endsWith(".mp4")) return "video/mp4";
+        if (lower.endsWith(".webm")) return "video/webm";
+        if (lower.endsWith(".ogg")) return "video/ogg";
+        return "application/octet-stream";
+    }
+
+    private boolean isAllowed(String contentType, String fileName) {
+        if (contentType != null && ALLOWED_TYPES.contains(contentType)) {
+            return true;
+        }
+        if (fileName == null) return false;
+        String lower = fileName.toLowerCase();
+        return lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png")
+                || lower.endsWith(".gif") || lower.endsWith(".webp") || lower.endsWith(".svg")
+                || lower.endsWith(".mp4") || lower.endsWith(".webm") || lower.endsWith(".ogg");
     }
 }

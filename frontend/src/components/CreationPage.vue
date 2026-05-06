@@ -309,6 +309,8 @@ const handlePublish = async () => {
     let finalCoverUrl = ''
     let imageUrls = []
     let postType = activeTab.value
+    const token = localStorage.getItem('token')
+    const uploadHeaders = token ? { 'Authorization': `Bearer ${token}` } : {}
 
     if (activeTab.value === 'video') {
       if (videoFile.value) {
@@ -317,6 +319,7 @@ const handlePublish = async () => {
 
         const uploadRes = await fetch('/api/posts/upload', {
           method: 'POST',
+          headers: uploadHeaders,
           body: videoFormData
         })
         const uploadData = await uploadRes.json()
@@ -337,6 +340,7 @@ const handlePublish = async () => {
 
           const coverRes = await fetch('/api/posts/upload', {
             method: 'POST',
+            headers: uploadHeaders,
             body: coverFormData
           })
           const coverData = await coverRes.json()
@@ -353,6 +357,7 @@ const handlePublish = async () => {
 
           const uploadRes = await fetch('/api/posts/upload', {
             method: 'POST',
+            headers: uploadHeaders,
             body: imageFormData
           })
           const uploadData = await uploadRes.json()
@@ -366,6 +371,8 @@ const handlePublish = async () => {
       }
     }
 
+    const authHeaders = token ? { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` } : { 'Content-Type': 'application/json' }
+
     const postData = {
       title: title.value,
       description: content.value,
@@ -373,7 +380,6 @@ const handlePublish = async () => {
       url: finalUrl,
       cover_url: finalCoverUrl,
       imageUrls: imageUrls.length > 0 ? imageUrls : imageUrls.value,
-      author_id: props.currentUser?.id || 0,
       tag: selectedTag.value
     }
 
@@ -381,13 +387,13 @@ const handlePublish = async () => {
     if (isEditMode.value) {
       postRes = await fetch(`/api/posts/${props.editingPost.id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: authHeaders,
         body: JSON.stringify(postData)
       })
     } else {
       postRes = await fetch('/api/posts', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: authHeaders,
         body: JSON.stringify(postData)
       })
     }
