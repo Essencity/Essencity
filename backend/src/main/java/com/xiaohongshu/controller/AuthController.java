@@ -1,28 +1,46 @@
 package com.xiaohongshu.controller;
 
+import com.xiaohongshu.config.JwtUtil;
 import com.xiaohongshu.entity.User;
 import com.xiaohongshu.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class AuthController {
+
+    private static final Logger log = LoggerFactory.getLogger(AuthController.class);
+
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
         try {
             if (user.getAvatar() == null || user.getAvatar().isEmpty()) {
-                user.setAvatar("http://localhost:3000/uploads/default_avatar.png");
+                user.setAvatar("/uploads/default_avatar.png");
             }
-            return ResponseEntity.ok(userService.register(user));
+            User registered = userService.register(user);
+            String token = jwtUtil.generateToken(registered.getId(), registered.getUsername());
+
+            Map<String, Object> response = userToMap(registered);
+            response.put("token", token);
+            return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
+            log.warn("Registration failed: {}", e.getMessage());
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
     }
@@ -30,19 +48,25 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
         try {
-            return ResponseEntity.ok(userService.login(
+            User user = userService.login(
                     loginRequest.get("username"),
-                    loginRequest.get("password")));
+                    loginRequest.get("password"));
+            String token = jwtUtil.generateToken(user.getId(), user.getUsername());
+
+            Map<String, Object> response = userToMap(user);
+            response.put("token", token);
+            return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+            log.warn("Login failed for user {}: {}", loginRequest.get("username"), e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("message", "用户名或密码错误"));
         }
     }
 
     @PutMapping("/profile")
     public ResponseEntity<?> updateProfile(@RequestBody Map<String, Object> updates) {
         try {
-            Long userId = ((Number) updates.get("userId")).longValue();
-            User user = userService.getUserById(userId);
+            User currentUser = getCurrentUser();
+            User user = userService.getUserById(currentUser.getId());
 
             if (updates.containsKey("nickname")) {
                 user.setNickname((String) updates.get("nickname"));
@@ -57,41 +81,45 @@ public class AuthController {
                 user.setAvatar((String) updates.get("avatar"));
             }
 
-            return ResponseEntity.ok(userService.updateUser(user));
+            User updated = userService.updateUser(user);
+            return ResponseEntity.ok(userToMap(updated));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Failed to update profile: " + e.getMessage()));
+            log.error("Failed to update profile: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("message", "更新个人信息失败"));
         }
     }
 
-    // Follow endpoints
     @PostMapping("/follow")
     public ResponseEntity<?> followUser(@RequestBody Map<String, Object> body) {
         try {
-            Long followerId = ((Number) body.get("followerId")).longValue();
+            User currentUser = getCurrentUser();
             Long followingId = ((Number) body.get("followingId")).longValue();
-            boolean success = userService.followUser(followerId, followingId);
+            boolean success = userService.followUser(currentUser.getId(), followingId);
             return ResponseEntity.ok(Map.of("success", success));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("success", false, "message", e.getMessage()));
+            log.error("Follow failed: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", "操作失败"));
         }
     }
 
     @PostMapping("/unfollow")
     public ResponseEntity<?> unfollowUser(@RequestBody Map<String, Object> body) {
         try {
-            Long followerId = ((Number) body.get("followerId")).longValue();
+            User currentUser = getCurrentUser();
             Long followingId = ((Number) body.get("followingId")).longValue();
-            boolean success = userService.unfollowUser(followerId, followingId);
+            boolean success = userService.unfollowUser(currentUser.getId(), followingId);
             return ResponseEntity.ok(Map.of("success", success));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("success", false, "message", e.getMessage()));
+            log.error("Unfollow failed: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", "操作失败"));
         }
     }
 
     @GetMapping("/following-status")
-    public ResponseEntity<?> getFollowingStatus(@RequestParam Long followerId, @RequestParam Long followingId) {
+    public ResponseEntity<?> getFollowingStatus(@RequestParam Long followingId) {
         try {
-            boolean isFollowing = userService.isFollowing(followerId, followingId);
+            User currentUser = getCurrentUser();
+            boolean isFollowing = userService.isFollowing(currentUser.getId(), followingId);
             return ResponseEntity.ok(Map.of("success", true, "isFollowing", isFollowing));
         } catch (Exception e) {
             return ResponseEntity.ok(Map.of("success", true, "isFollowing", false));
@@ -134,5 +162,24 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.ok(Map.of("count", 0));
         }
+    }
+
+    private User getCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getPrincipal() instanceof User) {
+            return (User) auth.getPrincipal();
+        }
+        throw new RuntimeException("未登录");
+    }
+
+    private Map<String, Object> userToMap(User user) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", user.getId());
+        map.put("username", user.getUsername());
+        map.put("nickname", user.getNickname());
+        map.put("avatar", user.getAvatar());
+        map.put("bio", user.getBio());
+        map.put("gender", user.getGender());
+        return map;
     }
 }

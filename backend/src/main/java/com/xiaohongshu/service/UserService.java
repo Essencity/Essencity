@@ -50,11 +50,15 @@ public class UserService {
         return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
+    @Transactional
     public User updateUser(User user) {
-        if (!userRepository.existsById(user.getId())) {
-            throw new RuntimeException("User not found");
-        }
-        return userRepository.save(user);
+        User existing = getUserById(user.getId());
+        // 只更新允许修改的字段，不修改密码
+        existing.setNickname(user.getNickname());
+        existing.setGender(user.getGender());
+        existing.setBio(user.getBio());
+        existing.setAvatar(user.getAvatar());
+        return userRepository.save(existing);
     }
 
     // Follow methods

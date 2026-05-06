@@ -122,7 +122,9 @@ const checkUserFollowStatus = async (userId) => {
   if (!props.currentUser || props.currentUser.id === userId) return false
   
   try {
-    const response = await fetch(`/api/auth/following-status?followerId=${props.currentUser.id}&followingId=${userId}`)
+    const token = localStorage.getItem('token')
+    const headers = token ? { 'Authorization': `Bearer ${token}` } : {}
+    const response = await fetch(`/api/auth/following-status?followingId=${userId}`, { headers })
     const data = await response.json()
     followingStatus.value[userId] = data.isFollowing || false
     return data.isFollowing || false
@@ -141,17 +143,18 @@ const handleListFollow = async (userId) => {
   try {
     const isFollowing = followingStatus.value[userId] || false
     const endpoint = isFollowing ? 'unfollow' : 'follow'
+    const token = localStorage.getItem('token')
     const response = await fetch(`/api/auth/${endpoint}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
       },
       body: JSON.stringify({
-        followerId: props.currentUser.id,
         followingId: userId
       })
     })
-    
+
     const data = await response.json()
     if (data.success) {
       followingStatus.value[userId] = !isFollowing
@@ -299,7 +302,9 @@ const checkFollowStatus = async () => {
   
   try {
     const targetUserId = props.userId ? Number(props.userId) : props.currentUser.id
-    const response = await fetch(`/api/auth/following-status?followerId=${props.currentUser.id}&followingId=${targetUserId}`)
+    const token = localStorage.getItem('token')
+    const headers = token ? { 'Authorization': `Bearer ${token}` } : {}
+    const response = await fetch(`/api/auth/following-status?followingId=${targetUserId}`, { headers })
     const data = await response.json()
     isFollowing.value = data.isFollowing || false
   } catch (error) {
@@ -319,13 +324,14 @@ const handleFollow = async () => {
   
   try {
     const endpoint = isFollowing.value ? 'unfollow' : 'follow'
+    const token = localStorage.getItem('token')
     const response = await fetch(`/api/auth/${endpoint}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
       },
       body: JSON.stringify({
-        followerId: props.currentUser.id,
         followingId: targetUserId
       })
     })
