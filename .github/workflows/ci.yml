@@ -62,25 +62,10 @@ jobs:
         working-directory: frontend
 
       - name: Run Frontend Tests & Coverage
-        run: |
-          echo "开始运行测试..."
-          npx vitest run --reporter=verbose --reporter=junit --outputFile=junit.xml --coverage 2>&1 || EXIT_CODE=$?
-          echo "测试退出码: ${EXIT_CODE:-0}"
-          exit ${EXIT_CODE:-0}
+        run: npx vitest run --reporter=default --reporter=junit --outputFile=junit.xml --coverage
         working-directory: frontend
         env:
           VITE_API_URL: http://localhost:3000
-          CI: true
-        continue-on-error: true
-
-      - name: Check test results
-        run: |
-          echo "检查生成的文件..."
-          ls -la junit.xml || echo "junit.xml 不存在"
-          ls -la coverage/lcov.info || echo "coverage/lcov.info 不存在"
-          ls -la coverage/ || echo "coverage 目录不存在"
-        working-directory: frontend
-        if: always()
 
       # 使用 Token 上传测试结果 (Test Analytics)
       - name: Upload frontend test results to Codecov
@@ -93,11 +78,10 @@ jobs:
 
       # 使用 Token 上传代码覆盖率
       - name: Upload frontend coverage to Codecov
-        if: always()
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: frontend/coverage/lcov.info
           flags: frontend
-          fail_ci_if_error: false
+          fail_ci_if_error: true
           verbose: true
