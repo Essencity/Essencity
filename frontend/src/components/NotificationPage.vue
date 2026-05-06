@@ -58,15 +58,15 @@ const tabs = [
 
 const fetchNotifications = async () => {
   if (!props.currentUser) return
-  
+
   loading.value = true
   try {
-    const res = await fetch(`/api/notifications?userId=${props.currentUser.id}&type=${activeTab.value}`)
+    const token = localStorage.getItem('token')
+    const headers = token ? { 'Authorization': `Bearer ${token}` } : {}
+    const res = await fetch(`/api/notifications?type=${activeTab.value}`, { headers })
     if (res.ok) {
       const data = await res.json()
       notifications.value = data
-      // Debug: Log notification data to check post structure
-      console.log('Notification data:', data)
     }
   } catch (error) {
     console.error('Failed to fetch notifications:', error)

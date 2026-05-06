@@ -10,6 +10,7 @@ import AuthModal from './components/AuthModal.vue'
 import ProfilePage from './components/ProfilePage.vue'
 import PostDetailModal from './components/PostDetailModal.vue'
 import CompleteProfileModal from './components/CompleteProfileModal.vue'
+import { getCurrentUser, clearAuth } from './api/index.js'
 
 const currentView = ref('discovery')
 const showAuthModal = ref(false)
@@ -155,13 +156,18 @@ const handleLoginSuccess = (user) => {
 
 const handleProfileCompleted = (updatedUser) => {
   currentUser.value = updatedUser
-  localStorage.setItem('user', JSON.stringify(updatedUser))
+  const user = getCurrentUser()
+  if (user) {
+    const token = localStorage.getItem('token')
+    localStorage.setItem('user', JSON.stringify({ ...updatedUser }))
+    if (token) localStorage.setItem('token', token)
+  }
   showCompleteProfileModal.value = false
 }
 
 const handleLogout = () => {
   currentUser.value = null
-  localStorage.removeItem('user')
+  clearAuth()
   currentView.value = 'discovery'
 }
 
@@ -176,20 +182,18 @@ const handleBackFromProfile = () => {
 
 // Check if user is already logged in (from localStorage)
 onMounted(() => {
-  const savedUser = localStorage.getItem('user')
+  const savedUser = getCurrentUser()
   if (savedUser) {
     try {
-      const user = JSON.parse(savedUser)
       // Fix avatar URL if legacy
-      if (user && user.avatar && user.avatar.startsWith('http://localhost:3000')) {
-        user.avatar = user.avatar.replace('http://localhost:3000', '/api')
-        // Update storage
-        localStorage.setItem('user', JSON.stringify(user))
+      if (savedUser.avatar && savedUser.avatar.startsWith('http://localhost:3000')) {
+        savedUser.avatar = savedUser.avatar.replace('http://localhost:3000', '/api')
+        localStorage.setItem('user', JSON.stringify(savedUser))
       }
-      currentUser.value = user
-      checkProfileCompletion(user)
+      currentUser.value = savedUser
+      checkProfileCompletion(savedUser)
     } catch (e) {
-      localStorage.removeItem('user')
+      clearAuth()
     }
   }
 })

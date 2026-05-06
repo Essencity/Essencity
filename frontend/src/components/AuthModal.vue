@@ -1,9 +1,10 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { setAuth } from '../api/index.js'
 
 const emit = defineEmits(['close', 'login-success'])
 
-const mode = ref('login') // 'login' or 'register'
+const mode = ref('login')
 const username = ref('')
 const password = ref('')
 const confirmPassword = ref('')
@@ -15,8 +16,8 @@ const isFormValid = computed(() => {
   if (mode.value === 'login') {
     return username.value.length >= 3 && password.value.length >= 6
   } else {
-    return username.value.length >= 3 && 
-           password.value.length >= 6 && 
+    return username.value.length >= 3 &&
+           password.value.length >= 6 &&
            password.value === confirmPassword.value
   }
 })
@@ -28,37 +29,33 @@ const switchMode = () => {
 
 const handleSubmit = async () => {
   if (!isFormValid.value) return
-  
+
   loading.value = true
   errorMessage.value = ''
-  
+
   try {
     const endpoint = mode.value === 'login' ? '/auth/login' : '/auth/register'
-    const body = mode.value === 'login' 
+    const body = mode.value === 'login'
       ? { username: username.value, password: password.value }
       : { username: username.value, password: password.value }
-    
+
     const response = await fetch(`/api${endpoint}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
     })
-    
+
     const data = await response.json()
-    
+
     if (!response.ok) {
       throw new Error(data.message || '操作失败')
     }
-    
-    // Fix URL if needed
-    if (data.avatar && data.avatar.startsWith('http://localhost:3000')) {
-      data.avatar = data.avatar.replace('http://localhost:3000', '/api')
-    }
 
-    // Success! Store user info and emit event
-    localStorage.setItem('user', JSON.stringify(data))
-    emit('login-success', data)
-    
+    // 分离 token 和 user 信息
+    const { token, ...user } = data
+    setAuth(token, user)
+    emit('login-success', user)
+
   } catch (error) {
     errorMessage.value = error.message
   } finally {
