@@ -5,9 +5,13 @@ import com.xiaohongshu.entity.Post;
 import com.xiaohongshu.entity.User;
 import com.xiaohongshu.service.PostService;
 import com.xiaohongshu.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,15 +19,26 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/posts")
+<<<<<<< Updated upstream
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+=======
+@CrossOrigin(origins = "http://localhost:5173", methods = {RequestMethod.GET, RequestMethod.POST,
+        RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS}, allowCredentials = "true")
+>>>>>>> Stashed changes
 public class PostController {
+
+    private static final Logger log = LoggerFactory.getLogger(PostController.class);
+
+    private static final Set<String> ALLOWED_IMAGE_TYPES = Set.of(
+            "image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml");
+    private static final Set<String> ALLOWED_VIDEO_TYPES = Set.of(
+            "video/mp4", "video/webm", "video/ogg");
+    private static final long MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+
     @Autowired
     private PostService postService;
 
@@ -33,10 +48,7 @@ public class PostController {
     private final Path fileStorageLocation;
 
     public PostController(@Value("${file.upload-dir}") String uploadDir) {
-        this.fileStorageLocation = Paths.get(uploadDir)
-                .toAbsolutePath()
-                .normalize();
-
+        this.fileStorageLocation = Paths.get(uploadDir).toAbsolutePath().normalize();
         try {
             Files.createDirectories(this.fileStorageLocation);
         } catch (IOException e) {
@@ -60,25 +72,7 @@ public class PostController {
         } else {
             posts = postService.getAllPosts();
         }
-
-        // 为每个帖子添加 likeCount
-        return posts.stream().map(post -> {
-            Map<String, Object> postMap = new java.util.HashMap<>();
-            postMap.put("id", post.getId());
-            postMap.put("title", post.getTitle());
-            postMap.put("description", post.getDescription());
-            postMap.put("type", post.getType());
-            postMap.put("url", post.getUrl());
-            postMap.put("coverUrl", post.getCoverUrl());
-            postMap.put("imageUrl", post.getType().equals("video") ? post.getCoverUrl() : post.getUrl());
-            postMap.put("videoUrl", post.getType().equals("video") ? post.getUrl() : null);
-            postMap.put("author", post.getAuthor());
-            postMap.put("createdAt", post.getCreatedAt());
-            postMap.put("tag", post.getTag());
-            postMap.put("likeCount", postService.getLikeCount(post.getId()));
-            postMap.put("collectionCount", postService.getCollectionCount(post.getId()));
-            return postMap;
-        }).collect(java.util.stream.Collectors.toList());
+        return posts.stream().map(this::postToMap).collect(java.util.stream.Collectors.toList());
     }
 
     @GetMapping("/{id}")
@@ -88,42 +82,66 @@ public class PostController {
             if (post == null) {
                 return ResponseEntity.notFound().build();
             }
-
-            java.util.HashMap<String, Object> postMap = new java.util.HashMap<>();
-            postMap.put("id", post.getId());
-            postMap.put("title", post.getTitle());
-            postMap.put("content", post.getDescription());
-            postMap.put("description", post.getDescription());
-            postMap.put("type", post.getType());
-            postMap.put("url", post.getUrl());
-            postMap.put("coverUrl", post.getCoverUrl());
-            postMap.put("imageUrl", post.getType().equals("video") ? post.getCoverUrl() : post.getUrl());
-            postMap.put("videoUrl", post.getType().equals("video") ? post.getUrl() : null);
-            postMap.put("author", post.getAuthor());
-            postMap.put("createdAt", post.getCreatedAt());
-            postMap.put("tag", post.getTag());
-            postMap.put("likeCount", postService.getLikeCount(post.getId()));
-            postMap.put("collectionCount", postService.getCollectionCount(post.getId()));
-
-            return ResponseEntity.ok(postMap);
+            return ResponseEntity.ok(postToMap(post));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+            log.error("Error getting post {}: {}", id, e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("message", "获取帖子失败"));
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePost(@PathVariable Long id) {
         try {
+            User currentUser = getCurrentUser();
+            Post post = postService.getPostById(id);
+            if (post == null) {
+                return ResponseEntity.notFound().build();
+            }
+            if (!post.getAuthor().getId().equals(currentUser.getId())) {
+                return ResponseEntity.status(403).body(Map.of("success", false, "message", "无权删除"));
+            }
             postService.deletePost(id);
             return ResponseEntity.ok(Map.of("success", true, "message", "Post deleted successfully"));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("success", false, "message", e.getMessage()));
+            log.error("Error deleting post {}: {}", id, e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", "删除失败"));
         }
     }
 
     @PostMapping
     public ResponseEntity<?> createPost(@RequestBody Map<String, Object> postData) {
         try {
+            User currentUser = getCurrentUser();
+            Post post = new Post();
+            post.setTitle((String) postData.get("title"));
+            post.setDescription((String) postData.get("description"));
+            post.setType((String) postData.get("type"));
+            post.setUrl((String) postData.get("url"));
+            post.setCoverUrl((String) postData.get("cover_url"));
+            post.setTag((String) postData.get("tag"));
+            post.setAuthor(currentUser);
+
+            return ResponseEntity.ok(postService.createPost(post));
+        } catch (Exception e) {
+            log.error("Failed to create post: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("message", "创建帖子失败"));
+        }
+    }
+
+<<<<<<< Updated upstream
+=======
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updatePost(@PathVariable Long id, @RequestBody Map<String, Object> postData) {
+        try {
+            User currentUser = getCurrentUser();
+            Post existing = postService.getPostById(id);
+            if (existing == null) {
+                return ResponseEntity.notFound().build();
+            }
+            if (!existing.getAuthor().getId().equals(currentUser.getId())) {
+                return ResponseEntity.status(403).body(Map.of("message", "无权修改"));
+            }
+
             Post post = new Post();
             post.setTitle((String) postData.get("title"));
             post.setDescription((String) postData.get("description"));
@@ -132,98 +150,140 @@ public class PostController {
             post.setCoverUrl((String) postData.get("cover_url"));
             post.setTag((String) postData.get("tag"));
 
-            Long authorId = ((Number) postData.get("author_id")).longValue();
-            User author = userService.getUserById(authorId);
-            post.setAuthor(author);
-
-            return ResponseEntity.ok(postService.createPost(post));
+            Post updated = postService.updatePost(id, post);
+            return ResponseEntity.ok(updated);
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body(Map.of("message", "Failed to create post"));
+            log.error("Failed to update post {}: {}", id, e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("message", "更新失败"));
         }
     }
 
+>>>>>>> Stashed changes
     @PostMapping("/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
         try {
-            String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+            if (file.isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("message", "文件为空"));
+            }
+            if (file.getSize() > MAX_FILE_SIZE) {
+                return ResponseEntity.badRequest().body(Map.of("message", "文件大小不能超过50MB"));
+            }
+
+            // 校验文件类型
+            String contentType = file.getContentType();
+            String originalName = file.getOriginalFilename();
+            if (!isAllowedFileType(contentType, originalName)) {
+                return ResponseEntity.badRequest().body(Map.of("message", "不支持的文件类型"));
+            }
+
+            // 仅使用 UUID 作为文件名，防止路径遍历
+            String ext = "";
+            if (originalName != null && originalName.contains(".")) {
+                ext = originalName.substring(originalName.lastIndexOf("."));
+                // 二次校验扩展名
+                String lowerExt = ext.toLowerCase();
+                if (!lowerExt.matches("\\.(jpg|jpeg|png|gif|webp|svg|mp4|webm|ogg)")) {
+                    return ResponseEntity.badRequest().body(Map.of("message", "不支持的文件格式"));
+                }
+            }
+            String fileName = UUID.randomUUID().toString() + ext;
             Path targetLocation = fileStorageLocation.resolve(fileName);
+
+            // 确保路径在 upload 目录内
+            if (!targetLocation.normalize().startsWith(fileStorageLocation)) {
+                return ResponseEntity.badRequest().body(Map.of("message", "Invalid file path"));
+            }
+
             Files.copy(file.getInputStream(), targetLocation);
             String fileUrl = "/uploads/" + fileName;
             return ResponseEntity.ok(Map.of("url", fileUrl));
         } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError()
-                    .body(Map.of("message", "Failed to upload file: " + e.getMessage()));
+            log.error("Failed to upload file: {}", e.getMessage());
+            return ResponseEntity.internalServerError().body(Map.of("message", "文件上传失败"));
         }
     }
 
-    // Like endpoints
+    // Like endpoints - 从 SecurityContext 获取当前用户
     @GetMapping("/{id}/like/status")
-    public ResponseEntity<?> getLikeStatus(@PathVariable Long id, @RequestParam Long userId) {
-        User user = userService.getUserById(userId);
-        boolean liked = postService.isLikedBy(user, id);
-        long count = postService.getLikeCount(id);
-        return ResponseEntity.ok(Map.of("liked", liked, "likeCount", count));
-    }
-
-    @PostMapping("/{id}/like")
-    public ResponseEntity<?> likePost(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+    public ResponseEntity<?> getLikeStatus(@PathVariable Long id) {
         try {
-            Long userId = ((Number) body.get("userId")).longValue();
-            User user = userService.getUserById(userId);
-            postService.likePost(user, id);
-            boolean liked = postService.isLikedBy(user, id);
+            User currentUser = getCurrentUser();
+            boolean liked = postService.isLikedBy(currentUser, id);
             long count = postService.getLikeCount(id);
             return ResponseEntity.ok(Map.of("liked", liked, "likeCount", count));
         } catch (Exception e) {
-            e.printStackTrace(); // PRINT STACK TRACE
-            return ResponseEntity.internalServerError().body(Map.of("message", e.getMessage()));
+            return ResponseEntity.ok(Map.of("liked", false, "likeCount", postService.getLikeCount(id)));
+        }
+    }
+
+    @PostMapping("/{id}/like")
+    public ResponseEntity<?> likePost(@PathVariable Long id) {
+        try {
+            User currentUser = getCurrentUser();
+            postService.likePost(currentUser, id);
+            boolean liked = postService.isLikedBy(currentUser, id);
+            long count = postService.getLikeCount(id);
+            return ResponseEntity.ok(Map.of("liked", liked, "likeCount", count));
+        } catch (Exception e) {
+            log.error("Like failed for post {}: {}", id, e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("message", "操作失败"));
         }
     }
 
     @PostMapping("/{id}/unlike")
-    public ResponseEntity<?> unlikePost(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+    public ResponseEntity<?> unlikePost(@PathVariable Long id) {
         try {
-            Long userId = ((Number) body.get("userId")).longValue();
-            User user = userService.getUserById(userId);
-            postService.unlikePost(user, id);
-            boolean liked = postService.isLikedBy(user, id);
+            User currentUser = getCurrentUser();
+            postService.unlikePost(currentUser, id);
+            boolean liked = postService.isLikedBy(currentUser, id);
             long count = postService.getLikeCount(id);
             return ResponseEntity.ok(Map.of("liked", liked, "likeCount", count));
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body(Map.of("message", e.getMessage()));
+            log.error("Unlike failed for post {}: {}", id, e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("message", "操作失败"));
         }
     }
 
     // Collect endpoints
     @GetMapping("/{id}/collect/status")
-    public ResponseEntity<?> getCollectStatus(@PathVariable Long id, @RequestParam Long userId) {
-        User user = userService.getUserById(userId);
-        boolean collected = postService.isCollectedBy(user, id);
-        long count = postService.getCollectionCount(id);
-        return ResponseEntity.ok(Map.of("collected", collected, "collectionCount", count));
+    public ResponseEntity<?> getCollectStatus(@PathVariable Long id) {
+        try {
+            User currentUser = getCurrentUser();
+            boolean collected = postService.isCollectedBy(currentUser, id);
+            long count = postService.getCollectionCount(id);
+            return ResponseEntity.ok(Map.of("collected", collected, "collectionCount", count));
+        } catch (Exception e) {
+            return ResponseEntity.ok(Map.of("collected", false, "collectionCount",
+                    postService.getCollectionCount(id)));
+        }
     }
 
     @PostMapping("/{id}/collect")
-    public ResponseEntity<?> collectPost(@PathVariable Long id, @RequestBody Map<String, Object> body) {
-        Long userId = ((Number) body.get("userId")).longValue();
-        User user = userService.getUserById(userId);
-        postService.collectPost(user, id);
-        boolean collected = postService.isCollectedBy(user, id);
-        long count = postService.getCollectionCount(id);
-        return ResponseEntity.ok(Map.of("collected", collected, "collectionCount", count));
+    public ResponseEntity<?> collectPost(@PathVariable Long id) {
+        try {
+            User currentUser = getCurrentUser();
+            postService.collectPost(currentUser, id);
+            boolean collected = postService.isCollectedBy(currentUser, id);
+            long count = postService.getCollectionCount(id);
+            return ResponseEntity.ok(Map.of("collected", collected, "collectionCount", count));
+        } catch (Exception e) {
+            log.error("Collect failed for post {}: {}", id, e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("message", "操作失败"));
+        }
     }
 
     @PostMapping("/{id}/uncollect")
-    public ResponseEntity<?> uncollectPost(@PathVariable Long id, @RequestBody Map<String, Object> body) {
-        Long userId = ((Number) body.get("userId")).longValue();
-        User user = userService.getUserById(userId);
-        postService.uncollectPost(user, id);
-        boolean collected = postService.isCollectedBy(user, id);
-        long count = postService.getCollectionCount(id);
-        return ResponseEntity.ok(Map.of("collected", collected, "collectionCount", count));
+    public ResponseEntity<?> uncollectPost(@PathVariable Long id) {
+        try {
+            User currentUser = getCurrentUser();
+            postService.uncollectPost(currentUser, id);
+            boolean collected = postService.isCollectedBy(currentUser, id);
+            long count = postService.getCollectionCount(id);
+            return ResponseEntity.ok(Map.of("collected", collected, "collectionCount", count));
+        } catch (Exception e) {
+            log.error("Uncollect failed for post {}: {}", id, e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("message", "操作失败"));
+        }
     }
 
     // Comment endpoints
@@ -232,7 +292,6 @@ public class PostController {
         try {
             return ResponseEntity.ok(postService.getCommentsByPostId(id));
         } catch (Exception e) {
-            // 如果评论表不存在等情况，返回空数组
             return ResponseEntity.ok(java.util.Collections.emptyList());
         }
     }
@@ -240,18 +299,18 @@ public class PostController {
     @PostMapping("/{id}/comments")
     public ResponseEntity<?> createComment(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         try {
-            System.out.println("Processing createComment for post: " + id);
-            Long userId = ((Number) body.get("userId")).longValue();
+            User currentUser = getCurrentUser();
             String content = (String) body.get("content");
             Long parentId = body.get("parent_id") != null ? ((Number) body.get("parent_id")).longValue() : null;
 
-            System.out.println("User: " + userId + ", ParentId: " + parentId);
+            if (content == null || content.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("message", "评论内容不能为空"));
+            }
+            if (content.length() > 2000) {
+                return ResponseEntity.badRequest().body(Map.of("message", "评论内容不能超过2000字"));
+            }
 
-            User user = userService.getUserById(userId);
-            System.out.println("User found: " + user.getNickname());
-
-            Comment comment = postService.createComment(id, user, content, parentId);
-            System.out.println("Comment created: " + comment.getId());
+            Comment comment = postService.createComment(id, currentUser, content, parentId);
 
             Map<String, Object> response = new HashMap<>();
             response.put("id", comment.getId());
@@ -262,7 +321,6 @@ public class PostController {
             response.put("parent_id", comment.getParentId());
 
             if (comment.getReplyToUser() != null) {
-                System.out.println("Adding replyToUser info: " + comment.getReplyToUser().getNickname());
                 Map<String, Object> rUser = new HashMap<>();
                 rUser.put("id", comment.getReplyToUser().getId());
                 rUser.put("nickname", comment.getReplyToUser().getNickname());
@@ -271,23 +329,27 @@ public class PostController {
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Error in createComment: " + e.getMessage());
-            return ResponseEntity.badRequest().body(Map.of("message", "Failed to create comment: " + e.getMessage()));
+            log.error("Error creating comment for post {}: {}", id, e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("message", "评论发送失败"));
         }
     }
 
     @DeleteMapping("/comments/{commentId}")
-    public ResponseEntity<?> deleteComment(@PathVariable Long commentId, @RequestBody Map<String, Object> body) {
-        Long userId = ((Number) body.get("userId")).longValue();
-        boolean deleted = postService.deleteComment(commentId, userId);
-        if (deleted) {
-            return ResponseEntity.ok(Map.of("success", true));
+    public ResponseEntity<?> deleteComment(@PathVariable Long commentId) {
+        try {
+            User currentUser = getCurrentUser();
+            boolean deleted = postService.deleteComment(commentId, currentUser.getId());
+            if (deleted) {
+                return ResponseEntity.ok(Map.of("success", true));
+            }
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Cannot delete comment"));
+        } catch (Exception e) {
+            log.error("Error deleting comment {}: {}", commentId, e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", "删除失败"));
         }
-        return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Cannot delete comment"));
     }
 
-    // User stats endpoints
+    // User stats endpoints (public read)
     @GetMapping("/user/{userId}/stats")
     public ResponseEntity<?> getUserStats(@PathVariable Long userId) {
         User user = userService.getUserById(userId);
@@ -304,5 +366,44 @@ public class PostController {
     public ResponseEntity<?> getUserLikes(@PathVariable Long userId) {
         User user = userService.getUserById(userId);
         return ResponseEntity.ok(postService.getUserLikedPosts(userId, user));
+    }
+
+    // Helpers
+    private User getCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getPrincipal() instanceof User) {
+            return (User) auth.getPrincipal();
+        }
+        throw new RuntimeException("未登录");
+    }
+
+    private Map<String, Object> postToMap(Post post) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", post.getId());
+        map.put("title", post.getTitle());
+        map.put("description", post.getDescription());
+        map.put("type", post.getType());
+        map.put("url", post.getUrl());
+        map.put("coverUrl", post.getCoverUrl());
+        map.put("imageUrl", post.getType().equals("video") ? post.getCoverUrl() : post.getUrl());
+        map.put("videoUrl", post.getType().equals("video") ? post.getUrl() : null);
+        map.put("author", post.getAuthor());
+        map.put("createdAt", post.getCreatedAt());
+        map.put("tag", post.getTag());
+        map.put("likeCount", postService.getLikeCount(post.getId()));
+        map.put("collectionCount", postService.getCollectionCount(post.getId()));
+        return map;
+    }
+
+    private boolean isAllowedFileType(String contentType, String fileName) {
+        if (contentType != null) {
+            return ALLOWED_IMAGE_TYPES.contains(contentType)
+                    || ALLOWED_VIDEO_TYPES.contains(contentType);
+        }
+        if (fileName == null) return false;
+        String lower = fileName.toLowerCase();
+        return lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png")
+                || lower.endsWith(".gif") || lower.endsWith(".webp") || lower.endsWith(".svg")
+                || lower.endsWith(".mp4") || lower.endsWith(".webm") || lower.endsWith(".ogg");
     }
 }

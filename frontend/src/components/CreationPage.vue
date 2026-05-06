@@ -279,6 +279,8 @@ const handlePublish = async () => {
     let finalCoverUrl = ''
     let imageUrls = []
     let postType = activeTab.value
+    const token = localStorage.getItem('token')
+    const uploadHeaders = token ? { 'Authorization': `Bearer ${token}` } : {}
 
     if (activeTab.value === 'video') {
       const videoFormData = new FormData()
@@ -314,15 +316,68 @@ const handlePublish = async () => {
 
         const uploadRes = await fetch('/api/posts/upload', {
           method: 'POST',
+<<<<<<< Updated upstream
           body: imageFormData
         })
         const uploadData = await uploadRes.json()
         imageUrls.push(uploadData.url)
+=======
+          headers: uploadHeaders,
+          body: videoFormData
+        })
+        const uploadData = await uploadRes.json()
+        finalUrl = uploadData.url
+      } else {
+        finalUrl = props.editingPost?.url || ''
+      }
+
+      if ((coverSource.value === 'manual' && manualCoverUrl.value) || coverUrl.value) {
+        const coverToUpload = coverSource.value === 'manual' && manualCoverUrl.value
+          ? manualCoverUrl.value
+          : coverUrl.value
+
+        if (coverToUpload && !coverToUpload.startsWith('/api') && !coverToUpload.startsWith('http')) {
+          const coverBlob = await fetch(coverToUpload).then(r => r.blob())
+          const coverFormData = new FormData()
+          coverFormData.append('file', coverBlob, 'cover.jpg')
+
+          const coverRes = await fetch('/api/posts/upload', {
+            method: 'POST',
+            headers: uploadHeaders,
+            body: coverFormData
+          })
+          const coverData = await coverRes.json()
+          finalCoverUrl = coverData.url
+        } else {
+          finalCoverUrl = coverToUpload
+        }
+      }
+    } else {
+      if (imageFiles.value.length > 0) {
+        for (let i = 0; i < imageFiles.value.length; i++) {
+          const imageFormData = new FormData()
+          imageFormData.append('file', imageFiles.value[i])
+
+          const uploadRes = await fetch('/api/posts/upload', {
+            method: 'POST',
+            headers: uploadHeaders,
+            body: imageFormData
+          })
+          const uploadData = await uploadRes.json()
+          imageUrls.push(uploadData.url)
+        }
+        finalUrl = imageUrls[0]
+        finalCoverUrl = imageUrls[0]
+      } else {
+        finalUrl = props.editingPost?.url || imageUrls.value[0] || ''
+        finalCoverUrl = props.editingPost?.coverUrl || imageUrls.value[0] || ''
+>>>>>>> Stashed changes
       }
       finalUrl = imageUrls[0]
       finalCoverUrl = imageUrls[0]
     }
 
+<<<<<<< Updated upstream
     const postRes = await fetch('/api/posts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -337,6 +392,34 @@ const handlePublish = async () => {
         tag: selectedTag.value
       })
     })
+=======
+    const authHeaders = token ? { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` } : { 'Content-Type': 'application/json' }
+
+    const postData = {
+      title: title.value,
+      description: content.value,
+      type: postType,
+      url: finalUrl,
+      cover_url: finalCoverUrl,
+      imageUrls: imageUrls.length > 0 ? imageUrls : imageUrls.value,
+      tag: selectedTag.value
+    }
+
+    let postRes
+    if (isEditMode.value) {
+      postRes = await fetch(`/api/posts/${props.editingPost.id}`, {
+        method: 'PUT',
+        headers: authHeaders,
+        body: JSON.stringify(postData)
+      })
+    } else {
+      postRes = await fetch('/api/posts', {
+        method: 'POST',
+        headers: authHeaders,
+        body: JSON.stringify(postData)
+      })
+    }
+>>>>>>> Stashed changes
 
     if (postRes.ok) {
       alert('发布成功！')

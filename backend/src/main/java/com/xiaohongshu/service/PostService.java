@@ -37,6 +37,26 @@ public class PostService {
         return postRepository.save(post);
     }
 
+<<<<<<< Updated upstream
+=======
+    @Transactional
+    public Post updatePost(Long id, Post updated) {
+        Post existing = getPostById(id);
+        existing.setTitle(updated.getTitle());
+        existing.setDescription(updated.getDescription());
+        existing.setType(updated.getType());
+        existing.setUrl(updated.getUrl());
+        existing.setCoverUrl(updated.getCoverUrl());
+        existing.setTag(updated.getTag());
+        return postRepository.save(existing);
+    }
+
+    @Transactional
+    public void updatePostAiSummary(Post post) {
+        postRepository.save(post);
+    }
+
+>>>>>>> Stashed changes
     public List<Post> getAllPosts() {
         return postRepository.findAllByOrderByCreatedAtDesc();
     }

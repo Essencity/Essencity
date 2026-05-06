@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import AiSummary from './AiSummary.vue'
+import { getCurrentUser } from '../api/index.js'
 
 const props = defineProps({
   post: {
@@ -72,6 +73,12 @@ const formattedCollects = computed(() => {
   }
   return num
 })
+
+// 获取带认证头的请求选项
+const authHeaders = () => {
+  const token = localStorage.getItem('token')
+  return token ? { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' } : { 'Content-Type': 'application/json' }
+}
 
 // 计算总评论数（主评论 + 子回复）
 const commentCount = computed(() => {
@@ -155,7 +162,7 @@ const fetchLikeStatus = async () => {
   
   try {
     // 获取点赞状态
-    const likeRes = await fetch(`/api/posts/${props.post.id}/like/status?userId=${props.currentUser.id}`)
+    const likeRes = await fetch(`/api/posts/${props.post.id}/like/status`, { headers: authHeaders() })
     if (likeRes.ok) {
       const likeData = await likeRes.json()
       isLiked.value = likeData.liked
@@ -163,7 +170,7 @@ const fetchLikeStatus = async () => {
     }
     
     // 获取收藏状态
-    const collectRes = await fetch(`/api/posts/${props.post.id}/collect/status?userId=${props.currentUser.id}`)
+    const collectRes = await fetch(`/api/posts/${props.post.id}/collect/status`, { headers: authHeaders() })
     if (collectRes.ok) {
       const collectData = await collectRes.json()
       isCollected.value = collectData.collected
@@ -184,15 +191,13 @@ const handleLike = async () => {
     if (isLiked.value) {
       await fetch(`/api/posts/${props.post.id}/unlike`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: props.currentUser.id })
+        headers: authHeaders()
       })
       likeCount.value = Math.max(0, likeCount.value - 1)
     } else {
       await fetch(`/api/posts/${props.post.id}/like`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: props.currentUser.id })
+        headers: authHeaders()
       })
       likeCount.value++
     }
@@ -213,15 +218,13 @@ const handleCollect = async () => {
     if (isCollected.value) {
       await fetch(`/api/posts/${props.post.id}/uncollect`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: props.currentUser.id })
+        headers: authHeaders()
       })
       collectCount.value = Math.max(0, collectCount.value - 1)
     } else {
       await fetch(`/api/posts/${props.post.id}/collect`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: props.currentUser.id })
+        headers: authHeaders()
       })
       collectCount.value++
     }
@@ -244,9 +247,8 @@ const handleSubmitComment = async () => {
   try {
     const response = await fetch(`/api/posts/${props.post.id}/comments`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: authHeaders(),
       body: JSON.stringify({
-        userId: props.currentUser.id,
         content: content,
         parent_id: replyToCommentId.value
       })
@@ -387,8 +389,7 @@ const handleCommentLike = async (commentId) => {
     const endpoint = currentStatus ? 'unlike' : 'like'
     const response = await fetch(`/api/comments/${commentId}/${endpoint}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId: props.currentUser.id })
+      headers: authHeaders()
     })
 
     const data = await response.json()
@@ -430,7 +431,7 @@ const checkFollowStatus = async () => {
   if (!props.currentUser || !props.post.author_id) return
   
   try {
-    const response = await fetch(`/api/auth/following-status?followerId=${props.currentUser.id}&followingId=${props.post.author_id}`)
+    const response = await fetch(`/api/auth/following-status?followingId=${props.post.author_id}`, { headers: authHeaders() })
     const data = await response.json()
     if (data.success) {
       isFollowing.value = data.isFollowing
@@ -458,11 +459,8 @@ const handleFollow = async () => {
     const endpoint = isFollowing.value ? 'unfollow' : 'follow'
     const response = await fetch(`/api/auth/${endpoint}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: authHeaders(),
       body: JSON.stringify({
-        followerId: props.currentUser.id,
         followingId: props.post.author_id
       })
     })
