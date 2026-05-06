@@ -3,13 +3,13 @@ USE xiaohongshu;
 
 CREATE TABLE IF NOT EXISTS users (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(255) NOT NULL UNIQUE,
+    username VARCHAR(250) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     nickname VARCHAR(255),
     avatar VARCHAR(255),
     bio TEXT,
     gender VARCHAR(10)
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS posts (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -19,10 +19,11 @@ CREATE TABLE IF NOT EXISTS posts (
     url VARCHAR(255) NOT NULL,
     cover_url VARCHAR(255),
     author_id BIGINT NOT NULL,
+    tag VARCHAR(50),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     ai_summary TEXT,
     FOREIGN KEY (author_id) REFERENCES users(id)
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS likes (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -31,7 +32,7 @@ CREATE TABLE IF NOT EXISTS likes (
     UNIQUE KEY unique_user_post (user_id, post_id),
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (post_id) REFERENCES posts(id)
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS collections (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -40,7 +41,7 @@ CREATE TABLE IF NOT EXISTS collections (
     UNIQUE KEY unique_user_post_collection (user_id, post_id),
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (post_id) REFERENCES posts(id)
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS comments (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -51,7 +52,7 @@ CREATE TABLE IF NOT EXISTS comments (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (post_id) REFERENCES posts(id),
     FOREIGN KEY (user_id) REFERENCES users(id)
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS follows (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -61,5 +62,5 @@ CREATE TABLE IF NOT EXISTS follows (
     UNIQUE KEY unique_follow (follower_id, following_id),
     FOREIGN KEY (follower_id) REFERENCES users(id),
     FOREIGN KEY (following_id) REFERENCES users(id)
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
