@@ -1,14 +1,19 @@
 package com.xiaohongshu.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.xiaohongshu.config.JwtAuthenticationFilter;
+import com.xiaohongshu.config.JwtUtil;
 import com.xiaohongshu.entity.User;
 import com.xiaohongshu.service.UserService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -37,15 +42,27 @@ class AuthControllerTest {
     @MockBean
     private UserService userService;
 
-    private User createTestUser() {
-        User user = new User();
-        user.setId(1L);
-        user.setUsername("testuser");
-        user.setNickname("Test User");
-        user.setAvatar("/default.png");
-        user.setBio("Hello");
-        user.setGender("male");
-        return user;
+    @MockBean
+    private JwtUtil jwtUtil;
+
+    @MockBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    private User testUser;
+
+    @BeforeEach
+    void setUp() {
+        testUser = new User();
+        testUser.setId(1L);
+        testUser.setUsername("testuser");
+        testUser.setNickname("Test User");
+        testUser.setAvatar("/default.png");
+        testUser.setBio("Hello");
+        testUser.setGender("male");
+
+        // 为需要认证的测试设置 SecurityContext
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(testUser, null, Collections.emptyList()));
     }
 
     // ==================== register ====================
@@ -58,9 +75,11 @@ class AuthControllerTest {
         input.setNickname("New User");
         input.setAvatar("/custom.png");
 
-        User saved = createTestUser();
+        User saved = new User();
+        saved.setId(2L);
         saved.setUsername("newuser");
         saved.setNickname("New User");
+        saved.setAvatar("/custom.png");
 
         when(userService.register(any(User.class))).thenReturn(saved);
 
@@ -78,9 +97,11 @@ class AuthControllerTest {
         input.setPassword("password123");
         input.setAvatar("");
 
-        User saved = createTestUser();
+        User saved = new User();
+        saved.setId(2L);
         saved.setUsername("newuser");
-        saved.setAvatar("http://localhost:3000/uploads/default_avatar.png");
+        saved.setNickname("New User");
+        saved.setAvatar("/uploads/default_avatar.png");
 
         when(userService.register(any(User.class))).thenReturn(saved);
 
@@ -110,8 +131,7 @@ class AuthControllerTest {
     @Test
     void login_Success() throws Exception {
         Map<String, String> loginRequest = Map.of("username", "testuser", "password", "password123");
-        User user = createTestUser();
-        when(userService.login("testuser", "password123")).thenReturn(user);
+        when(userService.login("testuser", "password123")).thenReturn(testUser);
 
         mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -129,7 +149,7 @@ class AuthControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Invalid credentials"));
+                .andExpect(jsonPath("$.message").value("用户名或密码错误"));
     }
 
     @Test
@@ -141,7 +161,7 @@ class AuthControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("User not found"));
+                .andExpect(jsonPath("$.message").value("用户名或密码错误"));
     }
 
     // ==================== updateProfile ====================
@@ -149,12 +169,13 @@ class AuthControllerTest {
     @Test
     void updateProfile_Success() throws Exception {
         Map<String, Object> updates = new HashMap<>();
-        updates.put("userId", 1);
         updates.put("nickname", "Updated Name");
         updates.put("bio", "New bio");
 
-        User existing = createTestUser();
-        User updated = createTestUser();
+        User existing = testUser;
+        User updated = new User();
+        updated.setId(1L);
+        updated.setUsername("testuser");
         updated.setNickname("Updated Name");
         updated.setBio("New bio");
 
@@ -171,11 +192,12 @@ class AuthControllerTest {
     @Test
     void updateProfile_PartialUpdate() throws Exception {
         Map<String, Object> updates = new HashMap<>();
-        updates.put("userId", 1);
         updates.put("gender", "female");
 
-        User existing = createTestUser();
-        User updated = createTestUser();
+        User existing = testUser;
+        User updated = new User();
+        updated.setId(1L);
+        updated.setUsername("testuser");
         updated.setGender("female");
 
         when(userService.getUserById(1L)).thenReturn(existing);
@@ -190,8 +212,8 @@ class AuthControllerTest {
 
     @Test
     void updateProfile_UserNotFound_ShouldReturn400() throws Exception {
-        Map<String, Object> updates = Map.of("userId", 999);
-        when(userService.getUserById(999L)).thenThrow(new RuntimeException("User not found"));
+        Map<String, Object> updates = Map.of("nickname", "test");
+        when(userService.getUserById(1L)).thenThrow(new RuntimeException("User not found"));
 
         mockMvc.perform(put("/auth/profile")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -203,7 +225,7 @@ class AuthControllerTest {
 
     @Test
     void followUser_Success() throws Exception {
-        Map<String, Object> body = Map.of("followerId", 1, "followingId", 2);
+        Map<String, Object> body = Map.of("followingId", 2);
         when(userService.followUser(1L, 2L)).thenReturn(true);
 
         mockMvc.perform(post("/auth/follow")
@@ -215,7 +237,7 @@ class AuthControllerTest {
 
     @Test
     void followUser_SelfFollow_ShouldReturn400() throws Exception {
-        Map<String, Object> body = Map.of("followerId", 1, "followingId", 1);
+        Map<String, Object> body = Map.of("followingId", 1);
         when(userService.followUser(1L, 1L)).thenThrow(new RuntimeException("Cannot follow yourself"));
 
         mockMvc.perform(post("/auth/follow")
@@ -229,7 +251,7 @@ class AuthControllerTest {
 
     @Test
     void unfollowUser_Success() throws Exception {
-        Map<String, Object> body = Map.of("followerId", 1, "followingId", 2);
+        Map<String, Object> body = Map.of("followingId", 2);
         when(userService.unfollowUser(1L, 2L)).thenReturn(true);
 
         mockMvc.perform(post("/auth/unfollow")
@@ -241,7 +263,7 @@ class AuthControllerTest {
 
     @Test
     void unfollowUser_Error_ShouldReturn400() throws Exception {
-        Map<String, Object> body = Map.of("followerId", 1, "followingId", 2);
+        Map<String, Object> body = Map.of("followingId", 2);
         when(userService.unfollowUser(1L, 2L)).thenThrow(new RuntimeException("Not following"));
 
         mockMvc.perform(post("/auth/unfollow")
@@ -258,7 +280,6 @@ class AuthControllerTest {
         when(userService.isFollowing(1L, 2L)).thenReturn(true);
 
         mockMvc.perform(get("/auth/following-status")
-                        .param("followerId", "1")
                         .param("followingId", "2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.isFollowing").value(true));
@@ -269,7 +290,6 @@ class AuthControllerTest {
         when(userService.isFollowing(1L, 2L)).thenReturn(false);
 
         mockMvc.perform(get("/auth/following-status")
-                        .param("followerId", "1")
                         .param("followingId", "2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.isFollowing").value(false));
@@ -280,7 +300,6 @@ class AuthControllerTest {
         when(userService.isFollowing(1L, 2L)).thenThrow(new RuntimeException("DB error"));
 
         mockMvc.perform(get("/auth/following-status")
-                        .param("followerId", "1")
                         .param("followingId", "2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.isFollowing").value(false));

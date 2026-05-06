@@ -1,6 +1,8 @@
 package com.xiaohongshu.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.xiaohongshu.config.JwtAuthenticationFilter;
+import com.xiaohongshu.config.JwtUtil;
 import com.xiaohongshu.entity.Comment;
 import com.xiaohongshu.entity.Post;
 import com.xiaohongshu.entity.User;
@@ -49,6 +51,12 @@ class PostControllerTest {
 
     @MockBean
     private UserService userService;
+
+    @MockBean
+    private JwtUtil jwtUtil;
+
+    @MockBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     private static final Path UPLOAD_DIR = Paths.get("./test-uploads").toAbsolutePath().normalize();
 

@@ -163,23 +163,25 @@ public class UserServiceTest {
 
     @Test
     void testUpdateUser_Success() {
+        User existing = createTestUser(1L, "testuser");
         User user = createTestUser(1L, "testuser");
         user.setNickname("Updated Nickname");
 
-        when(userRepository.existsById(1L)).thenReturn(true);
-        when(userRepository.save(any(User.class))).thenReturn(user);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(existing));
+        when(userRepository.save(any(User.class))).thenReturn(existing);
 
         User result = userService.updateUser(user);
 
         assertNotNull(result);
-        verify(userRepository).save(user);
+        verify(userRepository).findById(1L);
+        verify(userRepository).save(any(User.class));
     }
 
     @Test
     void testUpdateUser_NotFound() {
         User user = createTestUser(999L, "nonexistent");
 
-        when(userRepository.existsById(999L)).thenReturn(false);
+        when(userRepository.findById(999L)).thenReturn(Optional.empty());
 
         assertThrows(RuntimeException.class, () -> userService.updateUser(user));
     }

@@ -1,11 +1,13 @@
 package com.xiaohongshu.controller;
 
+import com.xiaohongshu.config.JwtAuthenticationFilter;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
@@ -27,6 +29,9 @@ class FileControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @MockBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
     private static final Path UPLOAD_DIR = Paths.get("./test-uploads").toAbsolutePath().normalize();
 
     @BeforeEach
@@ -36,7 +41,6 @@ class FileControllerTest {
 
     @AfterEach
     void tearDown() throws Exception {
-        // Clean up test files
         if (Files.exists(UPLOAD_DIR)) {
             Files.list(UPLOAD_DIR).forEach(p -> {
                 try {
@@ -55,13 +59,6 @@ class FileControllerTest {
     }
 
     @Test
-    void debugPath_ShouldReturnPathInfo() throws Exception {
-        mockMvc.perform(get("/uploads/debug/test.jpg"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Resolved path:")));
-    }
-
-    @Test
     void downloadFile_FileNotFound_ShouldReturn404() throws Exception {
         mockMvc.perform(get("/uploads/nonexistent.jpg"))
                 .andExpect(status().isNotFound());
@@ -69,7 +66,6 @@ class FileControllerTest {
 
     @Test
     void downloadFile_FileExists_ShouldReturnWithContentType() throws Exception {
-        // Create a test file
         Path testFile = UPLOAD_DIR.resolve("test-image.jpg");
         Files.write(testFile, "test image content".getBytes());
 
