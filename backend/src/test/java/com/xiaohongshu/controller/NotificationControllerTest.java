@@ -1,12 +1,17 @@
 package com.xiaohongshu.controller;
 
+import com.xiaohongshu.config.JwtAuthenticationFilter;
 import com.xiaohongshu.dto.NotificationDTO;
+import com.xiaohongshu.entity.User;
 import com.xiaohongshu.service.NotificationService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -34,6 +39,18 @@ class NotificationControllerTest {
     @MockBean
     private NotificationService notificationService;
 
+    @MockBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @BeforeEach
+    void setUp() {
+        User testUser = new User();
+        testUser.setId(1L);
+        testUser.setUsername("testuser");
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(testUser, null, Collections.emptyList()));
+    }
+
     @Test
     void getNotifications_ShouldReturnList() throws Exception {
         NotificationDTO dto = new NotificationDTO(
@@ -46,7 +63,6 @@ class NotificationControllerTest {
         when(notificationService.getNotifications(anyLong(), anyString())).thenReturn(list);
 
         mockMvc.perform(get("/notifications")
-                        .param("userId", "1")
                         .param("type", "likes"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].type").value("LIKE"))
@@ -57,8 +73,7 @@ class NotificationControllerTest {
     void getNotifications_ShouldReturnEmptyList() throws Exception {
         when(notificationService.getNotifications(anyLong(), anyString())).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(get("/notifications")
-                        .param("userId", "1"))
+        mockMvc.perform(get("/notifications"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$").isEmpty());
