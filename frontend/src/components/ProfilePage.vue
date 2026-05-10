@@ -1726,4 +1726,28 @@ const handlePostClick = (post) => {
 .list-move {
   transition: transform 0.3s ease;
 }
+
+@media (max-width: 768px) {
+  .profile-header {
+    padding: 20px 16px;
+    gap: 16px;
+  }
+
+  .profile-avatar {
+    width: 72px;
+    height: 72px;
+  }
+
+  .stats-row {
+    gap: 16px;
+  }
+
+  .tab-content {
+    padding: 0 8px;
+  }
+
+  .edit-modal-content {
+    padding: 16px;
+  }
+}
 </style>

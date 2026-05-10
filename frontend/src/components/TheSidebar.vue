@@ -184,6 +184,12 @@ onMounted(() => {
   z-index: 100;
 }
 
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+}
+
 .logo-area {
   height: var(--header-height);
   display: flex;

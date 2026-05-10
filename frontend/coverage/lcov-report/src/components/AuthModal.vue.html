@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">99.34% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>303/305</span>
+                <span class='fraction'>302/302</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.11% </span>
+                <span class="strong">93.02% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>41/45</span>
+                <span class='fraction'>40/43</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">99.34% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>303/305</span>
+                <span class='fraction'>302/302</span>
             </div>
         
             
@@ -365,10 +365,8 @@
 <a name='L300'></a><a href='#L300'>300</a>
 <a name='L301'></a><a href='#L301'>301</a>
 <a name='L302'></a><a href='#L302'>302</a>
-<a name='L303'></a><a href='#L303'>303</a>
-<a name='L304'></a><a href='#L304'>304</a>
-<a name='L305'></a><a href='#L305'>305</a>
-<a name='L306'></a><a href='#L306'>306</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L303'></a><a href='#L303'>303</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -420,10 +418,6 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -675,10 +669,11 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&lt;script setup&gt;
 import { ref, computed } from 'vue'
+import { setAuth } from '../api/index.js'
 &nbsp;
 const emit = defineEmits(['close', 'login-success'])
 &nbsp;
-const mode = ref('login') // 'login' or 'register'
+const mode = ref('login')
 const username = ref('')
 const password = ref('')
 const confirmPassword = ref('')
@@ -690,8 +685,8 @@ const isFormValid = computed(() =&gt; {
   if (mode.value === 'login') {
     return username.value.length &gt;= 3 &amp;&amp; password.value.length &gt;= 6
   } else {
-    return username.value.length &gt;= 3 &amp;&amp; 
-           password.value.length &gt;= 6 &amp;&amp; 
+    return username.value.length &gt;= 3 &amp;&amp;
+           password.value.length &gt;= 6 &amp;&amp;
            password.value === confirmPassword.value
   }
 })
@@ -703,37 +698,33 @@ const switchMode = () =&gt; {
 &nbsp;
 const handleSubmit = async () =&gt; {
   if (!isFormValid.value) return
-  
+&nbsp;
   loading.value = true
   errorMessage.value = ''
-  
+&nbsp;
   try {
     const endpoint = mode.value === 'login' ? '/auth/login' <span class="branch-0 cbranch-no" title="branch not covered" >: '/auth/register'</span>
-    const body = mode.value === 'login' 
+    const body = mode.value === 'login'
       ? { username: username.value, password: password.value }
 <span class="branch-0 cbranch-no" title="branch not covered" >      : { username: username.value, password: password.value }</span>
-    
+&nbsp;
     const response = await fetch(`/api${endpoint}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
     })
-    
+&nbsp;
     const data = await response.json()
-    
+&nbsp;
     if (!response.ok) {
       throw new Error(data.message <span class="branch-0 cbranch-no" title="branch not covered" >|| '操作失败')</span>
     }
-    
-    // Fix URL if needed
-    if (data.avatar &amp;&amp; data.avatar.startsWith('http://localhost:3000')) <span class="branch-0 cbranch-no" title="branch not covered" >{</span>
-<span class="cstat-no" title="statement not covered" >      data.avatar = data.avatar.replace('http://localhost:3000', '/api')</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-    // Success! Store user info and emit event
-    localStorage.setItem('user', JSON.stringify(data))
-    emit('login-success', data)
-    
+    // 分离 token 和 user 信息
+    const { token, ...user } = data
+    setAuth(token, user)
+    emit('login-success', user)
+&nbsp;
   } catch (error) {
     errorMessage.value = error.message
   } finally {
@@ -985,7 +976,7 @@ const handleSubmit = async () =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-04-29T03:21:13.109Z
+                at 2026-05-10T09:14:37.661Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

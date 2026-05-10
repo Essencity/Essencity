@@ -14,10 +14,9 @@ const columns = ref([])
 
 const updateColumnCount = () => {
   const width = window.innerWidth
-  // Available width is roughly window.innerWidth - 240px (Sidebar)
-  // 5 columns * 210 + 4 * 16 = 1114px required content width
-  // So window needs ~1360px.
-  if (width >= 1380) {
+  if (width <= 768) {
+    columnCount.value = 2
+  } else if (width >= 1380) {
     columnCount.value = 5
   } else if (width >= 1120) {
     columnCount.value = 4
@@ -84,5 +83,16 @@ onUnmounted(() => {
   width: 210px;
   display: flex;
   flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .masonry-grid {
+    gap: 8px;
+    justify-content: space-between;
+  }
+
+  .masonry-column {
+    width: calc((100% - 8px) / 2);
+  }
 }
 </style>

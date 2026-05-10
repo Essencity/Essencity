@@ -104,6 +104,27 @@ const handleCardClick = () => {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+@media (max-width: 768px) {
+  .media-container {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 4;
+  }
+
+  .post-title {
+    font-size: 13px;
+  }
+
+  .card-footer {
+    font-size: 11px;
+  }
+
+  .avatar {
+    width: 16px;
+    height: 16px;
+  }
+}
+
 .cover-image {
   width: 100%;
   height: 100%;

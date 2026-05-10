@@ -77,6 +77,21 @@ const placeholderText = computed(() => {
   z-index: 90;
 }
 
+@media (max-width: 768px) {
+  .header {
+    height: var(--header-height);
+    padding: 0 12px;
+  }
+
+  .right-actions {
+    display: none;
+  }
+
+  .search-input-wrapper {
+    height: 40px;
+  }
+}
+
 .search-container {
   /* flex: 1; Removed flexible width */
   width: 100%;

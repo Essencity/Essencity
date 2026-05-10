@@ -1526,5 +1526,23 @@ const canPublish = computed(() => {
   width: 150px;
   background: transparent;
 }
+
+@media (max-width: 768px) {
+  .content-area {
+    padding: 12px;
+  }
+
+  .specs-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .image-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .main-body {
+    flex-direction: column;
+  }
+}
 </style>
 

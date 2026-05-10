@@ -267,7 +267,18 @@ onMounted(() => {
   line-height: 1.5;
 }
 
+@media (max-width: 768px) {
+  .notification-container {
+    padding: 0 12px;
+  }
 
+  .tabs-header {
+    gap: 16px;
+    padding: 12px 0;
+  }
 
-
+  .tab-btn {
+    font-size: 14px;
+  }
+}
 </style>
