@@ -1,65 +1,45 @@
 # Essencity 架构设计文档
 
-> 最后更新：2026-03-24
+> 最后更新：2026-05-10
 
 ## 1. 系统架构图
 
-```mermaid
-graph TB
-    subgraph Frontend["前端 Frontend (Vue 3)"]
-        UI["UI 组件层<br/>(Element Plus)"]
-        Router["路由层<br/>(Vue Router)"]
-        State["状态层<br/>(Pinia)"]
-        API["API 层<br/>(Axios)"]
-
-        UI --> Router
-        Router --> State
-        State --> API
-    end
-
-    subgraph Backend["后端 Backend (Spring Boot 3)"]
-        subgraph Controllers["控制器层"]
-            AuthC["AuthController<br/>/auth/**"]
-            PostC["PostController<br/>/posts/**"]
-            FileC["FileController<br/>/uploads/**"]
-            NotifC["NotificationController<br/>/notifications/**"]
-        end
-
-        subgraph Services["服务层"]
-            AuthS["AuthService"]
-            PostS["PostService"]
-            UserS["UserService"]
-            NotifS["NotificationService"]
-        end
-
-        subgraph Data["数据层"]
-            Repos["Repository 层<br/>(JPA)"]
-            DB[("MySQL 8.0")]
-        end
-
-        subgraph Security["安全层"]
-            SecConfig["SecurityConfig<br/>(JWT + BCrypt)"]
-            CorsConfig["CORS 配置"]
-        end
-
-        Controllers --> Services
-        Services --> Repos
-        Repos --> DB
-    end
-
-    subgraph External["外部服务"]
-        VolAPI["火山引擎豆包大模型<br/>(AI 智能总结)"]
-        FileStorage["本地文件存储<br/>/static/uploads/"]
-    end
-
-    API --> AuthC
-    API --> PostC
-    API --> FileC
-    API --> NotifC
-
-    PostC --> FileStorage
-    PostS --> VolAPI
 ```
+┌─────────────────────────────────────────────────────────────┐
+│                      浏览器 / 手机                            │
+└─────────────────────────┬───────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────────┐
+│                   前端 (Vue 3 + Vite)                        │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐   │
+│  │ 组件层    │  │ API 层   │  │ 状态管理  │  │ 工具函数  │   │
+│  │ Vant 4   │  │ Fetch    │  │ (ref)    │  │ composables│  │
+│  └──────────┘  └──────────┘  └──────────┘  └──────────┘   │
+└─────────────────────────┬───────────────────────────────────┘
+                          │ HTTP
+                          ▼
+┌─────────────────────────────────────────────────────────────┐
+│                后端 (Spring Boot 3.2)                        │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │                  Security Filter                      │  │
+│  │              (JWT + BCrypt + CORS)                    │  │
+│  └──────────────────────────────────────────────────────┘  │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐   │
+│  │Controller│  │ Service  │  │Repository│  │  Entity  │   │
+│  │  层      │→│  层       │→│  层       │←│  层       │   │
+│  └──────────┘  └──────────┘  └──────────┘  └──────────┘   │
+└─────────────────────────┬───────────────────────────────────┘
+                          │
+          ┌───────────────┼───────────────┐
+          ▼               ▼               ▼
+    ┌──────────┐   ┌──────────┐   ┌──────────┐
+    │  MySQL   │   │ 文件存储  │   │ MiniMax  │
+    │  8.0     │   │ uploads/ │   │ AI API   │
+    └──────────┘   └──────────┘   └──────────┘
+```
+
+---
 
 ## 2. 技术栈详情
 
@@ -67,219 +47,166 @@ graph TB
 | 类别 | 技术 | 说明 |
 |------|------|------|
 | 框架 | Vue 3 (Composition API) | 渐进式前端框架 |
-| 构建工具 | Vite | 快速开发服务器 |
-| UI 库 | Element Plus | Vue 3 组件库 |
-| 状态管理 | Pinia | Vue 3 推荐状态管理 |
-| 路由 | Vue Router | SPA 路由管理 |
-| HTTP 客户端 | Axios | API 请求封装 |
-| 样式 | CSS | 全局样式 |
+| 构建工具 | Vite 5 | 快速开发服务器 |
+| 移动端 UI | Vant 4 | TabBar、Popup 等组件 |
+| HTTP 客户端 | Fetch API | 原生 API |
+| 语音识别 | Web Speech API | 浏览器原生 API |
 
 ### 后端
 | 类别 | 技术 | 说明 |
 |------|------|------|
-| 框架 | Spring Boot 3 | Java 主流框架 |
-| ORM | Spring Data JPA | 数据库持久化 |
+| 框架 | Spring Boot 3.2 | Java 主流框架 |
+| ORM | Spring Data JPA | 数据持久化 |
+| 安全 | Spring Security | 认证授权 |
 | 数据库 | MySQL 8.0 | 关系型数据库 |
-| 安全 | Spring Security + JWT | 身份认证 |
-| 密码加密 | BCrypt | 密码哈希 |
-| API 文档 | Swagger | API 调试界面 |
+| 认证 | JWT | 无状态认证 |
+| 加密 | BCrypt | 密码加密 |
+| AI | MiniMax API | AI 总结能力 |
 
-### 外部服务
-| 服务 | 用途 |
-|------|------|
-| 火山引擎豆包大模型 | AI 笔记总结（待接入） |
+---
 
-## 3. 前端目录结构
+## 3. 后端架构
 
-```
-frontend/src/
-├── components/              # Vue 组件
-│   ├── TheHeader.vue        # 顶部导航
-│   ├── TheSidebar.vue       # 侧边栏
-│   ├── MasonryGrid.vue      # 瀑布流布局
-│   ├── CategoryTabs.vue     # 分类标签
-│   ├── PostCard.vue         # 帖子卡片
-│   ├── PostDetailModal.vue  # 帖子详情弹窗
-│   ├── CreationPage.vue     # 创作页面
-│   ├── ProfilePage.vue      # 个人主页
-│   ├── NotificationPage.vue # 通知页面
-│   ├── AuthModal.vue        # 登录/注册弹窗
-│   └── CompleteProfileModal.vue  # 完善资料弹窗
-├── config/                  # 配置文件
-├── App.vue                  # 根组件
-├── main.js                  # 入口文件
-└── style.css                # 全局样式
-```
-
-## 4. 后端目录结构
+### 3.1 包结构
 
 ```
-backend/src/main/java/com/xiaohongshu/
-├── config/
-│   ├── SecurityConfig.java  # Spring Security + JWT 配置
-│   └── WebConfig.java       # CORS + 资源处理
-├── controller/
-│   ├── AuthController.java       # 认证（注册/登录）
-│   ├── PostController.java       # 帖子 CRUD + 点赞/收藏/评论
-│   ├── FileController.java       # 文件上传
-│   └── NotificationController.java # 通知
-├── service/
-│   ├── AuthService.java
-│   ├── PostService.java
-│   ├── UserService.java
-│   └── NotificationService.java
-├── repository/
-│   ├── UserRepository.java
-│   ├── PostRepository.java
-│   ├── LikeRepository.java
-│   ├── CollectionRepository.java
-│   ├── CommentRepository.java
-│   └── FollowRepository.java
-├── entity/
-│   ├── User.java
-│   ├── Post.java
-│   ├── Like.java
-│   ├── Collection.java
-│   ├── Comment.java
-│   └── Follow.java
-├── dto/
-│   └── NotificationDTO.java
-├── XiaohongshuApplication.java   # 启动类
-├── DataInitializer.java          # 数据初始化
-└── DbConnectionTest.java         # 数据库连接测试
+com.xiaohongshu/
+├── config/              # 配置类
+│   ├── SecurityConfig   # Spring Security 配置
+│   ├── JwtUtil          # JWT 工具类
+│   ├── JwtAuthenticationFilter  # JWT 过滤器
+│   └── WebConfig        # CORS + 静态资源配置
+├── controller/          # 控制器
+│   ├── AuthController   # 认证相关
+│   ├── PostController   # 帖子相关
+│   ├── FileController   # 文件上传
+│   ├── AIController     # AI 总结
+│   └── NotificationController  # 通知
+├── service/             # 服务层
+├── repository/          # 数据访问层
+├── entity/              # 实体类
+├── dto/                 # 数据传输对象
+└── DataInitializer.java # 测试数据初始化
 ```
 
-## 5. API 架构
-
-### 5.1 认证模块 `/auth/**`
-```
-POST /auth/register     # 用户注册
-POST /auth/login        # 用户登录
-```
-
-### 5.2 帖子模块 `/posts/**`
-```
-GET    /posts                    # 获取帖子列表（支持搜索/标签过滤）
-GET    /posts/{id}               # 获取帖子详情
-POST   /posts                    # 创建帖子
-DELETE /posts/{id}               # 删除帖子
-POST   /posts/upload             # 上传图片/视频
-
-# 互动
-GET    /posts/{id}/like/status   # 点赞状态
-POST   /posts/{id}/like          # 点赞
-POST   /posts/{id}/unlike        # 取消点赞
-GET    /posts/{id}/collect/status # 收藏状态
-POST   /posts/{id}/collect       # 收藏
-POST   /posts/{id}/uncollect     # 取消收藏
-
-# 评论
-GET    /posts/{id}/comments      # 获取评论
-POST   /posts/{id}/comments      # 添加评论
-DELETE /posts/comments/{id}      # 删除评论
-
-# 用户数据
-GET    /posts/user/{id}/stats    # 用户统计（帖子/获赞/收藏数）
-GET    /posts/user/{id}/collections # 用户收藏列表
-GET    /posts/user/{id}/likes    # 用户点赞列表
-```
-
-### 5.3 用户模块
-```
-GET    /users/{id}               # 获取用户信息
-PUT    /users/{id}               # 更新用户信息
-GET    /users/{id}/followers      # 粉丝列表
-GET    /users/{id}/following      # 关注列表
-POST   /users/{id}/follow         # 关注
-POST   /users/{id}/unfollow       # 取关
-```
-
-### 5.4 通知模块
-```
-GET    /notifications            # 获取通知列表
-```
-
-### 5.5 文件模块
-```
-GET    /uploads/**                # 访问上传的文件
-```
-
-## 6. 安全架构
-
-```mermaid
-graph LR
-    Client["客户端"] --> Token["JWT Token"]
-    Token --> Filter["JWT 过滤器"]
-    Filter --> Auth["认证服务"]
-    Auth --> UserDB[("用户数据库")]
-
-    style Token fill:#f96
-    style Filter fill:#bbf
-```
-
-### 安全措施
-| 措施 | 说明 |
-|------|------|
-| JWT | 无状态认证，Token 包含用户信息 |
-| BCrypt | 密码加密存储，不可逆 |
-| CORS | 限制允许的请求来源 |
-| CSRF | 已禁用（前后端分离模式） |
-| 文件上传 | 校验文件大小和类型 |
-
-## 7. 数据流
-
-```mermaid
-sequenceDiagram
-    participant U as 用户
-    participant F as 前端
-    participant A as Axios
-    participant B as 后端
-    participant DB as MySQL
-
-    U->>F: 操作（发评论）
-    F->>A: POST /posts/1/comments
-    A->>B: HTTP Request + JWT
-    B->>B: 验证 Token
-    B->>DB: 查询/写入
-    DB-->>B: 结果
-    B-->>A: JSON Response
-    A-->>F: 返回数据
-    F-->>U: 更新界面
-```
-
-## 8. 部署架构
+### 3.2 认证流程
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                     用户浏览器                        │
-└─────────────────────┬───────────────────────────────┘
-                      │ HTTP
-                      ▼
-┌─────────────────────────────────────────────────────┐
-│                   Nginx (可选)                       │
-│              反向代理 + 静态资源缓存                    │
-└─────────────────────┬───────────────────────────────┘
-                      │
-        ┌─────────────┴─────────────┐
-        ▼                           ▼
-┌───────────────┐         ┌───────────────┐
-│  前端 Vite    │         │  后端 Spring  │
-│  :5173 (dev)  │         │   Boot :8080  │
-│  静态资源      │         │   API 服务    │
-└───────────────┘         └───────┬───────┘
-                                   │
-                                   ▼
-                          ┌───────────────┐
-                          │   MySQL :3306 │
-                          │   xiaohongshu │
-                          └───────────────┘
+用户登录 → 验证密码(BCrypt) → 生成 JWT → 返回 Token
+    ↓
+后续请求 → JWT Filter → 解析 Token → 验证身份 → 处理请求
 ```
 
-## 9. 未来扩展点
+---
 
-| 功能 | 状态 | 说明 |
+## 4. 数据库设计
+
+### 4.1 ER 图
+
+```
+users ──┬── posts ──┬── comments
+        │          ├── likes
+        │          └── collections
+        │
+        └── follows (自关联)
+```
+
+### 4.2 核心表
+
+| 表名 | 说明 | 主要字段 |
+|------|------|----------|
+| users | 用户表 | id, username, password, nickname, avatar, bio |
+| posts | 帖子表 | id, title, description, type, url, author_id, tag |
+| comments | 评论表 | id, post_id, user_id, content, parent_id |
+| likes | 点赞表 | id, user_id, post_id |
+| collections | 收藏表 | id, user_id, post_id |
+| follows | 关注表 | id, follower_id, following_id |
+
+---
+
+## 5. API 设计
+
+### 5.1 认证相关
+
+| 方法 | 路径 | 说明 |
 |------|------|------|
-| AI 笔记总结 | 待开发 | 火山引擎豆包大模型 |
-| 语音搜索 | 待开发 | Web Speech API |
-| 话题标签 | 待开发 | 发布页 + 详情页 |
-| 多图笔记 | 待开发 | 最多 9 张 |
+| POST | /api/auth/register | 用户注册 |
+| POST | /api/auth/login | 用户登录 |
+| GET | /api/auth/me | 获取当前用户 |
+
+### 5.2 帖子相关
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | /api/posts | 获取帖子列表 |
+| POST | /api/posts | 创建帖子 |
+| GET | /api/posts/{id} | 获取帖子详情 |
+| PUT | /api/posts/{id} | 更新帖子 |
+| DELETE | /api/posts/{id} | 删除帖子 |
+| POST | /api/posts/{id}/like | 点赞/取消点赞 |
+| POST | /api/posts/{id}/collect | 收藏/取消收藏 |
+
+### 5.3 评论相关
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | /api/posts/{id}/comments | 获取评论列表 |
+| POST | /api/posts/{id}/comments | 发表评论 |
+| DELETE | /api/comments/{id} | 删除评论 |
+
+### 5.4 其他
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| POST | /api/upload | 文件上传 |
+| POST | /api/ai/summarize | AI 总结 |
+| GET | /api/notifications | 获取通知 |
+
+---
+
+## 6. 安全设计
+
+### 6.1 认证授权
+
+- JWT Token 认证，有效期 24 小时
+- BCrypt 密码加密
+- 无状态会话管理
+
+### 6.2 安全防护
+
+- CORS 跨域配置
+- SQL 注入防护（JPA 参数化查询）
+- XSS 防护（CSP 策略）
+- 文件上传校验（类型、大小）
+
+---
+
+## 7. 移动端适配
+
+### 7.1 响应式断点
+
+- 移动端：≤ 768px
+- 桌面端：> 768px
+
+### 7.2 布局策略
+
+| 组件 | 桌面端 | 移动端 |
+|------|--------|--------|
+| 导航 | 左侧边栏 | 底部 TabBar |
+| 瀑布流 | 3-5 列 | 2 列自适应 |
+| 详情页 | 弹窗 | 全屏 |
+| 搜索栏 | 居中 + 操作链接 | 简化 |
+
+---
+
+## 8. 文件存储
+
+### 8.1 存储位置
+
+- 运行时：`backend/uploads/`
+- 通过 `/api/uploads/**` 访问
+
+### 8.2 文件命名
+
+- UUID + 原始文件名
+- 示例：`7ca432b6-d59e-4b84-9779-958f86618f65_笔记本主页面.png`

@@ -46,6 +46,17 @@ const handleCategoryClick = (cat) => {
   z-index: 80;
 }
 
+@media (max-width: 768px) {
+  .category-tabs {
+    padding: 12px;
+  }
+
+  .tab-btn {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+}
+
 .category-tabs::-webkit-scrollbar {
   display: none;
 }

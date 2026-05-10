@@ -1413,4 +1413,56 @@ watch(() => props.post.id, () => {
   font-size: 14px;
   margin-right: 4px;
 }
+
+@media (max-width: 768px) {
+  .modal-overlay {
+    align-items: flex-end;
+  }
+
+  .post-detail-modal {
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  .close-btn {
+    top: 12px;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .close-btn svg {
+    color: var(--white);
+  }
+
+  .media-section {
+    flex: none;
+    height: 50vh;
+  }
+
+  .details-section {
+    width: 100%;
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .actions-bar {
+    padding: 12px;
+  }
+
+  .content-area {
+    padding: 12px 16px;
+  }
+
+  .comments-section {
+    padding: 12px 16px;
+  }
+
+  .author-header {
+    padding: 12px 16px;
+  }
+}
 </style>

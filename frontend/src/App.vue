@@ -10,6 +10,7 @@ import AuthModal from './components/AuthModal.vue'
 import ProfilePage from './components/ProfilePage.vue'
 import PostDetailModal from './components/PostDetailModal.vue'
 import CompleteProfileModal from './components/CompleteProfileModal.vue'
+import MobileBottomBar from './components/MobileBottomBar.vue'
 import { getCurrentUser, clearAuth } from './api/index.js'
 
 const currentView = ref('discovery')
@@ -347,6 +348,13 @@ onMounted(() => {
       :user="currentUser"
       @complete="handleProfileCompleted"
     />
+
+    <MobileBottomBar
+      :active-item="currentView"
+      :current-user="currentUser"
+      @change="handleNavChange"
+      @show-login="handleShowLogin"
+    />
   </div>
 </template>
 
@@ -373,5 +381,16 @@ onMounted(() => {
   flex: 1;
   overflow-y: auto;
   padding: 0 20px;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+    padding-bottom: calc(var(--mobile-tabbar-height) + var(--safe-area-bottom));
+  }
+
+  .content-scroll {
+    padding: 0 8px;
+  }
 }
 </style>
