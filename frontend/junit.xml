@@ -1,25 +1,771 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuites name="vitest tests" tests="215" failures="0" errors="0" time="5.601">
-    <testsuite name="src/api/__tests__/ai.spec.js" timestamp="2026-05-10T09:14:37.092Z" hostname="LAPTOP-KG5KRE96" tests="8" failures="0" errors="0" skipped="0" time="0.022">
-        <testcase classname="src/api/__tests__/ai.spec.js" name="ai.js API &gt; getAiSummary &gt; 成功获取AI总结" time="0.008">
+<testsuites name="vitest tests" tests="215" failures="0" errors="0" time="18.935">
+    <testsuite name="src/api/__tests__/ai.spec.js" timestamp="2026-05-12T05:16:47.127Z" hostname="LAPTOP-KG5KRE96" tests="8" failures="0" errors="0" skipped="0" time="0.021">
+        <testcase classname="src/api/__tests__/ai.spec.js" name="ai.js API &gt; getAiSummary &gt; 成功获取AI总结" time="0.006">
         </testcase>
-        <testcase classname="src/api/__tests__/ai.spec.js" name="ai.js API &gt; getAiSummary &gt; 获取失败时抛出错误" time="0.002">
+        <testcase classname="src/api/__tests__/ai.spec.js" name="ai.js API &gt; getAiSummary &gt; 获取失败时抛出错误" time="0.003">
         </testcase>
         <testcase classname="src/api/__tests__/ai.spec.js" name="ai.js API &gt; getAiSummary &gt; 使用正确的URL格式" time="0.001">
         </testcase>
-        <testcase classname="src/api/__tests__/ai.spec.js" name="ai.js API &gt; generateAiSummary &gt; 成功生成AI总结" time="0.001">
+        <testcase classname="src/api/__tests__/ai.spec.js" name="ai.js API &gt; generateAiSummary &gt; 成功生成AI总结" time="0.002">
         </testcase>
         <testcase classname="src/api/__tests__/ai.spec.js" name="ai.js API &gt; generateAiSummary &gt; 生成失败时抛出错误" time="0.001">
         </testcase>
-        <testcase classname="src/api/__tests__/ai.spec.js" name="ai.js API &gt; generateAiSummary &gt; 使用POST方法" time="0.004">
+        <testcase classname="src/api/__tests__/ai.spec.js" name="ai.js API &gt; generateAiSummary &gt; 使用POST方法" time="0.003">
         </testcase>
         <testcase classname="src/api/__tests__/ai.spec.js" name="ai.js API &gt; generateAiSummary &gt; 设置正确的Content-Type" time="0.002">
         </testcase>
-        <testcase classname="src/api/__tests__/ai.spec.js" name="ai.js API &gt; generateAiSummary &gt; 正确传递请求体参数" time="0.001">
+        <testcase classname="src/api/__tests__/ai.spec.js" name="ai.js API &gt; generateAiSummary &gt; 正确传递请求体参数" time="0">
         </testcase>
     </testsuite>
-    <testsuite name="src/composables/__tests__/useSpeech.spec.js" timestamp="2026-05-10T09:14:37.095Z" hostname="LAPTOP-KG5KRE96" tests="10" failures="0" errors="0" skipped="0" time="0.02">
-        <testcase classname="src/composables/__tests__/useSpeech.spec.js" name="useSpeech composable &gt; checkSupport &gt; 应返回 true 当浏览器支持语音识别" time="0.008">
+    <testsuite name="src/components/__tests__/AiLoading.spec.js" timestamp="2026-05-12T05:16:47.131Z" hostname="LAPTOP-KG5KRE96" tests="11" failures="0" errors="0" skipped="0" time="0.091">
+        <testcase classname="src/components/__tests__/AiLoading.spec.js" name="AiLoading.vue &gt; 默认属性 &gt; 默认 size 为 medium" time="0.035">
+        </testcase>
+        <testcase classname="src/components/__tests__/AiLoading.spec.js" name="AiLoading.vue &gt; 默认属性 &gt; 默认 text 为&quot;加载中...&quot;" time="0.004">
+        </testcase>
+        <testcase classname="src/components/__tests__/AiLoading.spec.js" name="AiLoading.vue &gt; 默认属性 &gt; medium 尺寸应用正确类名" time="0.017">
+        </testcase>
+        <testcase classname="src/components/__tests__/AiLoading.spec.js" name="AiLoading.vue &gt; 尺寸变体 &gt; small 尺寸应用正确类名" time="0.004">
+        </testcase>
+        <testcase classname="src/components/__tests__/AiLoading.spec.js" name="AiLoading.vue &gt; 尺寸变体 &gt; large 尺寸应用正确类名" time="0.003">
+        </testcase>
+        <testcase classname="src/components/__tests__/AiLoading.spec.js" name="AiLoading.vue &gt; 尺寸变体 &gt; size prop 验证器接受有效值" time="0.01">
+        </testcase>
+        <testcase classname="src/components/__tests__/AiLoading.spec.js" name="AiLoading.vue &gt; 加载文字 &gt; 显示自定义加载文字" time="0.003">
+        </testcase>
+        <testcase classname="src/components/__tests__/AiLoading.spec.js" name="AiLoading.vue &gt; 加载文字 &gt; 不传 text 时不显示文字" time="0.004">
+        </testcase>
+        <testcase classname="src/components/__tests__/AiLoading.spec.js" name="AiLoading.vue &gt; 加载文字 &gt; text 为 null 时不显示文字" time="0.003">
+        </testcase>
+        <testcase classname="src/components/__tests__/AiLoading.spec.js" name="AiLoading.vue &gt; 结构验证 &gt; 包含三个加载点" time="0.003">
+        </testcase>
+        <testcase classname="src/components/__tests__/AiLoading.spec.js" name="AiLoading.vue &gt; 结构验证 &gt; 加载容器结构正确" time="0.003">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/__tests__/AiSummary.spec.js" timestamp="2026-05-12T05:16:47.135Z" hostname="LAPTOP-KG5KRE96" tests="14" failures="0" errors="0" skipped="0" time="0.202">
+        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; 初始状态 &gt; 初始状态应显示空状态和获取按钮" time="0.055">
+        </testcase>
+        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; 初始状态 &gt; 不应显示加载状态" time="0.006">
+        </testcase>
+        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; 初始状态 &gt; 不应显示错误状态" time="0.007">
+        </testcase>
+        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; 初始状态 &gt; 不应显示总结内容" time="0.005">
+        </testcase>
+        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; 获取总结成功 &gt; 点击获取按钮后调用 getAiSummary" time="0.034">
+        </testcase>
+        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; 获取总结成功 &gt; 成功获取总结后显示总结内容" time="0.01">
+        </testcase>
+        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; 获取总结成功 &gt; 成功获取总结后 hasSummary 为 true" time="0.007">
+        </testcase>
+        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; 获取总结失败后自动生成 &gt; 获取失败时自动触发生成" time="0.012">
+        </testcase>
+        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; 获取总结失败后自动生成 &gt; 404错误时自动触发生成" time="0.006">
+        </testcase>
+        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; 关闭功能 &gt; 点击关闭按钮应触发 close 事件" time="0.023">
+        </testcase>
+        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; 关闭功能 &gt; 点击遮罩层应触发 close 事件" time="0.006">
+        </testcase>
+        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; Props 验证 &gt; 应正确接收 postId" time="0.014">
+        </testcase>
+        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; Props 验证 &gt; 应正确接收 title" time="0.007">
+        </testcase>
+        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; Props 验证 &gt; 应正确接收 content" time="0.005">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/__tests__/AuthModal.spec.js" timestamp="2026-05-12T05:16:47.139Z" hostname="LAPTOP-KG5KRE96" tests="20" failures="0" errors="0" skipped="0" time="0.281">
+        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 初始状态 &gt; 默认模式为登录" time="0.049">
+        </testcase>
+        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 初始状态 &gt; 用户名和密码初始为空" time="0.008">
+        </testcase>
+        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 初始状态 &gt; 错误信息初始为空" time="0.007">
+        </testcase>
+        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 初始状态 &gt; 加载状态初始为 false" time="0.006">
+        </testcase>
+        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 表单验证 &gt; 登录时用户名少于3位无效" time="0.01">
+        </testcase>
+        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 表单验证 &gt; 登录时密码少于6位无效" time="0.007">
+        </testcase>
+        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 表单验证 &gt; 登录时用户名密码都有效" time="0.008">
+        </testcase>
+        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 表单验证 &gt; 注册时确认密码不一致无效" time="0.021">
+        </testcase>
+        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 表单验证 &gt; 注册时所有字段有效" time="0.018">
+        </testcase>
+        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 模式切换 &gt; switchMode 切换登录和注册" time="0.007">
+        </testcase>
+        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 模式切换 &gt; 切换模式时清空错误信息" time="0.009">
+        </testcase>
+        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 表单提交 &gt; 表单无效时不提交" time="0.011">
+        </testcase>
+        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 表单提交 &gt; 登录成功触发 login-success 事件" time="0.012">
+        </testcase>
+        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 表单提交 &gt; 登录失败显示错误信息" time="0.009">
+        </testcase>
+        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 关闭功能 &gt; 点击关闭按钮触发 close 事件" time="0.032">
+        </testcase>
+        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 关闭功能 &gt; 点击遮罩层触发 close 事件" time="0.007">
+        </testcase>
+        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; UI 显示 &gt; 登录模式显示&quot;登录&quot;标题" time="0.009">
+        </testcase>
+        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; UI 显示 &gt; 注册模式显示&quot;注册&quot;标题" time="0.011">
+        </testcase>
+        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; UI 显示 &gt; 显示注册时有确认密码字段" time="0.028">
+        </testcase>
+        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; UI 显示 &gt; 登录时无确认密码字段" time="0.007">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/__tests__/CategoryTabs.spec.js" timestamp="2026-05-12T05:16:47.145Z" hostname="LAPTOP-KG5KRE96" tests="7" failures="0" errors="0" skipped="0" time="0.06">
+        <testcase classname="src/components/__tests__/CategoryTabs.spec.js" name="CategoryTabs.vue &gt; 初始状态 &gt; 默认选中&quot;推荐&quot;分类" time="0.023">
+        </testcase>
+        <testcase classname="src/components/__tests__/CategoryTabs.spec.js" name="CategoryTabs.vue &gt; 初始状态 &gt; 默认推荐分类有 active 类名" time="0.015">
+        </testcase>
+        <testcase classname="src/components/__tests__/CategoryTabs.spec.js" name="CategoryTabs.vue &gt; 分类列表 &gt; 包含所有预设分类" time="0.004">
+        </testcase>
+        <testcase classname="src/components/__tests__/CategoryTabs.spec.js" name="CategoryTabs.vue &gt; 分类列表 &gt; 总共11个分类" time="0.004">
+        </testcase>
+        <testcase classname="src/components/__tests__/CategoryTabs.spec.js" name="CategoryTabs.vue &gt; 分类切换 &gt; 点击&quot;美食&quot;分类触发 change 事件" time="0.009">
+        </testcase>
+        <testcase classname="src/components/__tests__/CategoryTabs.spec.js" name="CategoryTabs.vue &gt; 分类切换 &gt; 点击后 activeCategory 更新" time="0.003">
+        </testcase>
+        <testcase classname="src/components/__tests__/CategoryTabs.spec.js" name="CategoryTabs.vue &gt; Props &gt; 默认 activeCategory 为&quot;推荐&quot;" time="0.002">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/__tests__/CompleteProfileModal.spec.js" timestamp="2026-05-12T05:16:47.147Z" hostname="LAPTOP-KG5KRE96" tests="12" failures="0" errors="0" skipped="0" time="0.204">
+        <testcase classname="src/components/__tests__/CompleteProfileModal.spec.js" name="CompleteProfileModal.vue &gt; 初始状态 &gt; nickname 初始为空" time="0.053">
+        </testcase>
+        <testcase classname="src/components/__tests__/CompleteProfileModal.spec.js" name="CompleteProfileModal.vue &gt; 初始状态 &gt; gender 默认为&quot;保密&quot;" time="0.008">
+        </testcase>
+        <testcase classname="src/components/__tests__/CompleteProfileModal.spec.js" name="CompleteProfileModal.vue &gt; 初始状态 &gt; avatarFile 初始为 null" time="0.012">
+        </testcase>
+        <testcase classname="src/components/__tests__/CompleteProfileModal.spec.js" name="CompleteProfileModal.vue &gt; 初始状态 &gt; loading 初始为 false" time="0.009">
+        </testcase>
+        <testcase classname="src/components/__tests__/CompleteProfileModal.spec.js" name="CompleteProfileModal.vue &gt; 初始状态 &gt; errorMessage 初始为空" time="0.012">
+        </testcase>
+        <testcase classname="src/components/__tests__/CompleteProfileModal.spec.js" name="CompleteProfileModal.vue &gt; 头像预览 &gt; 使用用户现有头像作为预览" time="0.011">
+        </testcase>
+        <testcase classname="src/components/__tests__/CompleteProfileModal.spec.js" name="CompleteProfileModal.vue &gt; 头像预览 &gt; 用户无头像时预览为空" time="0.018">
+        </testcase>
+        <testcase classname="src/components/__tests__/CompleteProfileModal.spec.js" name="CompleteProfileModal.vue &gt; 文件上传 &gt; 文件大小超过2MB显示错误" time="0.03">
+        </testcase>
+        <testcase classname="src/components/__tests__/CompleteProfileModal.spec.js" name="CompleteProfileModal.vue &gt; 表单验证 &gt; 昵称为空时显示错误" time="0.009">
+        </testcase>
+        <testcase classname="src/components/__tests__/CompleteProfileModal.spec.js" name="CompleteProfileModal.vue &gt; 表单验证 &gt; 昵称有效时不显示错误" time="0.01">
+        </testcase>
+        <testcase classname="src/components/__tests__/CompleteProfileModal.spec.js" name="CompleteProfileModal.vue &gt; 表单提交 &gt; 成功更新后触发 complete 事件" time="0.015">
+        </testcase>
+        <testcase classname="src/components/__tests__/CompleteProfileModal.spec.js" name="CompleteProfileModal.vue &gt; Props &gt; 正确接收 user" time="0.011">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/__tests__/CreationPage.spec.js" timestamp="2026-05-12T05:16:47.150Z" hostname="LAPTOP-KG5KRE96" tests="17" failures="0" errors="0" skipped="0" time="0.218">
+        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 初始状态 &gt; 默认激活视频标签" time="0.058">
+        </testcase>
+        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 初始状态 &gt; 默认发布类型为立即发布" time="0.008">
+        </testcase>
+        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 初始状态 &gt; 图片列表初始为空" time="0.011">
+        </testcase>
+        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 初始状态 &gt; 未选择标签" time="0.009">
+        </testcase>
+        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 标签选择 &gt; 预置标签列表包含10个标签" time="0.014">
+        </testcase>
+        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 标签选择 &gt; 可以选择预置标签" time="0.012">
+        </testcase>
+        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 标签选择 &gt; isCustomTag 在选择自定义标签时返回 true" time="0.026">
+        </testcase>
+        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 标签选择 &gt; isCustomTag 在选择预置标签时返回 false" time="0.006">
+        </testcase>
+        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 自定义标签 &gt; toggleCustomTagInput 切换显示状态" time="0.008">
+        </testcase>
+        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 自定义标签 &gt; selectCustomTag 设置带 # 的标签" time="0.009">
+        </testcase>
+        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 自定义标签 &gt; selectCustomTag 忽略空白标签" time="0.008">
+        </testcase>
+        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 自定义标签 &gt; 已选标签时不能选自定义标签" time="0.007">
+        </testcase>
+        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 图片处理 &gt; removeImage 移除指定索引的图片" time="0.008">
+        </testcase>
+        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 文件大小格式化 &gt; 小于1MB返回KB单位" time="0.01">
+        </testcase>
+        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 文件大小格式化 &gt; 大于等于1MB返回MB单位" time="0.008">
+        </testcase>
+        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 视频时长格式化 &gt; 正确格式化时长" time="0.006">
+        </testcase>
+        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 视频时长格式化 &gt; 处理0秒" time="0.007">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/__tests__/MasonryGrid.spec.js" timestamp="2026-05-12T05:16:47.155Z" hostname="LAPTOP-KG5KRE96" tests="11" failures="0" errors="0" skipped="0" time="0.209">
+        <testcase classname="src/components/__tests__/MasonryGrid.spec.js" name="MasonryGrid.vue &gt; 初始状态 &gt; items 为空时渲染空网格" time="0.058">
+        </testcase>
+        <testcase classname="src/components/__tests__/MasonryGrid.spec.js" name="MasonryGrid.vue &gt; 初始状态 &gt; 列数根据窗口宽度设置" time="0.006">
+        </testcase>
+        <testcase classname="src/components/__tests__/MasonryGrid.spec.js" name="MasonryGrid.vue &gt; 列数计算 &gt; 窗口宽度 &gt;= 1380 时列数为5" time="0.006">
+        </testcase>
+        <testcase classname="src/components/__tests__/MasonryGrid.spec.js" name="MasonryGrid.vue &gt; 列数计算 &gt; 窗口宽度 &gt;= 1120 时列数为4" time="0.004">
+        </testcase>
+        <testcase classname="src/components/__tests__/MasonryGrid.spec.js" name="MasonryGrid.vue &gt; 列数计算 &gt; 窗口宽度 &gt;= 800 时列数为3" time="0.004">
+        </testcase>
+        <testcase classname="src/components/__tests__/MasonryGrid.spec.js" name="MasonryGrid.vue &gt; 列数计算 &gt; 窗口宽度 &lt; 800 时列数为2" time="0.003">
+        </testcase>
+        <testcase classname="src/components/__tests__/MasonryGrid.spec.js" name="MasonryGrid.vue &gt; 项目分发 &gt; 正确分发项目到各列" time="0.065">
+        </testcase>
+        <testcase classname="src/components/__tests__/MasonryGrid.spec.js" name="MasonryGrid.vue &gt; 项目分发 &gt; 轮询分发确保均匀分布" time="0.007">
+        </testcase>
+        <testcase classname="src/components/__tests__/MasonryGrid.spec.js" name="MasonryGrid.vue &gt; 项目分发 &gt; 空items时columns为空数组" time="0.004">
+        </testcase>
+        <testcase classname="src/components/__tests__/MasonryGrid.spec.js" name="MasonryGrid.vue &gt; Props &gt; 正确接收 items prop" time="0.045">
+        </testcase>
+        <testcase classname="src/components/__tests__/MasonryGrid.spec.js" name="MasonryGrid.vue &gt; Props &gt; items 为空数组" time="0.003">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/__tests__/NotificationPage.spec.js" timestamp="2026-05-12T05:16:47.159Z" hostname="LAPTOP-KG5KRE96" tests="22" failures="0" errors="0" skipped="0" time="0.19">
+        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; 初始状态 &gt; 默认标签为&quot;评论和回复&quot;" time="0.038">
+        </testcase>
+        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; 初始状态 &gt; 通知列表初始为空" time="0.006">
+        </testcase>
+        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; 初始状态 &gt; 加载状态初始为 false" time="0.005">
+        </testcase>
+        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; 标签列表 &gt; 包含三个标签" time="0.005">
+        </testcase>
+        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; 标签列表 &gt; 标签包含正确 id" time="0.011">
+        </testcase>
+        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; 获取通知 &gt; 无用户时不获取" time="0.006">
+        </testcase>
+        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; 获取通知 &gt; 有用户时获取通知" time="0.041">
+            <system-err>
+Failed to fetch notifications: TypeError: Cannot read properties of undefined (reading &apos;ok&apos;)
+    at Proxy.fetchNotifications [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\NotificationPage.vue:67:13[90m)[39m
+    at [90mD:\yclin\移动计算\Essencity\frontend\[39msrc\components\__tests__\NotificationPage.spec.js:68:7
+    at runTest [90m(file:///D:/yclin/%E7%A7%BB%E5%8A%A8%E8%AE%A1%E7%AE%97/Essencity/frontend/[39mnode_modules/[4m@vitest[24m/runner/dist/index.js:781:11[90m)[39m
+    at runSuite [90m(file:///D:/yclin/%E7%A7%BB%E5%8A%A8%E8%AE%A1%E7%AE%97/Essencity/frontend/[39mnode_modules/[4m@vitest[24m/runner/dist/index.js:909:15[90m)[39m
+    at runSuite [90m(file:///D:/yclin/%E7%A7%BB%E5%8A%A8%E8%AE%A1%E7%AE%97/Essencity/frontend/[39mnode_modules/[4m@vitest[24m/runner/dist/index.js:909:15[90m)[39m
+    at runSuite [90m(file:///D:/yclin/%E7%A7%BB%E5%8A%A8%E8%AE%A1%E7%AE%97/Essencity/frontend/[39mnode_modules/[4m@vitest[24m/runner/dist/index.js:909:15[90m)[39m
+    at runFiles [90m(file:///D:/yclin/%E7%A7%BB%E5%8A%A8%E8%AE%A1%E7%AE%97/Essencity/frontend/[39mnode_modules/[4m@vitest[24m/runner/dist/index.js:958:5[90m)[39m
+    at startTests [90m(file:///D:/yclin/%E7%A7%BB%E5%8A%A8%E8%AE%A1%E7%AE%97/Essencity/frontend/[39mnode_modules/[4m@vitest[24m/runner/dist/index.js:967:3[90m)[39m
+    at [90mfile:///D:/yclin/%E7%A7%BB%E5%8A%A8%E8%AE%A1%E7%AE%97/Essencity/frontend/[39mnode_modules/[4mvitest[24m/dist/chunks/runtime-runBaseTests.oAvMKtQC.js:116:7
+    at withEnv [90m(file:///D:/yclin/%E7%A7%BB%E5%8A%A8%E8%AE%A1%E7%AE%97/Essencity/frontend/[39mnode_modules/[4mvitest[24m/dist/chunks/runtime-runBaseTests.oAvMKtQC.js:83:5[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; 时间格式化 &gt; 小于1分钟显示1分钟前" time="0.008">
+        </testcase>
+        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; 时间格式化 &gt; 小于1小时显示分钟前" time="0.005">
+        </testcase>
+        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; 时间格式化 &gt; 小于24小时显示小时前" time="0.006">
+        </testcase>
+        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; 时间格式化 &gt; 超过24小时显示月-日" time="0.004">
+        </testcase>
+        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; 时间格式化 &gt; 超过1年显示完整日期" time="0.003">
+        </testcase>
+        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; Helper 函数 &gt; fixUrl 处理 /api 前缀" time="0.003">
+        </testcase>
+        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; Helper 函数 &gt; fixUrl 处理 /uploads 路径" time="0.004">
+        </testcase>
+        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; Helper 函数 &gt; fixUrl 处理普通 URL" time="0.004">
+        </testcase>
+        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; Helper 函数 &gt; fixUrl 处理 null" time="0.005">
+        </testcase>
+        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; Helper 函数 &gt; getImageUrl 返回默认头像" time="0.004">
+        </testcase>
+        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; Helper 函数 &gt; getImageUrl 处理相对路径" time="0.004">
+        </testcase>
+        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; Helper 函数 &gt; getImageUrl 处理完整 URL" time="0.003">
+        </testcase>
+        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; Helper 函数 &gt; getMediaUrl 返回相对路径" time="0.003">
+        </testcase>
+        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; Helper 函数 &gt; getMediaUrl 处理 null" time="0.004">
+        </testcase>
+        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; Props &gt; 正确接收 currentUser" time="0.012">
+            <system-err>
+Failed to fetch notifications: TypeError: Cannot read properties of undefined (reading &apos;ok&apos;)
+    at fetchNotifications [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\NotificationPage.vue:67:13[90m)[39m
+
+            </system-err>
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/__tests__/PostCard.spec.js" timestamp="2026-05-12T05:16:47.165Z" hostname="LAPTOP-KG5KRE96" tests="12" failures="0" errors="0" skipped="0" time="0.154">
+        <testcase classname="src/components/__tests__/PostCard.spec.js" name="PostCard.vue &gt; 初始状态 &gt; 正确显示帖子标题" time="0.063">
+        </testcase>
+        <testcase classname="src/components/__tests__/PostCard.spec.js" name="PostCard.vue &gt; 初始状态 &gt; 正确显示用户名" time="0.012">
+        </testcase>
+        <testcase classname="src/components/__tests__/PostCard.spec.js" name="PostCard.vue &gt; 图片处理 &gt; 图片使用 getMediaUrl 处理" time="0.008">
+        </testcase>
+        <testcase classname="src/components/__tests__/PostCard.spec.js" name="PostCard.vue &gt; 图片处理 &gt; 完整 URL 直接使用" time="0.006">
+        </testcase>
+        <testcase classname="src/components/__tests__/PostCard.spec.js" name="PostCard.vue &gt; 头像处理 &gt; 空头像返回默认头像" time="0.007">
+        </testcase>
+        <testcase classname="src/components/__tests__/PostCard.spec.js" name="PostCard.vue &gt; 头像处理 &gt; 相对路径添加 /api 前缀" time="0.007">
+        </testcase>
+        <testcase classname="src/components/__tests__/PostCard.spec.js" name="PostCard.vue &gt; 点赞数格式化 &gt; 小于10000直接显示" time="0.006">
+        </testcase>
+        <testcase classname="src/components/__tests__/PostCard.spec.js" name="PostCard.vue &gt; 点赞数格式化 &gt; 大于等于10000显示万" time="0.004">
+        </testcase>
+        <testcase classname="src/components/__tests__/PostCard.spec.js" name="PostCard.vue &gt; 点赞数格式化 &gt; 正好10000显示1.0万" time="0.017">
+        </testcase>
+        <testcase classname="src/components/__tests__/PostCard.spec.js" name="PostCard.vue &gt; 视频标识 &gt; 视频类型显示播放图标" time="0.007">
+        </testcase>
+        <testcase classname="src/components/__tests__/PostCard.spec.js" name="PostCard.vue &gt; 视频标识 &gt; 图片类型不显示播放图标" time="0.006">
+        </testcase>
+        <testcase classname="src/components/__tests__/PostCard.spec.js" name="PostCard.vue &gt; 点击事件 &gt; 点击卡片触发 open-detail 事件" time="0.009">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/__tests__/PostDetailModal.spec.js" timestamp="2026-05-12T05:16:47.168Z" hostname="LAPTOP-KG5KRE96" tests="21" failures="0" errors="0" skipped="0" time="0.573">
+        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; 初始状态 &gt; isLiked 初始值来自 props" time="0.096">
+            <system-err>
+Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; 初始状态 &gt; isCollected 初始值来自 props" time="0.019">
+            <system-err>
+Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; 初始状态 &gt; likeCount 初始值来自 props" time="0.015">
+            <system-err>
+Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; 初始状态 &gt; 评论列表初始为空" time="0.043">
+            <system-err>
+Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; 初始状态 &gt; newComment 初始为空" time="0.024">
+            <system-err>
+Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; Helper 函数 &gt; getAvatar 返回默认头像" time="0.016">
+            <system-err>
+Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; Helper 函数 &gt; getAvatar 处理相对路径" time="0.014">
+            <system-err>
+Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; Helper 函数 &gt; getAvatar 处理完整 URL" time="0.036">
+            <system-err>
+Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; Helper 函数 &gt; getMediaUrl 处理相对路径" time="0.014">
+            <system-err>
+Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; Helper 函数 &gt; getMediaUrl 处理完整 URL" time="0.013">
+            <system-err>
+Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; Helper 函数 &gt; getMediaUrl 处理 null" time="0.014">
+            <system-err>
+Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; 点赞数格式化 &gt; 小于10000直接显示" time="0.067">
+            <system-err>
+Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; 点赞数格式化 &gt; 大于等于10000显示万" time="0.022">
+            <system-err>
+Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; 收藏数格式化 &gt; 小于10000直接显示" time="0.016">
+            <system-err>
+Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; 收藏数格式化 &gt; 大于等于10000显示万" time="0.023">
+            <system-err>
+Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; AI 总结 &gt; showAiSummary 初始为 false" time="0.017">
+            <system-err>
+Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; AI 总结 &gt; 切换 showAiSummary 状态" time="0.02">
+            <system-err>
+Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; 交互事件 &gt; 点击关闭按钮触发 close 事件" time="0.046">
+            <system-err>
+Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; 交互事件 &gt; 点击遮罩层触发 close 事件" time="0.017">
+            <system-err>
+Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; Props &gt; 正确接收 post" time="0.02">
+            <system-err>
+Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; Props &gt; 正确接收 currentUser" time="0.014">
+            <system-err>
+Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
+Failed to fetch like/collect status: TypeError: Cannot read properties of undefined (reading &apos;ok&apos;)
+    at fetchLikeStatus [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:188:17[90m)[39m
+
+            </system-err>
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/__tests__/ProfilePage.spec.js" timestamp="2026-05-12T05:16:47.178Z" hostname="LAPTOP-KG5KRE96" tests="22" failures="0" errors="0" skipped="0" time="0.471">
+        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; 初始状态 &gt; 默认标签为&quot;笔记&quot;" time="0.084">
+            <system-err>
+Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
+Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; 初始状态 &gt; showEditModal 初始为 false" time="0.013">
+            <system-err>
+Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
+Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; 初始状态 &gt; isSaving 初始为 false" time="0.027">
+            <system-err>
+Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
+Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; 初始状态 &gt; 用户帖子列表初始为空" time="0.039">
+            <system-err>
+Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
+Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Helper 函数 &gt; fixUrl 处理 /api 前缀" time="0.018">
+            <system-err>
+Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
+Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Helper 函数 &gt; fixUrl 处理 http://localhost:3000" time="0.015">
+            <system-err>
+Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
+Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Helper 函数 &gt; fixUrl 处理 http://localhost:8080/api" time="0.018">
+            <system-err>
+Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
+Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Helper 函数 &gt; fixUrl 处理 /uploads 路径" time="0.015">
+            <system-err>
+Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
+Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Helper 函数 &gt; fixUrl 处理 null" time="0.01">
+            <system-err>
+Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
+Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Helper 函数 &gt; getImageUrl 返回空字符串" time="0.012">
+            <system-err>
+Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
+Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Helper 函数 &gt; getImageUrl 处理 http URL" time="0.014">
+            <system-err>
+Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
+Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Helper 函数 &gt; getImageUrl 添加 /api 前缀" time="0.01">
+            <system-err>
+Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
+Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Helper 函数 &gt; getMediaUrl 处理 null" time="0.051">
+            <system-err>
+Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
+Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Helper 函数 &gt; getMediaUrl 处理 http URL" time="0.014">
+            <system-err>
+Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
+Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Helper 函数 &gt; getMediaUrl 处理 /api 路径" time="0.012">
+            <system-err>
+Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
+Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Helper 函数 &gt; getMediaUrl 添加 /api 前缀" time="0.016">
+            <system-err>
+Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
+Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; 标签列表 &gt; 包含笔记、收藏、点赞三个标签" time="0.014">
+            <system-err>
+Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
+Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; 标签列表 &gt; 标签包含正确 id" time="0.021">
+            <system-err>
+Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
+Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; 性别选项 &gt; 包含男、女、保密" time="0.015">
+            <system-err>
+Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
+Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Props &gt; 正确接收 currentUser" time="0.022">
+            <system-err>
+Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
+Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Props &gt; 正确接收 isOwnProfile" time="0.017">
+            <system-err>
+Failed to check follow status: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at checkFollowStatus [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:308:33[90m)[39m
+Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
+Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Props &gt; isOwnProfile 默认为 true" time="0.012">
+            <system-err>
+Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
+Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
+    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
+
+            </system-err>
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/__tests__/TheHeader.spec.js" timestamp="2026-05-12T05:16:47.188Z" hostname="LAPTOP-KG5KRE96" tests="9" failures="0" errors="0" skipped="0" time="0.179">
+        <testcase classname="src/components/__tests__/TheHeader.spec.js" name="TheHeader.vue &gt; 初始状态 &gt; 搜索框初始为空" time="0.047">
+        </testcase>
+        <testcase classname="src/components/__tests__/TheHeader.spec.js" name="TheHeader.vue &gt; 初始状态 &gt; 语音搜索弹窗初始关闭" time="0.007">
+        </testcase>
+        <testcase classname="src/components/__tests__/TheHeader.spec.js" name="TheHeader.vue &gt; 搜索功能 &gt; 输入搜索内容" time="0.03">
+        </testcase>
+        <testcase classname="src/components/__tests__/TheHeader.spec.js" name="TheHeader.vue &gt; 搜索功能 &gt; 点击搜索按钮触发 search 事件" time="0.015">
+        </testcase>
+        <testcase classname="src/components/__tests__/TheHeader.spec.js" name="TheHeader.vue &gt; 搜索功能 &gt; 按下回车触发搜索" time="0.013">
+        </testcase>
+        <testcase classname="src/components/__tests__/TheHeader.spec.js" name="TheHeader.vue &gt; 语音搜索 &gt; 点击麦克风按钮打开语音搜索" time="0.032">
+        </testcase>
+        <testcase classname="src/components/__tests__/TheHeader.spec.js" name="TheHeader.vue &gt; placeholder 文本 &gt; 未登录时显示&quot;登录探索更多内容&quot;" time="0.005">
+        </testcase>
+        <testcase classname="src/components/__tests__/TheHeader.spec.js" name="TheHeader.vue &gt; placeholder 文本 &gt; 登录后显示&quot;搜索趣生活&quot;" time="0.024">
+        </testcase>
+        <testcase classname="src/components/__tests__/TheHeader.spec.js" name="TheHeader.vue &gt; Props &gt; 正确接收 currentUser" time="0.005">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/__tests__/TheSidebar.spec.js" timestamp="2026-05-12T05:16:47.191Z" hostname="LAPTOP-KG5KRE96" tests="12" failures="0" errors="0" skipped="0" time="0.347">
+        <testcase classname="src/components/__tests__/TheSidebar.spec.js" name="TheSidebar.vue &gt; 初始状态 &gt; 更多菜单初始关闭" time="0.099">
+        </testcase>
+        <testcase classname="src/components/__tests__/TheSidebar.spec.js" name="TheSidebar.vue &gt; 初始状态 &gt; 暗色模式根据 localStorage 设置" time="0.026">
+        </testcase>
+        <testcase classname="src/components/__tests__/TheSidebar.spec.js" name="TheSidebar.vue &gt; 菜单项 &gt; 包含发现、发布、通知三个菜单" time="0.027">
+        </testcase>
+        <testcase classname="src/components/__tests__/TheSidebar.spec.js" name="TheSidebar.vue &gt; 菜单项 &gt; 菜单项包含正确 id" time="0.031">
+        </testcase>
+        <testcase classname="src/components/__tests__/TheSidebar.spec.js" name="TheSidebar.vue &gt; 更多菜单 &gt; 点击切换更多菜单显示状态" time="0.028">
+        </testcase>
+        <testcase classname="src/components/__tests__/TheSidebar.spec.js" name="TheSidebar.vue &gt; 更多菜单 &gt; 退出登录触发 logout 事件" time="0.017">
+        </testcase>
+        <testcase classname="src/components/__tests__/TheSidebar.spec.js" name="TheSidebar.vue &gt; 暗色模式 &gt; 切换暗色模式" time="0.013">
+        </testcase>
+        <testcase classname="src/components/__tests__/TheSidebar.spec.js" name="TheSidebar.vue &gt; 头像 URL 处理 &gt; 空 URL 返回空字符串" time="0.014">
+        </testcase>
+        <testcase classname="src/components/__tests__/TheSidebar.spec.js" name="TheSidebar.vue &gt; 头像 URL 处理 &gt; http URL 直接返回" time="0.021">
+        </testcase>
+        <testcase classname="src/components/__tests__/TheSidebar.spec.js" name="TheSidebar.vue &gt; 头像 URL 处理 &gt; 相对路径添加 /api 前缀" time="0.02">
+        </testcase>
+        <testcase classname="src/components/__tests__/TheSidebar.spec.js" name="TheSidebar.vue &gt; Props &gt; 正确接收 activeItem" time="0.029">
+        </testcase>
+        <testcase classname="src/components/__tests__/TheSidebar.spec.js" name="TheSidebar.vue &gt; Props &gt; 正确接收 currentUser" time="0.019">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/__tests__/VoiceSearch.spec.js" timestamp="2026-05-12T05:16:47.195Z" hostname="LAPTOP-KG5KRE96" tests="7" failures="0" errors="0" skipped="0" time="0.225">
+        <testcase classname="src/components/__tests__/VoiceSearch.spec.js" name="VoiceSearch.vue &gt; 初始状态 &gt; visible 为 false 时不显示弹窗" time="0.038">
+            <system-err>
+[Vue warn]: Invalid watch source:  { value: [32m&apos;&apos;[39m } A watch source can only be a getter/effect function, a ref, a reactive object, or an array of these types. 
+  at &lt;VoiceSearch visible=false ref=&quot;VTU_COMPONENT&quot; &gt; 
+  at &lt;VTUROOT&gt;
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/VoiceSearch.spec.js" name="VoiceSearch.vue &gt; 初始状态 &gt; visible 为 true 时显示弹窗" time="0.039">
+            <system-err>
+[Vue warn]: Invalid watch source:  { value: [32m&apos;&apos;[39m } A watch source can only be a getter/effect function, a ref, a reactive object, or an array of these types. 
+  at &lt;VoiceSearch visible=true ref=&quot;VTU_COMPONENT&quot; &gt; 
+  at &lt;VTUROOT&gt;
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/VoiceSearch.spec.js" name="VoiceSearch.vue &gt; 组件交互 &gt; 点击关闭按钮触发 close 事件" time="0.02">
+            <system-err>
+[Vue warn]: Invalid watch source:  { value: [32m&apos;&apos;[39m } A watch source can only be a getter/effect function, a ref, a reactive object, or an array of these types. 
+  at &lt;VoiceSearch visible=true ref=&quot;VTU_COMPONENT&quot; &gt; 
+  at &lt;VTUROOT&gt;
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/VoiceSearch.spec.js" name="VoiceSearch.vue &gt; 组件交互 &gt; 点击遮罩层触发 close 事件" time="0.008">
+            <system-err>
+[Vue warn]: Invalid watch source:  { value: [32m&apos;&apos;[39m } A watch source can only be a getter/effect function, a ref, a reactive object, or an array of these types. 
+  at &lt;VoiceSearch visible=true ref=&quot;VTU_COMPONENT&quot; &gt; 
+  at &lt;VTUROOT&gt;
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/VoiceSearch.spec.js" name="VoiceSearch.vue &gt; 组件交互 &gt; 按下回车键触发搜索" time="0.018">
+            <system-err>
+[Vue warn]: Invalid watch source:  { value: [32m&apos;&apos;[39m } A watch source can only be a getter/effect function, a ref, a reactive object, or an array of these types. 
+  at &lt;VoiceSearch visible=true ref=&quot;VTU_COMPONENT&quot; &gt; 
+  at &lt;VTUROOT&gt;
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/VoiceSearch.spec.js" name="VoiceSearch.vue &gt; Props &gt; visible 为 true 时显示组件" time="0.093">
+            <system-err>
+[Vue warn]: Invalid watch source:  { value: [32m&apos;&apos;[39m } A watch source can only be a getter/effect function, a ref, a reactive object, or an array of these types. 
+  at &lt;VoiceSearch visible=true ref=&quot;VTU_COMPONENT&quot; &gt; 
+  at &lt;VTUROOT&gt;
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/__tests__/VoiceSearch.spec.js" name="VoiceSearch.vue &gt; Props &gt; visible 为 false 时隐藏组件" time="0.002">
+            <system-err>
+[Vue warn]: Invalid watch source:  { value: [32m&apos;&apos;[39m } A watch source can only be a getter/effect function, a ref, a reactive object, or an array of these types. 
+  at &lt;VoiceSearch visible=false ref=&quot;VTU_COMPONENT&quot; &gt; 
+  at &lt;VTUROOT&gt;
+
+            </system-err>
+        </testcase>
+    </testsuite>
+    <testsuite name="src/composables/__tests__/useSpeech.spec.js" timestamp="2026-05-12T05:16:47.198Z" hostname="LAPTOP-KG5KRE96" tests="10" failures="0" errors="0" skipped="0" time="0.016">
+        <testcase classname="src/composables/__tests__/useSpeech.spec.js" name="useSpeech composable &gt; checkSupport &gt; 应返回 true 当浏览器支持语音识别" time="0.005">
             <system-err>
 [Vue warn]: onUnmounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
 
@@ -31,7 +777,7 @@
 
             </system-err>
         </testcase>
-        <testcase classname="src/composables/__tests__/useSpeech.spec.js" name="useSpeech composable &gt; startListening &gt; 初始化后应能启动语音识别" time="0.003">
+        <testcase classname="src/composables/__tests__/useSpeech.spec.js" name="useSpeech composable &gt; startListening &gt; 初始化后应能启动语音识别" time="0.001">
             <system-err>
 [Vue warn]: onUnmounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
 
@@ -61,7 +807,7 @@
 
             </system-err>
         </testcase>
-        <testcase classname="src/composables/__tests__/useSpeech.spec.js" name="useSpeech composable &gt; 状态初始化 &gt; isListening 初始值应为 false" time="0.001">
+        <testcase classname="src/composables/__tests__/useSpeech.spec.js" name="useSpeech composable &gt; 状态初始化 &gt; isListening 初始值应为 false" time="0">
             <system-err>
 [Vue warn]: onUnmounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
 
@@ -73,755 +819,9 @@
 
             </system-err>
         </testcase>
-        <testcase classname="src/composables/__tests__/useSpeech.spec.js" name="useSpeech composable &gt; 状态初始化 &gt; error 初始值应为 null" time="0">
+        <testcase classname="src/composables/__tests__/useSpeech.spec.js" name="useSpeech composable &gt; 状态初始化 &gt; error 初始值应为 null" time="0.001">
             <system-err>
 [Vue warn]: onUnmounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
-
-            </system-err>
-        </testcase>
-    </testsuite>
-    <testsuite name="src/components/__tests__/AiLoading.spec.js" timestamp="2026-05-10T09:14:37.101Z" hostname="LAPTOP-KG5KRE96" tests="11" failures="0" errors="0" skipped="0" time="0.104">
-        <testcase classname="src/components/__tests__/AiLoading.spec.js" name="AiLoading.vue &gt; 默认属性 &gt; 默认 size 为 medium" time="0.034">
-        </testcase>
-        <testcase classname="src/components/__tests__/AiLoading.spec.js" name="AiLoading.vue &gt; 默认属性 &gt; 默认 text 为&quot;加载中...&quot;" time="0.004">
-        </testcase>
-        <testcase classname="src/components/__tests__/AiLoading.spec.js" name="AiLoading.vue &gt; 默认属性 &gt; medium 尺寸应用正确类名" time="0.021">
-        </testcase>
-        <testcase classname="src/components/__tests__/AiLoading.spec.js" name="AiLoading.vue &gt; 尺寸变体 &gt; small 尺寸应用正确类名" time="0.005">
-        </testcase>
-        <testcase classname="src/components/__tests__/AiLoading.spec.js" name="AiLoading.vue &gt; 尺寸变体 &gt; large 尺寸应用正确类名" time="0.004">
-        </testcase>
-        <testcase classname="src/components/__tests__/AiLoading.spec.js" name="AiLoading.vue &gt; 尺寸变体 &gt; size prop 验证器接受有效值" time="0.009">
-        </testcase>
-        <testcase classname="src/components/__tests__/AiLoading.spec.js" name="AiLoading.vue &gt; 加载文字 &gt; 显示自定义加载文字" time="0.005">
-        </testcase>
-        <testcase classname="src/components/__tests__/AiLoading.spec.js" name="AiLoading.vue &gt; 加载文字 &gt; 不传 text 时不显示文字" time="0.004">
-        </testcase>
-        <testcase classname="src/components/__tests__/AiLoading.spec.js" name="AiLoading.vue &gt; 加载文字 &gt; text 为 null 时不显示文字" time="0.005">
-        </testcase>
-        <testcase classname="src/components/__tests__/AiLoading.spec.js" name="AiLoading.vue &gt; 结构验证 &gt; 包含三个加载点" time="0.003">
-        </testcase>
-        <testcase classname="src/components/__tests__/AiLoading.spec.js" name="AiLoading.vue &gt; 结构验证 &gt; 加载容器结构正确" time="0.008">
-        </testcase>
-    </testsuite>
-    <testsuite name="src/components/__tests__/AiSummary.spec.js" timestamp="2026-05-10T09:14:37.104Z" hostname="LAPTOP-KG5KRE96" tests="14" failures="0" errors="0" skipped="0" time="0.178">
-        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; 初始状态 &gt; 初始状态应显示空状态和获取按钮" time="0.058">
-        </testcase>
-        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; 初始状态 &gt; 不应显示加载状态" time="0.006">
-        </testcase>
-        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; 初始状态 &gt; 不应显示错误状态" time="0.006">
-        </testcase>
-        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; 初始状态 &gt; 不应显示总结内容" time="0.005">
-        </testcase>
-        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; 获取总结成功 &gt; 点击获取按钮后调用 getAiSummary" time="0.036">
-        </testcase>
-        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; 获取总结成功 &gt; 成功获取总结后显示总结内容" time="0.01">
-        </testcase>
-        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; 获取总结成功 &gt; 成功获取总结后 hasSummary 为 true" time="0.008">
-        </testcase>
-        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; 获取总结失败后自动生成 &gt; 获取失败时自动触发生成" time="0.008">
-        </testcase>
-        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; 获取总结失败后自动生成 &gt; 404错误时自动触发生成" time="0.008">
-        </testcase>
-        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; 关闭功能 &gt; 点击关闭按钮应触发 close 事件" time="0.006">
-        </testcase>
-        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; 关闭功能 &gt; 点击遮罩层应触发 close 事件" time="0.007">
-        </testcase>
-        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; Props 验证 &gt; 应正确接收 postId" time="0.004">
-        </testcase>
-        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; Props 验证 &gt; 应正确接收 title" time="0.006">
-        </testcase>
-        <testcase classname="src/components/__tests__/AiSummary.spec.js" name="AiSummary.vue &gt; Props 验证 &gt; 应正确接收 content" time="0.005">
-        </testcase>
-    </testsuite>
-    <testsuite name="src/components/__tests__/AuthModal.spec.js" timestamp="2026-05-10T09:14:37.108Z" hostname="LAPTOP-KG5KRE96" tests="20" failures="0" errors="0" skipped="0" time="0.311">
-        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 初始状态 &gt; 默认模式为登录" time="0.06">
-        </testcase>
-        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 初始状态 &gt; 用户名和密码初始为空" time="0.008">
-        </testcase>
-        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 初始状态 &gt; 错误信息初始为空" time="0.012">
-        </testcase>
-        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 初始状态 &gt; 加载状态初始为 false" time="0.008">
-        </testcase>
-        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 表单验证 &gt; 登录时用户名少于3位无效" time="0.013">
-        </testcase>
-        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 表单验证 &gt; 登录时密码少于6位无效" time="0.007">
-        </testcase>
-        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 表单验证 &gt; 登录时用户名密码都有效" time="0.01">
-        </testcase>
-        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 表单验证 &gt; 注册时确认密码不一致无效" time="0.017">
-        </testcase>
-        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 表单验证 &gt; 注册时所有字段有效" time="0.02">
-        </testcase>
-        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 模式切换 &gt; switchMode 切换登录和注册" time="0.009">
-        </testcase>
-        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 模式切换 &gt; 切换模式时清空错误信息" time="0.011">
-        </testcase>
-        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 表单提交 &gt; 表单无效时不提交" time="0.01">
-        </testcase>
-        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 表单提交 &gt; 登录成功触发 login-success 事件" time="0.021">
-        </testcase>
-        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 表单提交 &gt; 登录失败显示错误信息" time="0.009">
-        </testcase>
-        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 关闭功能 &gt; 点击关闭按钮触发 close 事件" time="0.037">
-        </testcase>
-        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; 关闭功能 &gt; 点击遮罩层触发 close 事件" time="0.01">
-        </testcase>
-        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; UI 显示 &gt; 登录模式显示&quot;登录&quot;标题" time="0.011">
-        </testcase>
-        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; UI 显示 &gt; 注册模式显示&quot;注册&quot;标题" time="0.009">
-        </testcase>
-        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; UI 显示 &gt; 显示注册时有确认密码字段" time="0.01">
-        </testcase>
-        <testcase classname="src/components/__tests__/AuthModal.spec.js" name="AuthModal.vue &gt; UI 显示 &gt; 登录时无确认密码字段" time="0.011">
-        </testcase>
-    </testsuite>
-    <testsuite name="src/components/__tests__/CategoryTabs.spec.js" timestamp="2026-05-10T09:14:37.114Z" hostname="LAPTOP-KG5KRE96" tests="7" failures="0" errors="0" skipped="0" time="0.07">
-        <testcase classname="src/components/__tests__/CategoryTabs.spec.js" name="CategoryTabs.vue &gt; 初始状态 &gt; 默认选中&quot;推荐&quot;分类" time="0.027">
-        </testcase>
-        <testcase classname="src/components/__tests__/CategoryTabs.spec.js" name="CategoryTabs.vue &gt; 初始状态 &gt; 默认推荐分类有 active 类名" time="0.018">
-        </testcase>
-        <testcase classname="src/components/__tests__/CategoryTabs.spec.js" name="CategoryTabs.vue &gt; 分类列表 &gt; 包含所有预设分类" time="0.005">
-        </testcase>
-        <testcase classname="src/components/__tests__/CategoryTabs.spec.js" name="CategoryTabs.vue &gt; 分类列表 &gt; 总共11个分类" time="0.004">
-        </testcase>
-        <testcase classname="src/components/__tests__/CategoryTabs.spec.js" name="CategoryTabs.vue &gt; 分类切换 &gt; 点击&quot;美食&quot;分类触发 change 事件" time="0.008">
-        </testcase>
-        <testcase classname="src/components/__tests__/CategoryTabs.spec.js" name="CategoryTabs.vue &gt; 分类切换 &gt; 点击后 activeCategory 更新" time="0.004">
-        </testcase>
-        <testcase classname="src/components/__tests__/CategoryTabs.spec.js" name="CategoryTabs.vue &gt; Props &gt; 默认 activeCategory 为&quot;推荐&quot;" time="0.003">
-        </testcase>
-    </testsuite>
-    <testsuite name="src/components/__tests__/CompleteProfileModal.spec.js" timestamp="2026-05-10T09:14:37.116Z" hostname="LAPTOP-KG5KRE96" tests="12" failures="0" errors="0" skipped="0" time="0.187">
-        <testcase classname="src/components/__tests__/CompleteProfileModal.spec.js" name="CompleteProfileModal.vue &gt; 初始状态 &gt; nickname 初始为空" time="0.056">
-        </testcase>
-        <testcase classname="src/components/__tests__/CompleteProfileModal.spec.js" name="CompleteProfileModal.vue &gt; 初始状态 &gt; gender 默认为&quot;保密&quot;" time="0.011">
-        </testcase>
-        <testcase classname="src/components/__tests__/CompleteProfileModal.spec.js" name="CompleteProfileModal.vue &gt; 初始状态 &gt; avatarFile 初始为 null" time="0.01">
-        </testcase>
-        <testcase classname="src/components/__tests__/CompleteProfileModal.spec.js" name="CompleteProfileModal.vue &gt; 初始状态 &gt; loading 初始为 false" time="0.008">
-        </testcase>
-        <testcase classname="src/components/__tests__/CompleteProfileModal.spec.js" name="CompleteProfileModal.vue &gt; 初始状态 &gt; errorMessage 初始为空" time="0.007">
-        </testcase>
-        <testcase classname="src/components/__tests__/CompleteProfileModal.spec.js" name="CompleteProfileModal.vue &gt; 头像预览 &gt; 使用用户现有头像作为预览" time="0.01">
-        </testcase>
-        <testcase classname="src/components/__tests__/CompleteProfileModal.spec.js" name="CompleteProfileModal.vue &gt; 头像预览 &gt; 用户无头像时预览为空" time="0.01">
-        </testcase>
-        <testcase classname="src/components/__tests__/CompleteProfileModal.spec.js" name="CompleteProfileModal.vue &gt; 文件上传 &gt; 文件大小超过2MB显示错误" time="0.02">
-        </testcase>
-        <testcase classname="src/components/__tests__/CompleteProfileModal.spec.js" name="CompleteProfileModal.vue &gt; 表单验证 &gt; 昵称为空时显示错误" time="0.017">
-        </testcase>
-        <testcase classname="src/components/__tests__/CompleteProfileModal.spec.js" name="CompleteProfileModal.vue &gt; 表单验证 &gt; 昵称有效时不显示错误" time="0.013">
-        </testcase>
-        <testcase classname="src/components/__tests__/CompleteProfileModal.spec.js" name="CompleteProfileModal.vue &gt; 表单提交 &gt; 成功更新后触发 complete 事件" time="0.01">
-        </testcase>
-        <testcase classname="src/components/__tests__/CompleteProfileModal.spec.js" name="CompleteProfileModal.vue &gt; Props &gt; 正确接收 user" time="0.012">
-        </testcase>
-    </testsuite>
-    <testsuite name="src/components/__tests__/CreationPage.spec.js" timestamp="2026-05-10T09:14:37.120Z" hostname="LAPTOP-KG5KRE96" tests="17" failures="0" errors="0" skipped="0" time="0.216">
-        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 初始状态 &gt; 默认激活视频标签" time="0.056">
-        </testcase>
-        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 初始状态 &gt; 默认发布类型为立即发布" time="0.01">
-        </testcase>
-        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 初始状态 &gt; 图片列表初始为空" time="0.013">
-        </testcase>
-        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 初始状态 &gt; 未选择标签" time="0.02">
-        </testcase>
-        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 标签选择 &gt; 预置标签列表包含10个标签" time="0.016">
-        </testcase>
-        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 标签选择 &gt; 可以选择预置标签" time="0.013">
-        </testcase>
-        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 标签选择 &gt; isCustomTag 在选择自定义标签时返回 true" time="0.019">
-        </testcase>
-        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 标签选择 &gt; isCustomTag 在选择预置标签时返回 false" time="0.007">
-        </testcase>
-        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 自定义标签 &gt; toggleCustomTagInput 切换显示状态" time="0.006">
-        </testcase>
-        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 自定义标签 &gt; selectCustomTag 设置带 # 的标签" time="0.007">
-        </testcase>
-        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 自定义标签 &gt; selectCustomTag 忽略空白标签" time="0.007">
-        </testcase>
-        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 自定义标签 &gt; 已选标签时不能选自定义标签" time="0.007">
-        </testcase>
-        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 图片处理 &gt; removeImage 移除指定索引的图片" time="0.007">
-        </testcase>
-        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 文件大小格式化 &gt; 小于1MB返回KB单位" time="0.004">
-        </testcase>
-        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 文件大小格式化 &gt; 大于等于1MB返回MB单位" time="0.006">
-        </testcase>
-        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 视频时长格式化 &gt; 正确格式化时长" time="0.007">
-        </testcase>
-        <testcase classname="src/components/__tests__/CreationPage.spec.js" name="CreationPage.vue &gt; 视频时长格式化 &gt; 处理0秒" time="0.007">
-        </testcase>
-    </testsuite>
-    <testsuite name="src/components/__tests__/MasonryGrid.spec.js" timestamp="2026-05-10T09:14:37.125Z" hostname="LAPTOP-KG5KRE96" tests="11" failures="0" errors="0" skipped="0" time="0.148">
-        <testcase classname="src/components/__tests__/MasonryGrid.spec.js" name="MasonryGrid.vue &gt; 初始状态 &gt; items 为空时渲染空网格" time="0.058">
-        </testcase>
-        <testcase classname="src/components/__tests__/MasonryGrid.spec.js" name="MasonryGrid.vue &gt; 初始状态 &gt; 列数根据窗口宽度设置" time="0.005">
-        </testcase>
-        <testcase classname="src/components/__tests__/MasonryGrid.spec.js" name="MasonryGrid.vue &gt; 列数计算 &gt; 窗口宽度 &gt;= 1380 时列数为5" time="0.004">
-        </testcase>
-        <testcase classname="src/components/__tests__/MasonryGrid.spec.js" name="MasonryGrid.vue &gt; 列数计算 &gt; 窗口宽度 &gt;= 1120 时列数为4" time="0.003">
-        </testcase>
-        <testcase classname="src/components/__tests__/MasonryGrid.spec.js" name="MasonryGrid.vue &gt; 列数计算 &gt; 窗口宽度 &gt;= 800 时列数为3" time="0.004">
-        </testcase>
-        <testcase classname="src/components/__tests__/MasonryGrid.spec.js" name="MasonryGrid.vue &gt; 列数计算 &gt; 窗口宽度 &lt; 800 时列数为2" time="0.003">
-        </testcase>
-        <testcase classname="src/components/__tests__/MasonryGrid.spec.js" name="MasonryGrid.vue &gt; 项目分发 &gt; 正确分发项目到各列" time="0.041">
-        </testcase>
-        <testcase classname="src/components/__tests__/MasonryGrid.spec.js" name="MasonryGrid.vue &gt; 项目分发 &gt; 轮询分发确保均匀分布" time="0.01">
-        </testcase>
-        <testcase classname="src/components/__tests__/MasonryGrid.spec.js" name="MasonryGrid.vue &gt; 项目分发 &gt; 空items时columns为空数组" time="0.003">
-        </testcase>
-        <testcase classname="src/components/__tests__/MasonryGrid.spec.js" name="MasonryGrid.vue &gt; Props &gt; 正确接收 items prop" time="0.009">
-        </testcase>
-        <testcase classname="src/components/__tests__/MasonryGrid.spec.js" name="MasonryGrid.vue &gt; Props &gt; items 为空数组" time="0.004">
-        </testcase>
-    </testsuite>
-    <testsuite name="src/components/__tests__/NotificationPage.spec.js" timestamp="2026-05-10T09:14:37.129Z" hostname="LAPTOP-KG5KRE96" tests="22" failures="0" errors="0" skipped="0" time="0.182">
-        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; 初始状态 &gt; 默认标签为&quot;评论和回复&quot;" time="0.037">
-        </testcase>
-        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; 初始状态 &gt; 通知列表初始为空" time="0.006">
-        </testcase>
-        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; 初始状态 &gt; 加载状态初始为 false" time="0.004">
-        </testcase>
-        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; 标签列表 &gt; 包含三个标签" time="0.009">
-        </testcase>
-        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; 标签列表 &gt; 标签包含正确 id" time="0.004">
-        </testcase>
-        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; 获取通知 &gt; 无用户时不获取" time="0.004">
-        </testcase>
-        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; 获取通知 &gt; 有用户时获取通知" time="0.031">
-            <system-err>
-Failed to fetch notifications: TypeError: Cannot read properties of undefined (reading &apos;ok&apos;)
-    at Proxy.fetchNotifications [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\NotificationPage.vue:67:13[90m)[39m
-    at [90mD:\yclin\移动计算\Essencity\frontend\[39msrc\components\__tests__\NotificationPage.spec.js:68:7
-    at runTest [90m(file:///D:/yclin/%E7%A7%BB%E5%8A%A8%E8%AE%A1%E7%AE%97/Essencity/frontend/[39mnode_modules/[4m@vitest[24m/runner/dist/index.js:781:11[90m)[39m
-    at runSuite [90m(file:///D:/yclin/%E7%A7%BB%E5%8A%A8%E8%AE%A1%E7%AE%97/Essencity/frontend/[39mnode_modules/[4m@vitest[24m/runner/dist/index.js:909:15[90m)[39m
-    at runSuite [90m(file:///D:/yclin/%E7%A7%BB%E5%8A%A8%E8%AE%A1%E7%AE%97/Essencity/frontend/[39mnode_modules/[4m@vitest[24m/runner/dist/index.js:909:15[90m)[39m
-    at runSuite [90m(file:///D:/yclin/%E7%A7%BB%E5%8A%A8%E8%AE%A1%E7%AE%97/Essencity/frontend/[39mnode_modules/[4m@vitest[24m/runner/dist/index.js:909:15[90m)[39m
-    at runFiles [90m(file:///D:/yclin/%E7%A7%BB%E5%8A%A8%E8%AE%A1%E7%AE%97/Essencity/frontend/[39mnode_modules/[4m@vitest[24m/runner/dist/index.js:958:5[90m)[39m
-    at startTests [90m(file:///D:/yclin/%E7%A7%BB%E5%8A%A8%E8%AE%A1%E7%AE%97/Essencity/frontend/[39mnode_modules/[4m@vitest[24m/runner/dist/index.js:967:3[90m)[39m
-    at [90mfile:///D:/yclin/%E7%A7%BB%E5%8A%A8%E8%AE%A1%E7%AE%97/Essencity/frontend/[39mnode_modules/[4mvitest[24m/dist/chunks/runtime-runBaseTests.oAvMKtQC.js:116:7
-    at withEnv [90m(file:///D:/yclin/%E7%A7%BB%E5%8A%A8%E8%AE%A1%E7%AE%97/Essencity/frontend/[39mnode_modules/[4mvitest[24m/dist/chunks/runtime-runBaseTests.oAvMKtQC.js:83:5[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; 时间格式化 &gt; 小于1分钟显示1分钟前" time="0.004">
-        </testcase>
-        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; 时间格式化 &gt; 小于1小时显示分钟前" time="0.004">
-        </testcase>
-        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; 时间格式化 &gt; 小于24小时显示小时前" time="0.004">
-        </testcase>
-        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; 时间格式化 &gt; 超过24小时显示月-日" time="0.003">
-        </testcase>
-        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; 时间格式化 &gt; 超过1年显示完整日期" time="0.004">
-        </testcase>
-        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; Helper 函数 &gt; fixUrl 处理 /api 前缀" time="0.017">
-        </testcase>
-        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; Helper 函数 &gt; fixUrl 处理 /uploads 路径" time="0.004">
-        </testcase>
-        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; Helper 函数 &gt; fixUrl 处理普通 URL" time="0.003">
-        </testcase>
-        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; Helper 函数 &gt; fixUrl 处理 null" time="0.002">
-        </testcase>
-        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; Helper 函数 &gt; getImageUrl 返回默认头像" time="0.004">
-        </testcase>
-        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; Helper 函数 &gt; getImageUrl 处理相对路径" time="0.007">
-        </testcase>
-        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; Helper 函数 &gt; getImageUrl 处理完整 URL" time="0.003">
-        </testcase>
-        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; Helper 函数 &gt; getMediaUrl 返回相对路径" time="0.002">
-        </testcase>
-        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; Helper 函数 &gt; getMediaUrl 处理 null" time="0.012">
-        </testcase>
-        <testcase classname="src/components/__tests__/NotificationPage.spec.js" name="NotificationPage.vue &gt; Props &gt; 正确接收 currentUser" time="0.005">
-            <system-err>
-Failed to fetch notifications: TypeError: Cannot read properties of undefined (reading &apos;ok&apos;)
-    at fetchNotifications [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\NotificationPage.vue:67:13[90m)[39m
-
-            </system-err>
-        </testcase>
-    </testsuite>
-    <testsuite name="src/components/__tests__/PostCard.spec.js" timestamp="2026-05-10T09:14:37.136Z" hostname="LAPTOP-KG5KRE96" tests="12" failures="0" errors="0" skipped="0" time="0.139">
-        <testcase classname="src/components/__tests__/PostCard.spec.js" name="PostCard.vue &gt; 初始状态 &gt; 正确显示帖子标题" time="0.061">
-        </testcase>
-        <testcase classname="src/components/__tests__/PostCard.spec.js" name="PostCard.vue &gt; 初始状态 &gt; 正确显示用户名" time="0.008">
-        </testcase>
-        <testcase classname="src/components/__tests__/PostCard.spec.js" name="PostCard.vue &gt; 图片处理 &gt; 图片使用 getMediaUrl 处理" time="0.007">
-        </testcase>
-        <testcase classname="src/components/__tests__/PostCard.spec.js" name="PostCard.vue &gt; 图片处理 &gt; 完整 URL 直接使用" time="0.006">
-        </testcase>
-        <testcase classname="src/components/__tests__/PostCard.spec.js" name="PostCard.vue &gt; 头像处理 &gt; 空头像返回默认头像" time="0.007">
-        </testcase>
-        <testcase classname="src/components/__tests__/PostCard.spec.js" name="PostCard.vue &gt; 头像处理 &gt; 相对路径添加 /api 前缀" time="0.005">
-        </testcase>
-        <testcase classname="src/components/__tests__/PostCard.spec.js" name="PostCard.vue &gt; 点赞数格式化 &gt; 小于10000直接显示" time="0.01">
-        </testcase>
-        <testcase classname="src/components/__tests__/PostCard.spec.js" name="PostCard.vue &gt; 点赞数格式化 &gt; 大于等于10000显示万" time="0.007">
-        </testcase>
-        <testcase classname="src/components/__tests__/PostCard.spec.js" name="PostCard.vue &gt; 点赞数格式化 &gt; 正好10000显示1.0万" time="0.005">
-        </testcase>
-        <testcase classname="src/components/__tests__/PostCard.spec.js" name="PostCard.vue &gt; 视频标识 &gt; 视频类型显示播放图标" time="0.007">
-        </testcase>
-        <testcase classname="src/components/__tests__/PostCard.spec.js" name="PostCard.vue &gt; 视频标识 &gt; 图片类型不显示播放图标" time="0.004">
-        </testcase>
-        <testcase classname="src/components/__tests__/PostCard.spec.js" name="PostCard.vue &gt; 点击事件 &gt; 点击卡片触发 open-detail 事件" time="0.01">
-        </testcase>
-    </testsuite>
-    <testsuite name="src/components/__tests__/PostDetailModal.spec.js" timestamp="2026-05-10T09:14:37.140Z" hostname="LAPTOP-KG5KRE96" tests="21" failures="0" errors="0" skipped="0" time="0.464">
-        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; 初始状态 &gt; isLiked 初始值来自 props" time="0.136">
-            <system-err>
-Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; 初始状态 &gt; isCollected 初始值来自 props" time="0.019">
-            <system-err>
-Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; 初始状态 &gt; likeCount 初始值来自 props" time="0.024">
-            <system-err>
-Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; 初始状态 &gt; 评论列表初始为空" time="0.016">
-            <system-err>
-Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; 初始状态 &gt; newComment 初始为空" time="0.013">
-            <system-err>
-Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; Helper 函数 &gt; getAvatar 返回默认头像" time="0.016">
-            <system-err>
-Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; Helper 函数 &gt; getAvatar 处理相对路径" time="0.013">
-            <system-err>
-Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; Helper 函数 &gt; getAvatar 处理完整 URL" time="0.016">
-            <system-err>
-Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; Helper 函数 &gt; getMediaUrl 处理相对路径" time="0.02">
-            <system-err>
-Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; Helper 函数 &gt; getMediaUrl 处理完整 URL" time="0.015">
-            <system-err>
-Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; Helper 函数 &gt; getMediaUrl 处理 null" time="0.027">
-            <system-err>
-Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; 点赞数格式化 &gt; 小于10000直接显示" time="0.013">
-            <system-err>
-Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; 点赞数格式化 &gt; 大于等于10000显示万" time="0.015">
-            <system-err>
-Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; 收藏数格式化 &gt; 小于10000直接显示" time="0.009">
-            <system-err>
-Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; 收藏数格式化 &gt; 大于等于10000显示万" time="0.012">
-            <system-err>
-Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; AI 总结 &gt; showAiSummary 初始为 false" time="0.009">
-            <system-err>
-Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; AI 总结 &gt; 切换 showAiSummary 状态" time="0.013">
-            <system-err>
-Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; 交互事件 &gt; 点击关闭按钮触发 close 事件" time="0.035">
-            <system-err>
-Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; 交互事件 &gt; 点击遮罩层触发 close 事件" time="0.015">
-            <system-err>
-Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; Props &gt; 正确接收 post" time="0.012">
-            <system-err>
-Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/PostDetailModal.spec.js" name="PostDetailModal.vue &gt; Props &gt; 正确接收 currentUser" time="0.012">
-            <system-err>
-Failed to fetch comments: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchComments [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:153:33[90m)[39m
-Failed to fetch like/collect status: TypeError: Cannot read properties of undefined (reading &apos;ok&apos;)
-    at fetchLikeStatus [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\PostDetailModal.vue:188:17[90m)[39m
-
-            </system-err>
-        </testcase>
-    </testsuite>
-    <testsuite name="src/components/__tests__/ProfilePage.spec.js" timestamp="2026-05-10T09:14:37.150Z" hostname="LAPTOP-KG5KRE96" tests="22" failures="0" errors="0" skipped="0" time="0.39">
-        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; 初始状态 &gt; 默认标签为&quot;笔记&quot;" time="0.091">
-            <system-err>
-Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
-Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; 初始状态 &gt; showEditModal 初始为 false" time="0.014">
-            <system-err>
-Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
-Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; 初始状态 &gt; isSaving 初始为 false" time="0.018">
-            <system-err>
-Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
-Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; 初始状态 &gt; 用户帖子列表初始为空" time="0.015">
-            <system-err>
-Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
-Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Helper 函数 &gt; fixUrl 处理 /api 前缀" time="0.013">
-            <system-err>
-Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
-Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Helper 函数 &gt; fixUrl 处理 http://localhost:3000" time="0.015">
-            <system-err>
-Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
-Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Helper 函数 &gt; fixUrl 处理 http://localhost:8080/api" time="0.012">
-            <system-err>
-Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
-Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Helper 函数 &gt; fixUrl 处理 /uploads 路径" time="0.009">
-            <system-err>
-Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
-Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Helper 函数 &gt; fixUrl 处理 null" time="0.012">
-            <system-err>
-Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
-Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Helper 函数 &gt; getImageUrl 返回空字符串" time="0.035">
-            <system-err>
-Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
-Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Helper 函数 &gt; getImageUrl 处理 http URL" time="0.01">
-            <system-err>
-Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
-Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Helper 函数 &gt; getImageUrl 添加 /api 前缀" time="0.014">
-            <system-err>
-Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
-Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Helper 函数 &gt; getMediaUrl 处理 null" time="0.011">
-            <system-err>
-Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
-Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Helper 函数 &gt; getMediaUrl 处理 http URL" time="0.008">
-            <system-err>
-Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
-Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Helper 函数 &gt; getMediaUrl 处理 /api 路径" time="0.01">
-            <system-err>
-Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
-Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Helper 函数 &gt; getMediaUrl 添加 /api 前缀" time="0.013">
-            <system-err>
-Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
-Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; 标签列表 &gt; 包含笔记、收藏、点赞三个标签" time="0.014">
-            <system-err>
-Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
-Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; 标签列表 &gt; 标签包含正确 id" time="0.019">
-            <system-err>
-Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
-Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; 性别选项 &gt; 包含男、女、保密" time="0.012">
-            <system-err>
-Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
-Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Props &gt; 正确接收 currentUser" time="0.019">
-            <system-err>
-Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
-Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Props &gt; 正确接收 isOwnProfile" time="0.012">
-            <system-err>
-Failed to check follow status: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at checkFollowStatus [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:308:33[90m)[39m
-Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
-Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/ProfilePage.spec.js" name="ProfilePage.vue &gt; Props &gt; isOwnProfile 默认为 true" time="0.009">
-            <system-err>
-Failed to fetch user stats: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserStats [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:196:51[90m)[39m
-Failed to fetch user posts: TypeError: Cannot read properties of undefined (reading &apos;json&apos;)
-    at fetchUserPosts [90m(D:\yclin\移动计算\Essencity\frontend\[39msrc\components\ProfilePage.vue:227:34[90m)[39m
-
-            </system-err>
-        </testcase>
-    </testsuite>
-    <testsuite name="src/components/__tests__/TheHeader.spec.js" timestamp="2026-05-10T09:14:37.161Z" hostname="LAPTOP-KG5KRE96" tests="9" failures="0" errors="0" skipped="0" time="0.158">
-        <testcase classname="src/components/__tests__/TheHeader.spec.js" name="TheHeader.vue &gt; 初始状态 &gt; 搜索框初始为空" time="0.055">
-        </testcase>
-        <testcase classname="src/components/__tests__/TheHeader.spec.js" name="TheHeader.vue &gt; 初始状态 &gt; 语音搜索弹窗初始关闭" time="0.006">
-        </testcase>
-        <testcase classname="src/components/__tests__/TheHeader.spec.js" name="TheHeader.vue &gt; 搜索功能 &gt; 输入搜索内容" time="0.032">
-        </testcase>
-        <testcase classname="src/components/__tests__/TheHeader.spec.js" name="TheHeader.vue &gt; 搜索功能 &gt; 点击搜索按钮触发 search 事件" time="0.013">
-        </testcase>
-        <testcase classname="src/components/__tests__/TheHeader.spec.js" name="TheHeader.vue &gt; 搜索功能 &gt; 按下回车触发搜索" time="0.016">
-        </testcase>
-        <testcase classname="src/components/__tests__/TheHeader.spec.js" name="TheHeader.vue &gt; 语音搜索 &gt; 点击麦克风按钮打开语音搜索" time="0.019">
-        </testcase>
-        <testcase classname="src/components/__tests__/TheHeader.spec.js" name="TheHeader.vue &gt; placeholder 文本 &gt; 未登录时显示&quot;登录探索更多内容&quot;" time="0.005">
-        </testcase>
-        <testcase classname="src/components/__tests__/TheHeader.spec.js" name="TheHeader.vue &gt; placeholder 文本 &gt; 登录后显示&quot;搜索趣生活&quot;" time="0.005">
-        </testcase>
-        <testcase classname="src/components/__tests__/TheHeader.spec.js" name="TheHeader.vue &gt; Props &gt; 正确接收 currentUser" time="0.005">
-        </testcase>
-    </testsuite>
-    <testsuite name="src/components/__tests__/TheSidebar.spec.js" timestamp="2026-05-10T09:14:37.164Z" hostname="LAPTOP-KG5KRE96" tests="12" failures="0" errors="0" skipped="0" time="0.235">
-        <testcase classname="src/components/__tests__/TheSidebar.spec.js" name="TheSidebar.vue &gt; 初始状态 &gt; 更多菜单初始关闭" time="0.068">
-        </testcase>
-        <testcase classname="src/components/__tests__/TheSidebar.spec.js" name="TheSidebar.vue &gt; 初始状态 &gt; 暗色模式根据 localStorage 设置" time="0.023">
-        </testcase>
-        <testcase classname="src/components/__tests__/TheSidebar.spec.js" name="TheSidebar.vue &gt; 菜单项 &gt; 包含发现、发布、通知三个菜单" time="0.019">
-        </testcase>
-        <testcase classname="src/components/__tests__/TheSidebar.spec.js" name="TheSidebar.vue &gt; 菜单项 &gt; 菜单项包含正确 id" time="0.015">
-        </testcase>
-        <testcase classname="src/components/__tests__/TheSidebar.spec.js" name="TheSidebar.vue &gt; 更多菜单 &gt; 点击切换更多菜单显示状态" time="0.028">
-        </testcase>
-        <testcase classname="src/components/__tests__/TheSidebar.spec.js" name="TheSidebar.vue &gt; 更多菜单 &gt; 退出登录触发 logout 事件" time="0.014">
-        </testcase>
-        <testcase classname="src/components/__tests__/TheSidebar.spec.js" name="TheSidebar.vue &gt; 暗色模式 &gt; 切换暗色模式" time="0.013">
-        </testcase>
-        <testcase classname="src/components/__tests__/TheSidebar.spec.js" name="TheSidebar.vue &gt; 头像 URL 处理 &gt; 空 URL 返回空字符串" time="0.011">
-        </testcase>
-        <testcase classname="src/components/__tests__/TheSidebar.spec.js" name="TheSidebar.vue &gt; 头像 URL 处理 &gt; http URL 直接返回" time="0.01">
-        </testcase>
-        <testcase classname="src/components/__tests__/TheSidebar.spec.js" name="TheSidebar.vue &gt; 头像 URL 处理 &gt; 相对路径添加 /api 前缀" time="0.007">
-        </testcase>
-        <testcase classname="src/components/__tests__/TheSidebar.spec.js" name="TheSidebar.vue &gt; Props &gt; 正确接收 activeItem" time="0.01">
-        </testcase>
-        <testcase classname="src/components/__tests__/TheSidebar.spec.js" name="TheSidebar.vue &gt; Props &gt; 正确接收 currentUser" time="0.013">
-        </testcase>
-    </testsuite>
-    <testsuite name="src/components/__tests__/VoiceSearch.spec.js" timestamp="2026-05-10T09:14:37.168Z" hostname="LAPTOP-KG5KRE96" tests="7" failures="0" errors="0" skipped="0" time="0.212">
-        <testcase classname="src/components/__tests__/VoiceSearch.spec.js" name="VoiceSearch.vue &gt; 初始状态 &gt; visible 为 false 时不显示弹窗" time="0.033">
-            <system-err>
-[Vue warn]: Invalid watch source:  { value: [32m&apos;&apos;[39m } A watch source can only be a getter/effect function, a ref, a reactive object, or an array of these types. 
-  at &lt;VoiceSearch visible=false ref=&quot;VTU_COMPONENT&quot; &gt; 
-  at &lt;VTUROOT&gt;
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/VoiceSearch.spec.js" name="VoiceSearch.vue &gt; 初始状态 &gt; visible 为 true 时显示弹窗" time="0.043">
-            <system-err>
-[Vue warn]: Invalid watch source:  { value: [32m&apos;&apos;[39m } A watch source can only be a getter/effect function, a ref, a reactive object, or an array of these types. 
-  at &lt;VoiceSearch visible=true ref=&quot;VTU_COMPONENT&quot; &gt; 
-  at &lt;VTUROOT&gt;
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/VoiceSearch.spec.js" name="VoiceSearch.vue &gt; 组件交互 &gt; 点击关闭按钮触发 close 事件" time="0.017">
-            <system-err>
-[Vue warn]: Invalid watch source:  { value: [32m&apos;&apos;[39m } A watch source can only be a getter/effect function, a ref, a reactive object, or an array of these types. 
-  at &lt;VoiceSearch visible=true ref=&quot;VTU_COMPONENT&quot; &gt; 
-  at &lt;VTUROOT&gt;
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/VoiceSearch.spec.js" name="VoiceSearch.vue &gt; 组件交互 &gt; 点击遮罩层触发 close 事件" time="0.009">
-            <system-err>
-[Vue warn]: Invalid watch source:  { value: [32m&apos;&apos;[39m } A watch source can only be a getter/effect function, a ref, a reactive object, or an array of these types. 
-  at &lt;VoiceSearch visible=true ref=&quot;VTU_COMPONENT&quot; &gt; 
-  at &lt;VTUROOT&gt;
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/VoiceSearch.spec.js" name="VoiceSearch.vue &gt; 组件交互 &gt; 按下回车键触发搜索" time="0.024">
-            <system-err>
-[Vue warn]: Invalid watch source:  { value: [32m&apos;&apos;[39m } A watch source can only be a getter/effect function, a ref, a reactive object, or an array of these types. 
-  at &lt;VoiceSearch visible=true ref=&quot;VTU_COMPONENT&quot; &gt; 
-  at &lt;VTUROOT&gt;
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/VoiceSearch.spec.js" name="VoiceSearch.vue &gt; Props &gt; visible 为 true 时显示组件" time="0.079">
-            <system-err>
-[Vue warn]: Invalid watch source:  { value: [32m&apos;&apos;[39m } A watch source can only be a getter/effect function, a ref, a reactive object, or an array of these types. 
-  at &lt;VoiceSearch visible=true ref=&quot;VTU_COMPONENT&quot; &gt; 
-  at &lt;VTUROOT&gt;
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/VoiceSearch.spec.js" name="VoiceSearch.vue &gt; Props &gt; visible 为 false 时隐藏组件" time="0.002">
-            <system-err>
-[Vue warn]: Invalid watch source:  { value: [32m&apos;&apos;[39m } A watch source can only be a getter/effect function, a ref, a reactive object, or an array of these types. 
-  at &lt;VoiceSearch visible=false ref=&quot;VTU_COMPONENT&quot; &gt; 
-  at &lt;VTUROOT&gt;
 
             </system-err>
         </testcase>

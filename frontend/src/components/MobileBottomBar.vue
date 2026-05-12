@@ -1,5 +1,5 @@
 <script setup>
-defineProps({
+const props = defineProps({
   activeItem: {
     type: String,
     required: true
@@ -19,7 +19,7 @@ const getImageUrl = (url) => {
 }
 
 const onTabChange = (name) => {
-  if ((name === 'publish' || name === 'profile') && !currentUser) {
+  if ((name === 'publish' || name === 'profile') && !props.currentUser) {
     emit('show-login')
     return
   }
