@@ -31,6 +31,21 @@ const replyToNickname = ref(null)
 const showDeleteMenu = ref(null)
 const showAiSummary = ref(false)
 const showPostDeleteMenu = ref(false)
+const currentImageIndex = ref(0)
+
+const prevImage = () => {
+  if (!props.post.imageUrls || props.post.imageUrls.length === 0) return
+  currentImageIndex.value = currentImageIndex.value === 0
+    ? props.post.imageUrls.length - 1
+    : currentImageIndex.value - 1
+}
+
+const nextImage = () => {
+  if (!props.post.imageUrls || props.post.imageUrls.length === 0) return
+  currentImageIndex.value = currentImageIndex.value >= props.post.imageUrls.length - 1
+    ? 0
+    : currentImageIndex.value + 1
+}
 
 const handleDeletePost = async () => {
   if (!props.currentUser) return
@@ -509,6 +524,7 @@ onMounted(() => {
 })
 
 watch(() => props.post.id, () => {
+  currentImageIndex.value = 0
   fetchComments()
 })
 </script>
@@ -544,18 +560,36 @@ watch(() => props.post.id, () => {
             </div>
           </template>
           
-          <!-- Image post (support multiple images) -->
+          <!-- Image post (support multiple images with carousel) -->
           <template v-else-if="post.type === 'image'">
-            <div v-if="post.imageUrls && post.imageUrls.length > 1" class="image-grid">
-              <img 
-                v-for="(imageUrl, index) in post.imageUrls" 
-                :key="index"
-                :src="getMediaUrl(imageUrl)"
-                :alt="`${post.title} - 图片 ${index + 1}`"
-                class="media-content"
+            <div v-if="post.imageUrls && post.imageUrls.length > 1" class="image-carousel">
+              <img
+                :src="getMediaUrl(post.imageUrls[currentImageIndex])"
+                :alt="`${post.title} - 图片 ${currentImageIndex + 1}`"
+                class="carousel-image"
               />
+              <button class="carousel-btn prev-btn" @click="prevImage">
+                <svg viewBox="0 0 24 24" fill="white">
+                  <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                </svg>
+              </button>
+              <button class="carousel-btn next-btn" @click="nextImage">
+                <svg viewBox="0 0 24 24" fill="white">
+                  <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/>
+                </svg>
+              </button>
+              <div class="carousel-indicators">
+                <span
+                  v-for="(_, index) in post.imageUrls"
+                  :key="index"
+                  class="indicator"
+                  :class="{ active: index === currentImageIndex }"
+                  @click="currentImageIndex = index"
+                />
+              </div>
+              <div class="carousel-counter">{{ currentImageIndex + 1 }} / {{ post.imageUrls.length }}</div>
             </div>
-            <img 
+            <img
               v-else
               :src="getMediaUrl(post.imageUrl) || getMediaUrl(post.coverUrl)"
               :alt="post.title"
@@ -908,6 +942,7 @@ watch(() => props.post.id, () => {
   display: flex;
   flex-direction: column;
   background: var(--white);
+  overflow-y: auto;
 }
 
 .author-header {
@@ -915,6 +950,7 @@ watch(() => props.post.id, () => {
   align-items: center;
   padding: 16px 20px;
   border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
 }
 
 .author-avatar {
@@ -1065,6 +1101,7 @@ watch(() => props.post.id, () => {
 .content-area {
   padding: 16px 20px;
   border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
 }
 
 .post-title {
@@ -1362,6 +1399,7 @@ watch(() => props.post.id, () => {
   display: flex;
   align-items: center;
   gap: 16px;
+  flex-shrink: 0;
 }
 
 .comment-input-wrapper {
@@ -1412,6 +1450,95 @@ watch(() => props.post.id, () => {
   color: var(--text-secondary);
   font-size: 14px;
   margin-right: 4px;
+}
+
+/* Image carousel */
+.image-carousel {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  z-index: 10;
+}
+
+.carousel-btn:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.carousel-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+.prev-btn {
+  left: 16px;
+}
+
+.next-btn {
+  right: 16px;
+}
+
+.carousel-indicators {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.indicator.active {
+  background: white;
+}
+
+.indicator:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.carousel-counter {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  z-index: 10;
 }
 
 @media (max-width: 768px) {

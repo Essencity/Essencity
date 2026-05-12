@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @RestController
 @RequestMapping("/posts")
 @CrossOrigin(origins = "http://localhost:5173", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS}, allowCredentials = "true")
@@ -32,6 +34,7 @@ public class PostController {
     private UserService userService;
 
     private final Path fileStorageLocation;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public PostController(@Value("${file.upload-dir}") String uploadDir) {
         this.fileStorageLocation = Paths.get(uploadDir)
@@ -78,6 +81,18 @@ public class PostController {
             postMap.put("tag", post.getTag());
             postMap.put("likeCount", postService.getLikeCount(post.getId()));
             postMap.put("collectionCount", postService.getCollectionCount(post.getId()));
+            String imageUrlsStr = post.getImageUrls();
+            if (imageUrlsStr != null && !imageUrlsStr.isEmpty()) {
+                try {
+                    List<String> imageUrlsList = objectMapper.readValue(imageUrlsStr,
+                        objectMapper.getTypeFactory().constructCollectionType(List.class, String.class));
+                    postMap.put("imageUrls", imageUrlsList);
+                } catch (Exception e) {
+                    postMap.put("imageUrls", List.of(post.getUrl()));
+                }
+            } else {
+                postMap.put("imageUrls", post.getType().equals("image") ? List.of(post.getUrl()) : List.of());
+            }
             return postMap;
         }).collect(java.util.stream.Collectors.toList());
     }
@@ -105,6 +120,18 @@ public class PostController {
             postMap.put("tag", post.getTag());
             postMap.put("likeCount", postService.getLikeCount(post.getId()));
             postMap.put("collectionCount", postService.getCollectionCount(post.getId()));
+            String imageUrlsStr = post.getImageUrls();
+            if (imageUrlsStr != null && !imageUrlsStr.isEmpty()) {
+                try {
+                    List<String> imageUrlsList = objectMapper.readValue(imageUrlsStr,
+                        objectMapper.getTypeFactory().constructCollectionType(List.class, String.class));
+                    postMap.put("imageUrls", imageUrlsList);
+                } catch (Exception e) {
+                    postMap.put("imageUrls", List.of(post.getUrl()));
+                }
+            } else {
+                postMap.put("imageUrls", post.getType().equals("image") ? List.of(post.getUrl()) : List.of());
+            }
 
             return ResponseEntity.ok(postMap);
         } catch (Exception e) {
@@ -133,6 +160,12 @@ public class PostController {
             post.setCoverUrl((String) postData.get("cover_url"));
             post.setTag((String) postData.get("tag"));
 
+            Object imageUrlsObj = postData.get("imageUrls");
+            if (imageUrlsObj instanceof List) {
+                List<String> imageUrlsList = (List<String>) imageUrlsObj;
+                post.setImageUrls(objectMapper.writeValueAsString(imageUrlsList));
+            }
+
             Long authorId = ((Number) postData.get("author_id")).longValue();
             User author = userService.getUserById(authorId);
             post.setAuthor(author);
@@ -154,6 +187,12 @@ public class PostController {
             post.setUrl((String) postData.get("url"));
             post.setCoverUrl((String) postData.get("cover_url"));
             post.setTag((String) postData.get("tag"));
+
+            Object imageUrlsObj = postData.get("imageUrls");
+            if (imageUrlsObj instanceof List) {
+                List<String> imageUrlsList = (List<String>) imageUrlsObj;
+                post.setImageUrls(objectMapper.writeValueAsString(imageUrlsList));
+            }
 
             Post updated = postService.updatePost(id, post);
             return ResponseEntity.ok(updated);

@@ -242,6 +242,7 @@ const fetchPosts = async (query = '') => {
         const fixedImageUrl = fixUrl(post.imageUrl || post.url) // 图片类型的URL
         const fixedUrl = fixUrl(post.url) // 通用URL
         const fixedVideoUrl = fixUrl(post.videoUrl || post.url) // 视频类型的URL
+        const fixedImageUrls = post.imageUrls ? post.imageUrls.map(url => getMediaUrl(fixUrl(url))) : null
 
         return {
           id: post.id,
@@ -264,7 +265,8 @@ const fetchPosts = async (query = '') => {
           author_avatar: getMediaUrl(fixedAuthorAvatar),
           authorAvatar: getMediaUrl(fixedAuthorAvatar),
           likes: post.likeCount || post.likes || 0,
-          createdAt: post.createdAt || post.created_at
+          createdAt: post.createdAt || post.created_at,
+          imageUrls: fixedImageUrls
         }
     })
   } catch (error) {

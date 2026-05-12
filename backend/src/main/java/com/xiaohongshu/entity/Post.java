@@ -40,6 +40,9 @@ public class Post {
     @Column(name = "ai_summary", columnDefinition = "TEXT")
     private String aiSummary;
 
+    @Column(name = "image_urls", columnDefinition = "TEXT")
+    private String imageUrls;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -124,5 +127,13 @@ public class Post {
 
     public void setAiSummary(String aiSummary) {
         this.aiSummary = aiSummary;
+    }
+
+    public String getImageUrls() {
+        return imageUrls;
+    }
+
+    public void setImageUrls(String imageUrls) {
+        this.imageUrls = imageUrls;
     }
 }
