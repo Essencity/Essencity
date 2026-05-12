@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import AiSummary from './AiSummary.vue'
+import AiPostQA from './AiPostQA.vue'
 import { getCurrentUser } from '../api/index.js'
 
 const props = defineProps({
@@ -31,6 +32,7 @@ const replyToNickname = ref(null)
 const showDeleteMenu = ref(null)
 const showAiSummary = ref(false)
 const showPostDeleteMenu = ref(false)
+const showAiQA = ref(false)
 
 const handleDeletePost = async () => {
   if (!props.currentUser) return
@@ -795,6 +797,12 @@ watch(() => props.post.id, () => {
               </svg>
               <span>AI</span>
             </div>
+            <div class="action-item" @click="showAiQA = true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+              </svg>
+              <span>问答</span>
+            </div>
           </div>
         </div>
       </div>
@@ -806,6 +814,14 @@ watch(() => props.post.id, () => {
       :title="post.title"
       :content="post.description"
       @close="showAiSummary = false"
+    />
+
+    <AiPostQA
+      v-if="showAiQA"
+      :post-id="post.id"
+      :title="post.title"
+      :content="post.description"
+      @close="showAiQA = false"
     />
   </div>
 </template>
