@@ -391,7 +391,8 @@ const handlePublish = async () => {
       url: finalUrl,
       cover_url: finalCoverUrl,
       imageUrls: imageUrls.length > 0 ? imageUrls : imageUrls.value,
-      tag: selectedTag.value
+      tag: selectedTag.value,
+      author_id: props.currentUser?.id
     }
 
     let postRes
