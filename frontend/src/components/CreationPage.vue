@@ -102,7 +102,13 @@ const formatDuration = (seconds) => {
 const handleFileSelect = (event) => {
   const file = event.target.files[0]
   if (!file) return
-  
+
+  const maxSize = 200 * 1024 * 1024 // 200MB
+  if (file.size > maxSize) {
+    alert('视频文件过大，请选择小于 200MB 的视频')
+    return
+  }
+
   processVideoFile(file)
 }
 
@@ -110,6 +116,11 @@ const handleDrop = (event) => {
   event.preventDefault()
   const file = event.dataTransfer.files[0]
   if (file && file.type.startsWith('video/')) {
+    const maxSize = 200 * 1024 * 1024
+    if (file.size > maxSize) {
+      alert('视频文件过大，请选择小于 200MB 的视频')
+      return
+    }
     processVideoFile(file)
   }
 }

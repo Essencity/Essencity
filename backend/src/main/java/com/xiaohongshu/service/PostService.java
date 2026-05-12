@@ -58,6 +58,9 @@ public class PostService {
         if (updatedPost.getTag() != null) {
             post.setTag(updatedPost.getTag());
         }
+        if (updatedPost.getImageUrls() != null) {
+            post.setImageUrls(updatedPost.getImageUrls());
+        }
         return postRepository.save(post);
     }
 

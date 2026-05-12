@@ -1,16 +1,9 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import Components from 'unplugin-vue-components/vite'
-import { VantResolver } from '@vant/auto-import-resolver'
 import path from 'path'
 
 export default defineConfig({
-  plugins: [
-    vue(),
-    Components({
-      resolvers: [VantResolver()]
-    })
-  ],
+  plugins: [vue()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src')
@@ -26,36 +19,6 @@ export default defineConfig({
         target: 'http://localhost:8080',
         changeOrigin: true
       }
-    }
-  },
-  build: {
-    minify: 'esbuild',
-    rollupOptions: {
-      output: {
-        chunkFileNames: 'assets/js/[name]-[hash].js',
-        entryFileNames: 'assets/js/[name]-[hash].js',
-        assetFileNames: 'assets/[ext]/[name]-[hash].[ext]'
-      }
-    }
-  },
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: './src/setupTests.js',
-    reporters: ['default', 'junit'],
-    outputFile: {
-      junit: './junit.xml'
-    },
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'lcov', 'html'],
-      reportsDirectory: './coverage',
-      exclude: [
-        'node_modules/**',
-        'src/setupTests.js',
-        '**/*.spec.js',
-        '**/*.md'
-      ]
     }
   }
 })
