@@ -223,18 +223,20 @@ const handleLike = async () => {
     alert('请先登录')
     return
   }
-  
+
   try {
     if (isLiked.value) {
       await fetch(`/api/posts/${props.post.id}/unlike`, {
         method: 'POST',
-        headers: authHeaders()
+        headers: authHeaders(),
+        body: JSON.stringify({ userId: props.currentUser.id })
       })
       likeCount.value = Math.max(0, likeCount.value - 1)
     } else {
       await fetch(`/api/posts/${props.post.id}/like`, {
         method: 'POST',
-        headers: authHeaders()
+        headers: authHeaders(),
+        body: JSON.stringify({ userId: props.currentUser.id })
       })
       likeCount.value++
     }
@@ -250,18 +252,20 @@ const handleCollect = async () => {
     alert('请先登录')
     return
   }
-  
+
   try {
     if (isCollected.value) {
       await fetch(`/api/posts/${props.post.id}/uncollect`, {
         method: 'POST',
-        headers: authHeaders()
+        headers: authHeaders(),
+        body: JSON.stringify({ userId: props.currentUser.id })
       })
       collectCount.value = Math.max(0, collectCount.value - 1)
     } else {
       await fetch(`/api/posts/${props.post.id}/collect`, {
         method: 'POST',
-        headers: authHeaders()
+        headers: authHeaders(),
+        body: JSON.stringify({ userId: props.currentUser.id })
       })
       collectCount.value++
     }
@@ -287,7 +291,8 @@ const handleSubmitComment = async () => {
       headers: authHeaders(),
       body: JSON.stringify({
         content: content,
-        parent_id: replyToCommentId.value
+        parent_id: replyToCommentId.value,
+        userId: props.currentUser.id
       })
     })
     
@@ -1118,6 +1123,8 @@ watch(() => props.post.id, () => {
   line-height: 1.6;
   margin: 0 0 12px 0;
   white-space: pre-wrap;
+  max-height: 200px;
+  overflow-y: auto;
 }
 
 .post-date {
