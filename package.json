@@ -4,6 +4,7 @@
   },
   "devDependencies": {
     "@vant/auto-import-resolver": "^1.3.0",
+    "pptxgenjs": "^4.0.1",
     "unplugin-vue-components": "^30.0.0"
   }
 }
