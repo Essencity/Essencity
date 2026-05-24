@@ -1,5 +1,9 @@
 # Essencity
 
+[![CI](https://github.com/Essencity/Essencity/actions/workflows/ci.yml/badge.svg)](https://github.com/Essencity/Essencity/actions)
+[![Backend Coverage](https://codecov.io/gh/Essencity/Essencity/branch/main/graph/badge.svg?token=7CZVSCDQ4K&flag=backend)](https://codecov.io/gh/Essencity/Essencity)
+[![Frontend Coverage](https://codecov.io/gh/Essencity/Essencity/branch/main/graph/badge.svg?token=7CZVSCDQ4K&flag=frontend)](https://codecov.io/gh/Essencity/Essencity)
+
 <p align="center">
   <img src="https://img.shields.io/badge/Vue-3.x-4FC08D?style=flat-square&logo=vue.js" alt="Vue">
   <img src="https://img.shields.io/badge/Vant-4.x-1989FA?style=flat-square" alt="Vant">
@@ -27,7 +31,7 @@
 
 ### AI 能力
 
-- **AI 智能总结** - 基于 MiniMax 大模型，一键生成笔记摘要
+- **AI 智能总结** - 基于 DeepSeek V4 Flash 大模型，一键生成笔记摘要
 - **语音搜索** - 基于 Web Speech API 的语音识别搜索
 
 ### 移动端适配
@@ -60,7 +64,7 @@
 | MySQL 8.0 | 数据库 |
 | JWT | 身份认证 |
 | BCrypt | 密码加密 |
-| MiniMax API | AI 总结能力 |
+| DeepSeek API | AI 总结能力 |
 
 ---
 
@@ -123,7 +127,7 @@ CREATE DATABASE xiaohongshu DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicod
 
 ```properties
 spring.datasource.password=你的MySQL密码
-minimax.api-key=你的MiniMax API Key
+deepseek.api-key=你的DeepSeek API Key
 jwt.secret=你的JWT密钥（至少64字符）
 ```
 

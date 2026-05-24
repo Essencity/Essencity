@@ -1,5 +1,7 @@
 <script setup>
 import { ref, computed, watch, defineProps } from 'vue'
+import AiTagRecommend from './AiTagRecommend.vue'
+import AiContentAssist from './AiContentAssist.vue'
 
 const props = defineProps({
   currentUser: {
@@ -35,6 +37,37 @@ const tags = ['穿搭', '美食', '彩妆', '影视', '职场', '情感', '家�
 const selectedTag = ref('')
 const customTagInput = ref('')
 const showCustomTagInput = ref(false)
+
+// AI功能状态
+const showTagRecommend = ref(false)
+const showAiAssist = ref(false)
+const aiAssistMode = ref('') // expand | polish | title
+
+const handleRecommendTags = () => {
+  showTagRecommend.value = true
+}
+
+const handleSelectAiTag = (tag) => {
+  selectedTag.value = tag
+}
+
+const handleAiAssist = (mode) => {
+  aiAssistMode.value = mode
+  showAiAssist.value = true
+}
+
+const handleApplyAiContent = (text) => {
+  if (aiAssistMode.value === 'title') {
+    title.value = text
+  } else {
+    content.value = text
+  }
+  showAiAssist.value = false
+}
+
+const handleCloseAiAssist = () => {
+  showAiAssist.value = false
+}
 
 const toggleCustomTagInput = () => {
   showCustomTagInput.value = !showCustomTagInput.value
@@ -579,18 +612,53 @@ const canPublish = computed(() => {
               <!-- Title -->
               <div class="section">
                 <h3 class="section-title">标题 <span class="char-count">{{ title.length }}/20</span></h3>
-                <input 
+                <input
                   v-model="title"
-                  type="text" 
+                  type="text"
                   class="title-input"
                   placeholder="填写标题会有更多赞哦～"
                   maxlength="20"
+                />
+                <div class="ai-assist-row">
+                  <button
+                    class="ai-assist-btn"
+                    @click="handleAiAssist('title')"
+                    :disabled="!content.trim()"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    AI生成标题
+                  </button>
+                </div>
+                <AiContentAssist
+                  v-if="showAiAssist && aiAssistMode === 'title'"
+                  mode="title"
+                  :title="title"
+                  :content="content"
+                  @apply="handleApplyAiContent"
+                  @close="handleCloseAiAssist"
                 />
               </div>
 
               <!-- Tag Selection -->
               <div class="section">
-                <h3 class="section-title">添加标签</h3>
+                <h3 class="section-title">
+                  添加标签
+                  <button
+                    class="ai-recommend-btn"
+                    @click="handleRecommendTags"
+                    :disabled="!title.trim()"
+                  >
+                    AI推荐
+                  </button>
+                </h3>
+                <AiTagRecommend
+                  :title="title"
+                  :content="content"
+                  :visible="showTagRecommend"
+                  @select="handleSelectAiTag"
+                />
                 <div class="tag-list">
                   <span
                     v-for="tag in tags"
@@ -633,12 +701,36 @@ const canPublish = computed(() => {
               <!-- Content -->
               <div class="section">
                 <h3 class="section-title">正文内容</h3>
-                <textarea 
+                <textarea
                   v-model="content"
                   class="content-input"
                   placeholder="输入正文描述，真诚有价值的分享予人温暖"
                   rows="4"
                 ></textarea>
+                <div class="ai-assist-row">
+                  <button
+                    class="ai-assist-btn"
+                    @click="handleAiAssist('expand')"
+                    :disabled="!content.trim()"
+                  >
+                    AI扩写
+                  </button>
+                  <button
+                    class="ai-assist-btn"
+                    @click="handleAiAssist('polish')"
+                    :disabled="!content.trim()"
+                  >
+                    AI润色
+                  </button>
+                </div>
+                <AiContentAssist
+                  v-if="showAiAssist && (aiAssistMode === 'expand' || aiAssistMode === 'polish')"
+                  :mode="aiAssistMode"
+                  :title="title"
+                  :content="content"
+                  @apply="handleApplyAiContent"
+                  @close="handleCloseAiAssist"
+                />
               </div>
 
               <div class="publish-actions">
@@ -733,21 +825,56 @@ const canPublish = computed(() => {
               <!-- Title -->
               <div class="section">
                 <h3 class="section-title">标题 <span class="char-count">{{ title.length }}/20</span></h3>
-                <input 
+                <input
                   v-model="title"
-                  type="text" 
+                  type="text"
                   class="title-input"
                   placeholder="填写标题会有更多赞哦～"
                   maxlength="20"
+                />
+                <div class="ai-assist-row">
+                  <button
+                    class="ai-assist-btn"
+                    @click="handleAiAssist('title')"
+                    :disabled="!content.trim()"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    AI生成标题
+                  </button>
+                </div>
+                <AiContentAssist
+                  v-if="showAiAssist && aiAssistMode === 'title'"
+                  mode="title"
+                  :title="title"
+                  :content="content"
+                  @apply="handleApplyAiContent"
+                  @close="handleCloseAiAssist"
                 />
               </div>
 
               <!-- Tag Selection -->
               <div class="section">
-                <h3 class="section-title">添加标签</h3>
+                <h3 class="section-title">
+                  添加标签
+                  <button
+                    class="ai-recommend-btn"
+                    @click="handleRecommendTags"
+                    :disabled="!title.trim()"
+                  >
+                    AI推荐
+                  </button>
+                </h3>
+                <AiTagRecommend
+                  :title="title"
+                  :content="content"
+                  :visible="showTagRecommend"
+                  @select="handleSelectAiTag"
+                />
                 <div class="tag-list">
-                  <span 
-                    v-for="tag in tags" 
+                  <span
+                    v-for="tag in tags"
                     :key="tag"
                     class="tag-item"
                     :class="{ active: selectedTag === tag }"
@@ -761,12 +888,36 @@ const canPublish = computed(() => {
               <!-- Content -->
               <div class="section">
                 <h3 class="section-title">正文内容</h3>
-                <textarea 
+                <textarea
                   v-model="content"
                   class="content-input"
                   placeholder="输入正文描述，真诚有价值的分享予人温暖"
                   rows="4"
                 ></textarea>
+                <div class="ai-assist-row">
+                  <button
+                    class="ai-assist-btn"
+                    @click="handleAiAssist('expand')"
+                    :disabled="!content.trim()"
+                  >
+                    AI扩写
+                  </button>
+                  <button
+                    class="ai-assist-btn"
+                    @click="handleAiAssist('polish')"
+                    :disabled="!content.trim()"
+                  >
+                    AI润色
+                  </button>
+                </div>
+                <AiContentAssist
+                  v-if="showAiAssist && (aiAssistMode === 'expand' || aiAssistMode === 'polish')"
+                  :mode="aiAssistMode"
+                  :title="title"
+                  :content="content"
+                  @apply="handleApplyAiContent"
+                  @close="handleCloseAiAssist"
+                />
               </div>
 
               <div class="publish-actions">
@@ -1537,6 +1688,57 @@ const canPublish = computed(() => {
   font-size: 14px;
   width: 150px;
   background: transparent;
+}
+
+/* AI功能按钮样式 */
+.ai-assist-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.ai-assist-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ai-assist-btn:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.ai-assist-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.ai-recommend-btn {
+  padding: 4px 10px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ai-recommend-btn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.ai-recommend-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
 }
 
 @media (max-width: 768px) {
