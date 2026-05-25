@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -69,6 +70,75 @@ public class AIController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(Map.of("message", "AI总结生成失败: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * AI标签推荐
+     */
+    @PostMapping("/recommend-tags")
+    public ResponseEntity<?> recommendTags(@RequestBody Map<String, Object> request) {
+        try {
+            String title = (String) request.get("title");
+            String content = (String) request.get("content");
+
+            if (title == null || title.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("message", "标题不能为空"));
+            }
+
+            List<String> tags = aiService.recommendTags(title, content);
+            return ResponseEntity.ok(Map.of("tags", tags));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(Map.of("message", "标签推荐失败: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * AI内容创作助手
+     */
+    @PostMapping("/assist")
+    public ResponseEntity<?> assistContent(@RequestBody Map<String, Object> request) {
+        try {
+            String mode = (String) request.get("mode");
+            String title = (String) request.get("title");
+            String content = (String) request.get("content");
+
+            if (mode == null || mode.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("message", "模式不能为空"));
+            }
+
+            String result = aiService.generateContent(mode, title, content);
+            return ResponseEntity.ok(Map.of("result", result));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(Map.of("message", "内容生成失败: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * AI帖子问答
+     */
+    @SuppressWarnings("unchecked")
+    @PostMapping("/ask")
+    public ResponseEntity<?> askQuestion(@RequestBody Map<String, Object> request) {
+        try {
+            String title = (String) request.get("title");
+            String content = (String) request.get("content");
+            String question = (String) request.get("question");
+            List<Map<String, String>> history = (List<Map<String, String>>) request.get("history");
+
+            if (question == null || question.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("message", "问题不能为空"));
+            }
+
+            String answer = aiService.answerQuestion(title, content, question, history);
+            return ResponseEntity.ok(Map.of("answer", answer));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(Map.of("message", "问答失败: " + e.getMessage()));
         }
     }
 }
