@@ -33,7 +33,7 @@ public class AIServiceTest {
     @Test
     void testGenerateSummary_Success() {
         // 手动创建 AIService 并注入 mock RestTemplate
-        aiService = new AIService(restTemplate, "test-api-key", "https://api.minimax.chat", "MiniMax-M2.1");
+        aiService = new AIService(restTemplate, "test-api-key", "https://api.deepseek.com", "deepseek-v4-flash");
 
         Map<String, Object> mockResponse = Map.of(
             "choices", java.util.List.of(
@@ -61,7 +61,7 @@ public class AIServiceTest {
 
     @Test
     void testGenerateSummary_WithEmptyContent() {
-        aiService = new AIService(restTemplate, "test-api-key", "https://api.minimax.chat", "MiniMax-M2.1");
+        aiService = new AIService(restTemplate, "test-api-key", "https://api.deepseek.com", "deepseek-v4-flash");
 
         Map<String, Object> mockResponse = Map.of(
             "choices", java.util.List.of(
@@ -88,7 +88,7 @@ public class AIServiceTest {
 
     @Test
     void testGenerateSummary_APIError() {
-        aiService = new AIService(restTemplate, "test-api-key", "https://api.minimax.chat", "MiniMax-M2.1");
+        aiService = new AIService(restTemplate, "test-api-key", "https://api.deepseek.com", "deepseek-v4-flash");
 
         when(restTemplate.exchange(
             anyString(),
@@ -102,7 +102,7 @@ public class AIServiceTest {
 
     @Test
     void testGenerateSummary_NonOKResponse() {
-        aiService = new AIService(restTemplate, "test-api-key", "https://api.minimax.chat", "MiniMax-M2.1");
+        aiService = new AIService(restTemplate, "test-api-key", "https://api.deepseek.com", "deepseek-v4-flash");
 
         when(restTemplate.exchange(
             anyString(),

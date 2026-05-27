@@ -10,13 +10,13 @@ import java.util.*;
 @Service
 public class AIService {
 
-    @Value("${minimax.api-key}")
+    @Value("${deepseek.api-key}")
     private String apiKey;
 
-    @Value("${minimax.base-url}")
+    @Value("${deepseek.base-url}")
     private String baseUrl;
 
-    @Value("${minimax.model}")
+    @Value("${deepseek.model}")
     private String model;
 
     private RestTemplate restTemplate;
@@ -35,7 +35,7 @@ public class AIService {
 
     public String generateSummary(String title, String content) {
         try {
-            String url = baseUrl + "/v1/text/chatcompletion_v2";
+            String url = baseUrl + "/chat/completions";
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -44,7 +44,7 @@ public class AIService {
             // 构建提示词
             String prompt = buildPrompt(title, content);
 
-            // 构建请求体 - MiniMax API 格式
+            // 构建请求体 - OpenAI 兼容格式
             Map<String, Object> requestBody = new HashMap<>();
             requestBody.put("model", model);
 
@@ -86,7 +86,7 @@ public class AIService {
 
     private String parseResponse(Map responseBody) {
         try {
-            // MiniMax API 响应格式
+            // DeepSeek API (OpenAI 兼容) 响应格式
             // {"id":"xxx","choices":[{"message":{"role":"assistant","content":"xxx"}}]}
             System.out.println("AI 响应: " + responseBody);
 
@@ -109,7 +109,7 @@ public class AIService {
 
     public List<String> recommendTags(String title, String content) {
         try {
-            String url = baseUrl + "/v1/text/chatcompletion_v2";
+            String url = baseUrl + "/chat/completions";
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -201,7 +201,7 @@ public class AIService {
 
     private String expandContent(String title, String content) {
         try {
-            String url = baseUrl + "/v1/text/chatcompletion_v2";
+            String url = baseUrl + "/chat/completions";
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -247,7 +247,7 @@ public class AIService {
 
     private String polishContent(String title, String content) {
         try {
-            String url = baseUrl + "/v1/text/chatcompletion_v2";
+            String url = baseUrl + "/chat/completions";
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -292,7 +292,7 @@ public class AIService {
 
     private String generateTitle(String content) {
         try {
-            String url = baseUrl + "/v1/text/chatcompletion_v2";
+            String url = baseUrl + "/chat/completions";
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -339,7 +339,7 @@ public class AIService {
 
     public String answerQuestion(String title, String content, String question, List<Map<String, String>> history) {
         try {
-            String url = baseUrl + "/v1/text/chatcompletion_v2";
+            String url = baseUrl + "/chat/completions";
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
