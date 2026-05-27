@@ -1,7 +1,9 @@
 /**
  * 统一的 API 请求工具，自动附加 JWT 认证头
+ * 开发环境：Vite proxy 将 /api 代理到 localhost:8080
+ * 生产环境：通过 VITE_API_BASE_URL 环境变量指定后端地址
  */
-const API_BASE = '/api'
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api'
 
 function getToken() {
   return localStorage.getItem('token')
