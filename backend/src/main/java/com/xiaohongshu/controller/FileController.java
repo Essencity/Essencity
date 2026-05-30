@@ -54,14 +54,23 @@ public class FileController {
             }
 
             Resource resource = new UrlResource(filePath.toUri());
-            if (!resource.exists()) {
-                return ResponseEntity.notFound().build();
+            if (resource.exists()) {
+                String contentType = detectContentType(fileName);
+                return ResponseEntity.ok()
+                        .contentType(MediaType.parseMediaType(contentType))
+                        .body(resource);
             }
 
-            String contentType = detectContentType(fileName);
-            return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType(contentType))
-                    .body(resource);
+            // 如果文件系统找不到，尝试从 classpath（JAR 内的静态资源）加载
+            Resource classpathResource = new org.springframework.core.io.ClassPathResource("static/uploads/" + fileName);
+            if (classpathResource.exists()) {
+                String contentType = detectContentType(fileName);
+                return ResponseEntity.ok()
+                        .contentType(MediaType.parseMediaType(contentType))
+                        .body(classpathResource);
+            }
+
+            return ResponseEntity.notFound().build();
         } catch (MalformedURLException e) {
             return ResponseEntity.badRequest().build();
         }
