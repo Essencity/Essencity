@@ -3,16 +3,11 @@ package com.xiaohongshu.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -45,45 +40,7 @@ public class FileController {
         return ResponseEntity.ok("FileController is working!");
     }
 
-    @GetMapping("/{fileName:.+}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {
-        try {
-            Path filePath = fileStorageLocation.resolve(fileName).normalize();
-
-            // 路径遍历防护
-            if (!filePath.startsWith(fileStorageLocation)) {
-                return ResponseEntity.notFound().build();
-            }
-
-            Resource resource = new UrlResource(filePath.toUri());
-            if (resource.exists()) {
-                String contentType = detectContentType(fileName);
-                return ResponseEntity.ok()
-                        .contentType(MediaType.parseMediaType(contentType))
-                        .body(resource);
-            }
-
-            // 如果文件系统找不到，尝试从 classpath 读取（JAR 内静态资源）
-            try {
-                InputStream in = getClass().getResourceAsStream("/static/uploads/" + fileName);
-                if (in != null) {
-                    byte[] bytes = in.readAllBytes();
-                    in.close();
-                    String contentType = detectContentType(fileName);
-                    ByteArrayResource bar = new ByteArrayResource(bytes);
-                    return ResponseEntity.ok()
-                            .contentType(MediaType.parseMediaType(contentType))
-                            .body(bar);
-                }
-            } catch (IOException e) {
-                log.warn("Failed to read classpath resource: {}", fileName);
-            }
-
-            return ResponseEntity.notFound().build();
-        } catch (MalformedURLException e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
+    // 文件下载由 WebConfig 的静态资源处理器处理
 
     @PostMapping("")
     public ResponseEntity<?> uploadFile(

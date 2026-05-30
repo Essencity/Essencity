@@ -6,11 +6,17 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Value("${app.cors.allowed-origins:http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174,http://127.0.0.1:5174,http://localhost,http://127.0.0.1}")
-    private String allowedOrigins;
+    private final String uploadDir;
+
+    public WebConfig(@Value("${file.upload-dir:${user.dir}/uploads}") String uploadDir) {
+        this.uploadDir = uploadDir;
+    }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -23,7 +29,12 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // registry.addResourceHandler("/uploads/**")
-        // .addResourceLocations("file:///C:/Users/panjiawei/.gemini/antigravity/xiaohongshu_uploads/");
+        Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
+        // 先从文件系统的 uploads 目录找，找不到再从 classpath（JAR 内静态资源）找
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations(
+                        "file:" + uploadPath.toString() + "/",
+                        "classpath:/static/uploads/")
+                .setCachePeriod(3600);
     }
 }
