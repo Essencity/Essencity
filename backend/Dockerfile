@@ -3,12 +3,14 @@ FROM maven:3.9-eclipse-temurin-21 AS builder
 WORKDIR /app
 COPY pom.xml .
 COPY src ./src
+COPY uploads ./uploads
 RUN mvn clean package -DskipTests
 
 # Runtime stage
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
+COPY --from=builder /app/uploads ./uploads
 
 # 创建上传目录
 RUN mkdir -p /app/uploads
