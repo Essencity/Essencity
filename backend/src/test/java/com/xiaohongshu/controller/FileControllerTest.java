@@ -52,13 +52,6 @@ class FileControllerTest {
     }
 
     @Test
-    void test_ShouldReturnWorkingMessage() throws Exception {
-        mockMvc.perform(get("/uploads/test"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("FileController is working!"));
-    }
-
-    @Test
     void downloadFile_FileNotFound_ShouldReturn404() throws Exception {
         mockMvc.perform(get("/uploads/nonexistent.jpg"))
                 .andExpect(status().isNotFound());
@@ -85,11 +78,18 @@ class FileControllerTest {
     }
 
     @Test
+    void test_ShouldReturnWorkingMessage() throws Exception {
+        mockMvc.perform(get("/files/test"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("FileController is working!"));
+    }
+
+    @Test
     void uploadFile_ShouldReturnUrl() throws Exception {
         MockMultipartFile file = new MockMultipartFile(
                 "file", "test.jpg", MediaType.IMAGE_JPEG_VALUE, "test content".getBytes());
 
-        mockMvc.perform(multipart("/uploads").file(file))
+        mockMvc.perform(multipart("/files").file(file))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.url").value(org.hamcrest.Matchers.startsWith("/uploads/")));
     }
@@ -99,7 +99,7 @@ class FileControllerTest {
         MockMultipartFile file = new MockMultipartFile(
                 "file", "empty.jpg", MediaType.IMAGE_JPEG_VALUE, new byte[0]);
 
-        mockMvc.perform(multipart("/uploads").file(file))
+        mockMvc.perform(multipart("/files").file(file))
                 .andExpect(status().isBadRequest());
     }
 }
