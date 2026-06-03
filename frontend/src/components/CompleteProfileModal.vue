@@ -53,7 +53,7 @@ const handleSubmit = async () => {
       const formData = new FormData()
       formData.append('file', avatarFile.value)
 
-      const uploadRes = await fetch('/api/uploads', {
+      const uploadRes = await fetch('/api/files', {
         method: 'POST',
         headers: authHeaders,
         body: formData

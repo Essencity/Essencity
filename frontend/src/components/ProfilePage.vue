@@ -474,7 +474,7 @@ const handleAvatarChange = async (event) => {
       formData.append('file', file)
       
       // 上传文件到后端
-      const response = await fetch('/api/uploads', {
+      const response = await fetch('/api/files', {
         method: 'POST',
         body: formData
       })
