@@ -36,7 +36,9 @@
       "Bash(curl -sL -o /dev/null -w \"%{http_code}\" \"http://localhost:8080/uploads/default-avatar.png\")",
       "Bash(curl -sL -o /dev/null -w \"%{http_code}\" \"http://localhost:8080/api/uploads/default-avatar.png\")",
       "Bash(curl -v \"http://localhost:8080/api/uploads/default-avatar.png\")",
-      "Bash(curl -sL -o /dev/null -w '%{http_code}' http://localhost:8080/api/uploads/test/__TRACKED_VAR__.jpg)"
+      "Bash(curl -sL -o /dev/null -w '%{http_code}' http://localhost:8080/api/uploads/test/__TRACKED_VAR__.jpg)",
+      "Bash(python \"D:/1/Essencity/docs/_enrich.py\")",
+      "Bash(rm \"D:/1/Essencity/docs/_enrich.py\" \"D:/1/Essencity/docs/_append.py\")"
     ]
   }
 }
