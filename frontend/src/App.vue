@@ -76,6 +76,7 @@ const handleOpenDetail = async (post) => {
           imageUrls: fullPost.imageUrls ? fullPost.imageUrls.map(url => getMediaUrl(fixUrl(url))) : null,
           type: fullPost.type || 'image',
           author: fullPost.author?.nickname || '未知用户',
+          author_id: fullPost.author?.id,
           authorId: fullPost.author?.id,
           authorAvatar: getMediaUrl(fixUrl(fullPost.author?.avatar)),
           authorNickname: fullPost.author?.nickname || '未知用户',
@@ -264,6 +265,7 @@ const fetchPosts = async (query = '') => {
           authorId: post.author?.id || post.authorId,
           author_avatar: getMediaUrl(fixedAuthorAvatar),
           authorAvatar: getMediaUrl(fixedAuthorAvatar),
+          authorNickname: post.author?.nickname || post.user?.nickname || '未知用户',
           likes: post.likeCount || post.likes || 0,
           createdAt: post.createdAt || post.created_at,
           imageUrls: fixedImageUrls
