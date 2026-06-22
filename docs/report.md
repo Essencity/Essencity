@@ -16,19 +16,6 @@ description: |
   Docker 容器化部署，并已通过 Vercel + Render + TiDB Cloud 完成云端部署。
 ---
 
-文档可以使用 Markdown 编写，用 [Pandoc](https://pandoc.org/) 转成 PDF、HTML 或 Word 等格式：
-
-```bash
-# Convert to PDF: 需要安装 typst
-pandoc sample_docs.md -o sample_docs.pdf --pdf-engine=typst
-# Convert to Word docx
-pandoc sample_docs.md -o sample_docs.docx
-# Convert to HTML
-pandoc sample_docs.md -o sample_docs.html
-```
-
-文档不能使用外部材料（比如设计图放在网站，文档中贴一个链接），所有材料必须包含在文档中。
-
 ---
 
 # 一、项目介绍 [林忠阳、林烨澄、陈熠恒]
@@ -343,15 +330,27 @@ Essencity 的界面设计遵循了小红书的核心视觉风格——以图片�
 
 第一，**首页视图（Discovery）**。顶部为带有品牌 Logo 的搜索栏（桌面端居中展示，移动端靠左简化），搜索栏集成语音搜索按钮（麦克风图标）。搜索栏下方为分类标签横滑栏（10 个标签：推荐、美食、穿搭、彩妆、影视、职场、情感、家居、游戏、旅行、健身），当前选中的标签高亮为品牌红色。主体区域为瀑布流布局（MasonryGrid），每张笔记卡片包含封面大图（3:4 竖版比例）、标题文字、底部栏（作者头像 + 昵称 + 点赞数图标）。桌面端左侧为固定 240px 的导航侧边栏，移动端底部为 MobileBottomBar 自定义导航（首页、发布、通知、我四个图标按钮）。
 
+<img src="file:///D:/1/Essencity/docs/design/discover.png" title="" alt="discover" style="zoom:50%;">
+
 第二，**笔记详情页（PostDetailModal）**。桌面端以弹窗形式展示，宽度 1000px，高度 680px，左右两栏布局——左侧为图片/视频展示区（约 65% 宽度），支持图片轮播切换（多图模式下左右箭头点击切换）；右侧为信息区（约 35% 宽度），从上到下依次为：作者头像 + 昵称 + 关注按钮、笔记标题（18px 粗体）、正文内容（可滚动区域）、AI 总结按钮（带加载动画）、标签区（话题标签可点击）、底部互动栏（点赞、收藏、评论图标 + 计数）。移动端则为全屏显示，上下布局——图片/视频在上方，信息区在下方，可上下滚动浏览。
+
+<img src="file:///D:/1/Essencity/docs/design/detail.png" title="" alt="detail" style="zoom:50%;">
 
 第三，**发布页面（CreationPage）**。顶部为返回按钮和"发布"按钮。中间为主体区域：图片上传区（3x3 网格布局，最多 9 个格子，每个格子 100px 方形，支持点击选择图片或拖拽图片，已上传的图片显示缩略图 + 右上角删除按钮）、标题输入框（占位文字"添加标题"）、正文文本域（占位文字"分享你的想法..."，多行输入）、分类标签选择器（网格展示所有可选标签，点击切换选中状态，选中的标签高亮红色，支持多选）。底部为发布按钮（全宽，品牌红色）。
 
+<img src="file:///D:/1/Essencity/docs/design/release.png" title="" alt="release" style="zoom:50%;">
+
 第四，**通知页面（NotificationPage）**。顶部为通知类型筛选栏（评论和回复、赞和收藏、新增关注三个 Tab）。主体为通知列表，每条通知包含：左侧触发用户的头像（圆形）、中间通知文本（模板化展示："XXX 赞了你的笔记"、"XXX 评论了你的笔记：内容"、"XXX 开始关注你了"）、右侧时间信息（相对时间如"3 分钟前"、"1 小时前"）。
+
+<img src="file:///D:/1/Essencity/docs/design/notification.png" title="" alt="notification" style="zoom:50%;">
 
 第五，**个人主页（ProfilePage）**。顶部为个人信息区：大头像（80px 圆形）、昵称、用户名（@username）、个人简介、性别标签、编辑资料按钮。中间为统计数据栏：笔记数、关注数、粉丝数（三列等宽横向排列，数字粗体大字，标签灰色小字）。下方为内容 Tab 切换（笔记、点赞、收藏三个 Tab），每个 Tab 下展示对应内容的网格列表（3 列，每列方形卡片，封面图 + 标题文字截断）。
 
+<img src="file:///D:/1/Essencity/docs/design/home.png" title="" alt="home" style="zoom:50%;">
+
 第六，**登录/注册弹窗（AuthModal）**。居中模态弹窗（桌面端 400px 宽，移动端 90% 屏宽），包含用户名输入框、密码输入框、登录按钮、注册切换链接。注册模式增加昵称输入框。输入框使用自定义表单样式，带有基础校验和状态反馈。底部提示文字"测试账号：xiaohong / 123456"。
+
+<img src="file:///C:/Users/l/Pictures/Typedown/48e6f426-9327-4e54-b79a-a338dc00d35d.png" title="" alt="48e6f426-9327-4e54-b79a-a338dc00d35d" style="zoom:50%;">
 
 **设计理念分析：**
 
@@ -974,6 +973,22 @@ Micrometer + Actuator 自动收集：JVM 指标（jvm.memory.used、jvm.gc.pause
 
 **首页瀑布流**：搜索栏（集成语音搜索麦克风）+ 分类标签横滑栏（10 个标签）+ 瀑布流卡片（3:4 封面大图 + 标题 + 作者信息 + 点赞数）。桌面端 240px 左侧边栏导航，移动端底部导航（首页/发布/通知/我）。**笔记详情**：桌面 1000x680px 弹窗左右布局（左图右文），移动端全屏上下布局。多图支持左右箭头轮播，视频使用 HTML5 player。AI 总结按钮点击后生成 100 字以内摘要。**发布页**：3x3 图片上传网格 + 标题输入 + 正文编辑 + 标签选择 + AI 推荐标签 + AI 创作助手。**通知中心**：类型筛选 + 头像/文本展示 + 相对时间。**个人主页**：大头像 + 统计栏 + 内容 Tab（笔记/点赞/收藏）。**登录注册**：登录/注册模式切换 + 测试账号提示。
 
+<img src="file:///C:/Users/l/Pictures/Typedown/018c64dc-ad37-4ae9-9eb9-751b2a0ea6e9.png" title="" alt="018c64dc-ad37-4ae9-9eb9-751b2a0ea6e9" style="zoom:50%;">
+
+<img title="" src="https://p.ananas.chaoxing.com/star3/origin/7bc4e6a19e4d65802c42631760ab0e29" alt="" data-align="inline" style="zoom:50%;">
+
+![](https://p.ananas.chaoxing.com/star3/origin/d12a777bbfe65b41ca322a860ad52b64)
+
+<img title="" src="file:///C:/Users/l/Pictures/Typedown/fcfe6ff9-e507-4634-9877-4ee7af7a5f1c.png" alt="fcfe6ff9-e507-4634-9877-4ee7af7a5f1c" style="zoom:33%;">
+
+<img src="file:///D:/1/Essencity/docs/design/notification.png" title="" alt="notification" style="zoom:50%;">
+
+<img title="" src="file:///C:/Users/l/Pictures/Typedown/9f49a0dd-00b4-445f-a86a-38f0308321f1.png" alt="9f49a0dd-00b4-445f-a86a-38f0308321f1" style="zoom:33%;">
+
+<img title="" src="file:///C:/Users/l/Pictures/Typedown/e60b1ee2-ef30-4864-b958-197c9a294f9b.png" alt="e60b1ee2-ef30-4864-b958-197c9a294f9b" style="zoom:33%;">
+
+<img src="file:///C:/Users/l/Pictures/Typedown/eb738473-45d5-4209-80dc-ed58178d2a45.png" title="" alt="eb738473-45d5-4209-80dc-ed58178d2a45" style="zoom:33%;">
+
 ## 16.2 性能展示
 
 Lighthouse (Fast 3G)：FCP ~1.2s，LCP ~1.8s，TTI ~2.1s。搜索响应 ~60ms（MySQL LIKE），语音搜索附加 1-2s。
@@ -1180,3 +1195,5 @@ Essencity/
 ├── CLAUDE.md                          # AI 助手项目说明
 └── README.md
 ```
+
+
