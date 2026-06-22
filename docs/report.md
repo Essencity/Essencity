@@ -350,7 +350,7 @@ Essencity 的界面设计遵循了小红书的核心视觉风格——以图片�
 
 第六，**登录/注册弹窗（AuthModal）**。居中模态弹窗（桌面端 400px 宽，移动端 90% 屏宽），包含用户名输入框、密码输入框、登录按钮、注册切换链接。注册模式增加昵称输入框。输入框使用自定义表单样式，带有基础校验和状态反馈。底部提示文字"测试账号：xiaohong / 123456"。
 
-<img src="file:///C:/Users/l/Pictures/Typedown/48e6f426-9327-4e54-b79a-a338dc00d35d.png" title="" alt="48e6f426-9327-4e54-b79a-a338dc00d35d" style="zoom:50%;">
+<img title="" src="./design/login.png" alt="48e6f426-9327-4e54-b79a-a338dc00d35d" style="zoom:50%;">
 
 **设计理念分析：**
 
@@ -973,19 +973,19 @@ Micrometer + Actuator 自动收集：JVM 指标（jvm.memory.used、jvm.gc.pause
 
 **首页瀑布流**：搜索栏（集成语音搜索麦克风）+ 分类标签横滑栏（10 个标签）+ 瀑布流卡片（3:4 封面大图 + 标题 + 作者信息 + 点赞数）。桌面端 240px 左侧边栏导航，移动端底部导航（首页/发布/通知/我）。**笔记详情**：桌面 1000x680px 弹窗左右布局（左图右文），移动端全屏上下布局。多图支持左右箭头轮播，视频使用 HTML5 player。AI 总结按钮点击后生成 100 字以内摘要。**发布页**：3x3 图片上传网格 + 标题输入 + 正文编辑 + 标签选择 + AI 推荐标签 + AI 创作助手。**通知中心**：类型筛选 + 头像/文本展示 + 相对时间。**个人主页**：大头像 + 统计栏 + 内容 Tab（笔记/点赞/收藏）。**登录注册**：登录/注册模式切换 + 测试账号提示。
 
-<img src="file:///C:/Users/l/Pictures/Typedown/018c64dc-ad37-4ae9-9eb9-751b2a0ea6e9.png" title="" alt="018c64dc-ad37-4ae9-9eb9-751b2a0ea6e9" style="zoom:50%;">
+<img title="" src="./截图/login.png" alt="loading-ag-2445" style="zoom:50%;">
 
-<img title="" src="https://p.ananas.chaoxing.com/star3/origin/7bc4e6a19e4d65802c42631760ab0e29" alt="" data-align="inline" style="zoom:50%;">
+<img title="" src="./截图/discover.png" alt="loading-ag-2447" data-align="inline" style="zoom:50%;">
 
-![](https://p.ananas.chaoxing.com/star3/origin/d12a777bbfe65b41ca322a860ad52b64)
+![loading-ag-2449](./截图/release.png)
 
-<img title="" src="file:///C:/Users/l/Pictures/Typedown/fcfe6ff9-e507-4634-9877-4ee7af7a5f1c.png" alt="fcfe6ff9-e507-4634-9877-4ee7af7a5f1c" style="zoom:33%;">
+<img title="" src="./截图/detail.png" alt="loading-ag-2451" style="zoom:33%;">
 
-<img src="file:///D:/1/Essencity/docs/design/notification.png" title="" alt="notification" style="zoom:50%;">
+<img title="" src="./截图/notification.png" alt="loading-ag-2453" style="zoom:50%;">
 
-<img title="" src="file:///C:/Users/l/Pictures/Typedown/9f49a0dd-00b4-445f-a86a-38f0308321f1.png" alt="9f49a0dd-00b4-445f-a86a-38f0308321f1" style="zoom:33%;">
+<img title="" src="./截图/home.png" alt="loading-ag-2455" style="zoom:33%;">
 
-<img title="" src="file:///C:/Users/l/Pictures/Typedown/e60b1ee2-ef30-4864-b958-197c9a294f9b.png" alt="e60b1ee2-ef30-4864-b958-197c9a294f9b" style="zoom:33%;">
+<img title="" src="./截图/summary.png" alt="loading-ag-2457" style="zoom:33%;">
 
 <img src="file:///C:/Users/l/Pictures/Typedown/eb738473-45d5-4209-80dc-ed58178d2a45.png" title="" alt="eb738473-45d5-4209-80dc-ed58178d2a45" style="zoom:33%;">
 
@@ -1195,5 +1195,3 @@ Essencity/
 ├── CLAUDE.md                          # AI 助手项目说明
 └── README.md
 ```
-
-
